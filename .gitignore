@@ -1,0 +1,6 @@
+area776
+build
+*.o
+GPATH
+GRTAGS
+GTAGS

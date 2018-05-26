@@ -1,0 +1,49 @@
+version: "{build}"
+
+clone_depth: 3
+
+platform:
+  - x86
+
+environment:
+  BASEDIR: c:\mylibs
+  SDLDIR: c:\mylibs\include\SDL
+  LIBDIR: c:\mylibs\lib
+
+install:
+  - mkdir %SDLDIR%
+  - mkdir %LIBDIR%
+  - IF NOT EXIST SDL-devel-1.2.15-VC.zip curl -fsS -O https://libsdl.org/release/SDL-devel-1.2.15-VC.zip
+  - IF NOT EXIST SDL_image-devel-1.2.12-VC.zip curl -fsS -O https://libsdl.org/projects/SDL_image/release/SDL_image-devel-1.2.12-VC.zip
+  - IF NOT EXIST SDL_mixer-devel-1.2.12-VC.zip curl -fsS -O https://libsdl.org/projects/SDL_mixer/release/SDL_mixer-devel-1.2.12-VC.zip
+  - IF NOT EXIST SDL_ttf-devel-2.0.11-VC.zip curl -fsS -O https://libsdl.org/projects/SDL_ttf/release/SDL_ttf-devel-2.0.11-VC.zip
+  - copy SDL-devel-1.2.15-VC.zip %TEMP% > nul
+  - copy SDL_image-devel-1.2.12-VC.zip %TEMP% > nul
+  - copy SDL_mixer-devel-1.2.12-VC.zip %TEMP% > nul
+  - copy SDL_ttf-devel-2.0.11-VC.zip %TEMP% > nul
+  - cd %TEMP%
+  - 7z x SDL-devel-1.2.15-VC.zip > nul
+  - 7z x SDL_image-devel-1.2.12-VC.zip > nul
+  - 7z x SDL_mixer-devel-1.2.12-VC.zip > nul
+  - 7z x SDL_ttf-devel-2.0.11-VC.zip > nul
+  - copy SDL-1.2.15\include\* %SDLDIR% > nul
+  - copy SDL_image-1.2.12\include\* %SDLDIR% > nul
+  - copy SDL_mixer-1.2.12\include\* %SDLDIR% > nul
+  - copy SDL_ttf-2.0.11\include\* %SDLDIR% > nul
+  - copy SDL-1.2.15\lib\x86\* %LIBDIR% > nul
+  - copy SDL_image-1.2.12\lib\x86\* %LIBDIR% > nul
+  - copy SDL_mixer-1.2.12\lib\x86\* %LIBDIR% > nul
+  - copy SDL_ttf-2.0.11\lib\x86\* %LIBDIR% > nul
+
+build_script:
+  - cd %APPVEYOR_BUILD_FOLDER%
+  - c:\cygwin\bin\sh -lc ("cd /cygdrive/c/projects/pacman-sdl/; make LDFLAGS='-I/cygdrive/c/mylibs/include -Dmain=SDL_main -L/cygdrive/c/mylibs/lib -lpthread -mwindows -lSDLmain -lSDL -lSDL_image -lSDL_mixer -lSDL_ttf -lm'")
+
+test: off
+deploy: off
+
+cache:
+  - SDL-devel-1.2.15-VC.zip
+  - SDL_image-devel-1.2.12-VC.zip
+  - SDL_mixer-devel-1.2.12-VC.zip
+  - SDL_ttf-devel-2.0.11-VC.zip

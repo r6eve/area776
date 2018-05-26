@@ -1,0 +1,97 @@
+git:
+  depth: 3
+
+language: c++
+
+matrix:
+  include:
+    - os: linux
+      env:
+        - TARGET=x86_64-unknown-linux-gnu
+        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+      addons:
+        apt:
+          update: true
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-7
+            - libsdl1.2-dev
+            - libsdl-image1.2-dev
+            - libsdl-mixer1.2-dev
+            - libsdl-ttf2.0-dev
+      compiler: g++-7
+    - os: linux
+      env:
+        - TARGET=x86_64-unknown-linux-gnu
+        - MATRIX_EVAL="CC=clang-5.0 && CXX=clang++-5.0"
+      addons:
+        apt:
+          update: true
+          sources:
+            - llvm-toolchain-trusty-5.0
+            - ubuntu-toolchain-r-test
+          packages:
+            - clang-5.0
+            - libstdc++-6-dev
+            - libsdl1.2-dev
+            - libsdl-image1.2-dev
+            - libsdl-mixer1.2-dev
+            - libsdl-ttf2.0-dev
+      compiler: clang++-5.0
+    - os: linux
+      env:
+        - TARGET=i686-unknown-linux-gnu
+        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+      addons:
+        apt:
+          update: true
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-7
+            - libsdl1.2-dev
+            - libsdl-image1.2-dev
+            - libsdl-mixer1.2-dev
+            - libsdl-ttf2.0-dev
+      compiler: g++-7
+    - os: linux
+      env:
+        - TARGET=i686-unknown-linux-gnu
+        - MATRIX_EVAL="CC=clang-5.0 && CXX=clang++-5.0"
+      addons:
+        apt:
+          update: true
+          sources:
+            - llvm-toolchain-trusty-5.0
+            - ubuntu-toolchain-r-test
+          packages:
+            - clang-5.0
+            - libstdc++-6-dev
+            - libsdl1.2-dev
+            - libsdl-image1.2-dev
+            - libsdl-mixer1.2-dev
+            - libsdl-ttf2.0-dev
+      compiler: clang++-5.0
+    - os: osx
+      osx_image: xcode9.3
+      env:
+        - MATRIX_EVAL="brew install gcc; brew link --overwrite gcc && CC=gcc && CXX=g++"
+      compiler: g++
+    - os: osx
+      osx_image: xcode9.3
+      compiler: clang++
+
+before_install:
+  - eval "${MATRIX_EVAL}"
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install sdl sdl_image sdl_mixer sdl_ttf
+
+script:
+  - make CXX=${CXX}
+  - ./area776 --version
+
+notifications:
+  email:
+    on_success: never
+    on_failure: change
