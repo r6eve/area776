@@ -2,7 +2,6 @@
 #define DEF_GLOBAL_H
 
 #include <SDL/SDL.h>
-#include <SDL/SDL_mixer.h>
 #include <math.h>
 #include "boss.hpp"
 #include "effect.hpp"
