@@ -21,13 +21,6 @@ const int ENEMY_SHOT_MAX = 128;
 const int EFFECT_MAX = 64;
 const int BOSS_SHOT_MAX = 256;
 
-// TODO:
-enum {
-  MAIN_SHOT_SE = 0,
-  ENEMY_SHOT_SE,
-  NUM_SE,
-};
-
 enum {
   GAME_STATE_TITLE = 0,
   GAME_STATE_START,
@@ -72,8 +65,6 @@ GLOBAL int Game_count;
 GLOBAL int Game_level;
 GLOBAL int Game_state;
 GLOBAL int Enemy_select;
-GLOBAL Mix_Music *Music;
-GLOBAL Mix_Chunk *Se[2];
 GLOBAL Fighter_data Fighter;
 GLOBAL Enemy_data Enemy[ENEMY_MAX];
 GLOBAL Shot_data Fighter_shot[FIGHTER_SHOT_MAX];

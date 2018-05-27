@@ -319,7 +319,6 @@ void Area776::game_clear() {
             Game_count = 0;
             Game_state = GAME_STATE_TITLE;
             Mix_HaltMusic();
-            Mix_FreeMusic(Music);
           }
         }
       } else {
@@ -347,7 +346,6 @@ void Area776::game_over() {
       Game_count = 0;
       Game_state = GAME_STATE_TITLE;
       Mix_HaltMusic();
-      Mix_FreeMusic(Music);
     }
   }
 }
