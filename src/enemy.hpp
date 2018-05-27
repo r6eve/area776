@@ -1,6 +1,7 @@
 #ifndef ENEMY_H
 #define ENEMY_H
 
+#include "area776.hpp"
 #include "vector.hpp"
 
 struct Enemy_data {

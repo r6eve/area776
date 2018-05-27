@@ -16,7 +16,6 @@
 #include "fighter.hpp"
 #include "image_manager.hpp"
 #include "input.hpp"
-#include "main.hpp"
 #include "vector.hpp"
 #include "wipe.hpp"
 
