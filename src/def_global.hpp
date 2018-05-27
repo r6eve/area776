@@ -19,7 +19,6 @@ const int FIGHTER_SHOT_MAX = 32;
 const int ENEMY_MAX = 16;
 const int ENEMY_SHOT_MAX = 128;
 const int EFFECT_MAX = 64;
-const int OFFSET_Y = 48;
 const int BOSS_SHOT_MAX = 256;
 
 // TODO:

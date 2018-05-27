@@ -45,10 +45,13 @@ bool Area776::init_sdl() {
     return false;
   }
   SDL_WM_SetCaption("SDL_SHOOTING", NULL);
-  // Screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP,
-  // SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_FULLSCREEN);
-  Screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP,
-                            SDL_HWSURFACE | SDL_DOUBLEBUF);
+  if (debug_mode_) {
+    Screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP,
+                              SDL_HWSURFACE | SDL_DOUBLEBUF);
+  } else {
+    Screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP,
+                              SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_FULLSCREEN);
+  }
   if (!Screen) {
     fprintf(stderr, "Can't initialize screen. : %s\n", SDL_GetError());
     SDL_Quit();
@@ -422,7 +425,7 @@ void Area776::draw_fps() {
       interval = 1;
     }
     double frame_rate = 1000.0 / interval;
-    Kanji_PutText(Screen, OFFSET_Y + 20, 16, Font[FONT_SIZE_16], GREEN,
+    Kanji_PutText(Screen, SCREEN_WIDTH - 140, 16, Font[FONT_SIZE_16], GREEN,
                   "FrameRate[%0.2f]", frame_rate);
   }
   pre_count = now_count;
