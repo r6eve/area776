@@ -1,6 +1,7 @@
+#include <SDL/SDL_mixer.h>
 #include "def_global.hpp"
 #include "image_manager.hpp"
-#include <SDL/SDL_mixer.h>
+#include "input_manager.hpp"
 #include "util.hpp"
 
 void init_fighter() {
@@ -12,20 +13,20 @@ void init_fighter() {
   }
 }
 
-void mv_fighter() {
-  double mv_speed = 4.0;
+void move_fighter(InputManager &input_manager) {
+  double move_speed = 4.0;
 
-  if (Press_key[PRESS_KEY_UP]) {
-    Fighter.pos.y -= mv_speed;
+  if (input_manager.press_key_p(input_device::up)) {
+    Fighter.pos.y -= move_speed;
   }
-  if (Press_key[PRESS_KEY_DOWN]) {
-    Fighter.pos.y += mv_speed;
+  if (input_manager.press_key_p(input_device::down)) {
+    Fighter.pos.y += move_speed;
   }
-  if (Press_key[PRESS_KEY_LEFT]) {
-    Fighter.pos.x -= mv_speed;
+  if (input_manager.press_key_p(input_device::left)) {
+    Fighter.pos.x -= move_speed;
   }
-  if (Press_key[PRESS_KEY_RIGHT]) {
-    Fighter.pos.x += mv_speed;
+  if (input_manager.press_key_p(input_device::right)) {
+    Fighter.pos.x += move_speed;
   }
 
   if (Fighter.pos.x < 0) {
@@ -42,7 +43,7 @@ void mv_fighter() {
   }
 
   if (Fighter.shot_timer == 0) {
-    if (Press_key[PRESS_KEY_BUTTON_0]) {
+    if (input_manager.press_key_p(input_device::f)) {
       double shot_speed = 16;
       Vector pos = {25, 10};
       for (int i = 0; i < FIGHTER_SHOT_MAX; ++i) {
@@ -60,13 +61,13 @@ void mv_fighter() {
     }
   } else {
     --Fighter.shot_timer;
-    if (!Press_key[PRESS_KEY_BUTTON_0]) {
+    if (!input_manager.press_key_p(input_device::f)) {
       Fighter.shot_timer = 0;
     }
   }
 }
 
-void mv_fighter_shot() {
+void move_fighter_shot() {
   for (int i = 0; i < FIGHTER_SHOT_MAX; ++i) {
     if (!Fighter_shot[i].view) {
       continue;

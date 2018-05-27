@@ -2,12 +2,14 @@
 #define AREA776_H
 
 #include "def_global.hpp"
+#include "input_manager.hpp"
 #include "wipe.hpp"
 
 class Area776 {
   const bool debug_mode_;
 
   Wipe wipe_;
+  InputManager input_manager_;
 
  public:
   Area776(const bool debug_mode) noexcept : debug_mode_(debug_mode) {}

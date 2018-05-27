@@ -26,6 +26,9 @@ enum {
   MAIN_SHOT_SE = 0,
   ENEMY_SHOT_SE,
   NUM_SE,
+};
+
+enum {
   GAME_STATE_TITLE = 0,
   GAME_STATE_START,
   GAME_STATE_CLEAR,
@@ -33,17 +36,12 @@ enum {
   GAME_STATE_OVER,
   GAME_STATE_PAUSE,
   NUM_GAME_STATE,
+};
+
+enum {
   ENEMY_1 = 0,
   BOSS_1,
   NUM_ENEMY_TYPE,
-  PRESS_KEY_UP = 0,
-  PRESS_KEY_DOWN,
-  PRESS_KEY_LEFT,
-  PRESS_KEY_RIGHT,
-  PRESS_KEY_BUTTON_0,
-  PRESS_KEY_BUTTON_1,
-  PRESS_KEY_SPACE,
-  NUM_PRESS_KEY
 };
 
 enum BOSS_STATE {
@@ -54,11 +52,11 @@ enum BOSS_STATE {
   NUM_BOSS_STATE
 };
 
-typedef struct _Shot_data {
+struct Shot_data {
   bool view;
   Vector pos;
   Vector move;
-} Shot_data;
+};
 
 #ifdef MAIN
 #define GLOBAL
@@ -83,7 +81,5 @@ GLOBAL Shot_data Enemy_shot[ENEMY_SHOT_MAX];
 GLOBAL Effect_data Effect[EFFECT_MAX];
 GLOBAL Boss_data Boss;
 GLOBAL Boss_shot_data Boss_shot[BOSS_SHOT_MAX];
-GLOBAL bool Press_key[NUM_PRESS_KEY];
-GLOBAL bool Edge_key[NUM_PRESS_KEY];
 
 #endif

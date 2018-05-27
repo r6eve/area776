@@ -15,7 +15,7 @@
 #include "enemy.hpp"
 #include "fighter.hpp"
 #include "image_manager.hpp"
-#include "input.hpp"
+#include "input_manager.hpp"
 #include "vector.hpp"
 #include "wipe.hpp"
 
@@ -37,7 +37,6 @@ bool Area776::init() {
     return false;
   } else {
     init_color();
-    init_joystick();
     return true;
   }
 }
@@ -134,7 +133,7 @@ bool Area776::init_game() {
 
 void Area776::main_loop() {
   for (;;) {
-    update_input();
+    input_manager_.update();
     switch (Game_state) {
       case GAME_STATE_TITLE:
         title();
@@ -187,7 +186,7 @@ void Area776::title() {
       Kanji_PutText(Screen, 160, 180, Font[FONT_SIZE_24], BLACK,
                     "S H O O T I N G - G A M E");
       Kanji_PutText(Screen, 240, 300, Font[FONT_SIZE_16], BLACK,
-                    "P r e s s  Z");
+                    "P r e s s  S p a c e  K e y");
       ++Blink_count;
       if (Blink_count >= 20) {
         SDL_Rect dst_back = {240, 300, SCREEN_WIDTH - 240, SCREEN_HEIGHT - 300};
@@ -197,7 +196,7 @@ void Area776::title() {
           Blink_count = 0;
         }
       }
-      if (Press_key[PRESS_KEY_BUTTON_0]) {
+      if (input_manager_.press_key_p(input_device::space)) {
         wipe_.set_wipe_out();
         ++Game_count;
       }
@@ -206,7 +205,7 @@ void Area776::title() {
       Kanji_PutText(Screen, 160, 180, Font[FONT_SIZE_24], BLACK,
                     "S H O O T I N G - G A M E");
       Kanji_PutText(Screen, 240, 300, Font[FONT_SIZE_16], BLACK,
-                    "P r e s s  Z");
+                    "P r e s s  S p a c e  K e y");
       wipe_.draw(Screen);
       Mix_PlayMusic(Music, -1);
       if (wipe_.update()) {
@@ -229,8 +228,8 @@ void Area776::title() {
 }
 
 void Area776::game_start() {
-  mv_fighter();
-  mv_fighter_shot();
+  move_fighter(input_manager_);
+  move_fighter_shot();
   draw_map();
   draw_fighter();
   draw_fighter_shot();
@@ -262,8 +261,8 @@ void Area776::game_start() {
 }
 
 void Area776::play_game() {
-  mv_fighter();
-  mv_fighter_shot();
+  move_fighter(input_manager_);
+  move_fighter_shot();
   check_enemyshots_hit_mychara(); /* do GameSelect = GAME_STATE_OVER;  */
   update_effect();
   draw_map();
@@ -311,8 +310,8 @@ void Area776::play_game() {
 }
 
 void Area776::game_clear() {
-  mv_fighter();
-  mv_fighter_shot();
+  move_fighter(input_manager_);
+  move_fighter_shot();
   draw_map();
   draw_fighter();
   draw_fighter_shot();
@@ -388,7 +387,7 @@ void Area776::game_pause() {
   draw_effect();
   draw_life();
   draw_translucence();
-  if (Edge_key[PRESS_KEY_SPACE]) {
+  if (input_manager_.edge_key_p(input_device::space)) {
     Game_state = GAME_STATE_GAME;
   }
 }
@@ -457,7 +456,6 @@ void Area776::end() {
   for (int i = 0; i < NUM_FONT; ++i) {
     Kanji_CloseFont(Font[i]);
   }
-  end_joystick();
   end_audio();
   SDL_Quit();
 }
