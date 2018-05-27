@@ -9,10 +9,17 @@
 #include "fighter.hpp"
 #include "vector.hpp"
 
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
-const int SCREEN_BPP = 32;
-const int MAX_FPS = 60;
+namespace screen {
+
+enum {
+  width = 640,
+  height = 480,
+  bpp = 32,
+  max_fps = 60,
+};
+
+}  // namespace screen
+
 const int NUM_SNOW = 256;
 const int FIGHTER_SHOT_MAX = 32;
 const int ENEMY_MAX = 16;

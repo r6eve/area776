@@ -6,7 +6,7 @@
 
 void init_boss() {
   Boss.state = BOSS_STATE_AUTOMOVE;
-  Boss.x = (SCREEN_WIDTH - 418) / 2;
+  Boss.x = (screen::width - 418) / 2;
   Boss.y = -240;
   Boss.move = 0;
   for (int i = 0; i < BOSS_SHOT_MAX; ++i) {
@@ -20,8 +20,8 @@ void move_boss(MixerManager &mixer_manager) {
     Boss.x = 0;
     Boss.move = 2;
   }
-  if ((Boss.x + 400) >= SCREEN_WIDTH) {
-    Boss.x = SCREEN_WIDTH - 400;
+  if ((Boss.x + 400) >= screen::width) {
+    Boss.x = screen::width - 400;
     Boss.move = -2;
   }
 
@@ -114,10 +114,10 @@ void move_boss_shot() {
     if (Boss_shot[i].pos.y < -16) {
       Boss_shot[i].view = false;
     }
-    if (Boss_shot[i].pos.x > SCREEN_WIDTH) {
+    if (Boss_shot[i].pos.x > screen::width) {
       Boss_shot[i].view = false;
     }
-    if (Boss_shot[i].pos.y > SCREEN_HEIGHT) {
+    if (Boss_shot[i].pos.y > screen::height) {
       Boss_shot[i].view = false;
     }
     ++Boss_shot[i].count;

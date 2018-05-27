@@ -46,10 +46,10 @@ bool Area776::init_sdl() {
   }
   SDL_WM_SetCaption("SDL_SHOOTING", NULL);
   if (debug_mode_) {
-    Screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP,
+    Screen = SDL_SetVideoMode(screen::width, screen::height, screen::bpp,
                               SDL_HWSURFACE | SDL_DOUBLEBUF);
   } else {
-    Screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP,
+    Screen = SDL_SetVideoMode(screen::width, screen::height, screen::bpp,
                               SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_FULLSCREEN);
   }
   if (!Screen) {
@@ -146,7 +146,7 @@ void Area776::main_loop() {
 }
 
 void Area776::title() {
-  SDL_Rect dst_back = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
+  SDL_Rect dst_back = {0, 0, screen::width, screen::height};
   Uint32 col = 0xffffffff;
   SDL_FillRect(Screen, &dst_back, col);
   switch (Game_count) {
@@ -169,7 +169,7 @@ void Area776::title() {
                     "P r e s s  S p a c e  K e y");
       ++Blink_count;
       if (Blink_count >= 20) {
-        SDL_Rect dst_back = {240, 300, SCREEN_WIDTH - 240, SCREEN_HEIGHT - 300};
+        SDL_Rect dst_back = {240, 300, screen::width - 240, screen::height - 300};
         Uint32 col = 0xffffffff;
         SDL_FillRect(Screen, &dst_back, col);
         if (Blink_count >= 40) {
@@ -305,7 +305,7 @@ void Area776::game_clear() {
     wipe_.draw(Screen);
     if (wipe_.update()) {
       if (Game_level == 1) {
-        SDL_Rect dst_back = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
+        SDL_Rect dst_back = {0, 0, screen::width, screen::height};
         Uint32 col = 0xffffffff;
         SDL_FillRect(Screen, &dst_back, col);
         Kanji_PutText(Screen, 200, 160, Font[FONT_SIZE_24], BLACK,
@@ -401,7 +401,7 @@ bool Area776::poll_event() {
 
 void Area776::wait_game() {
   static Uint32 pre_count;
-  double wait_time = 1000.0 / MAX_FPS;
+  double wait_time = 1000.0 / screen::max_fps;
   Uint32 wait_count = (wait_time + 0.5);
   if (pre_count) {
     Uint32 now_count = SDL_GetTicks();
@@ -423,7 +423,7 @@ void Area776::draw_fps() {
       interval = 1;
     }
     double frame_rate = 1000.0 / interval;
-    Kanji_PutText(Screen, SCREEN_WIDTH - 140, 16, Font[FONT_SIZE_16], GREEN,
+    Kanji_PutText(Screen, screen::width - 140, 16, Font[FONT_SIZE_16], GREEN,
                   "FrameRate[%0.2f]", frame_rate);
   }
   pre_count = now_count;
@@ -460,7 +460,7 @@ void Area776::draw_translucence() {
   dst_back.y = 0;
 
   SDL_Surface *trans_surface = SDL_CreateRGBSurface(
-      SDL_SWSURFACE, SCREEN_WIDTH, SCREEN_HEIGHT, 32, rmask, gmask, bmask, 0);
+      SDL_SWSURFACE, screen::width, screen::height, 32, rmask, gmask, bmask, 0);
   if (trans_surface == NULL) {
     fprintf(stderr, "CreateRGBSurface failed: %s\n", SDL_GetError());
     exit(EXIT_FAILURE);

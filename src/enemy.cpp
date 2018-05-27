@@ -23,7 +23,7 @@ void appear_enemy() {
         continue;
       }
       Enemy[i].view = true;
-      Enemy[i].pos.x = rand() % (SCREEN_WIDTH - 64);
+      Enemy[i].pos.x = rand() % (screen::width - 64);
       Enemy[i].pos.y = -64;
       Enemy[i].shot_timer = rand() % 15 + 15;
       sub_vec(&Enemy[i].move, &Fighter.pos, &Enemy[i].pos);
@@ -46,10 +46,10 @@ void move_enemy(MixerManager &mixer_manager) {
     if (Enemy[i].pos.x < -35) {
       Enemy[i].view = 0;
     }
-    if (Enemy[i].pos.x > SCREEN_WIDTH) {
+    if (Enemy[i].pos.x > screen::width) {
       Enemy[i].view = 0;
     }
-    if (Enemy[i].pos.y > SCREEN_HEIGHT) {
+    if (Enemy[i].pos.y > screen::height) {
       Enemy[i].view = 0;
     }
     if (!Enemy[i].view) {
@@ -96,10 +96,10 @@ void move_enemy_shot() {
     if (Enemy_shot[i].pos.y < -16) {
       Enemy_shot[i].view = false;
     }
-    if (Enemy_shot[i].pos.x > SCREEN_WIDTH) {
+    if (Enemy_shot[i].pos.x > screen::width) {
       Enemy_shot[i].view = false;
     }
-    if (Enemy_shot[i].pos.y > SCREEN_HEIGHT) {
+    if (Enemy_shot[i].pos.y > screen::height) {
       Enemy_shot[i].view = false;
     }
   }

@@ -36,11 +36,11 @@ void move_fighter(InputManager &input_manager, MixerManager &mixer_manager) {
   if (Fighter.pos.y < 0) {
     Fighter.pos.y = 0;
   }
-  if (Fighter.pos.x > (SCREEN_WIDTH - 60)) {
-    Fighter.pos.x = SCREEN_WIDTH - 60;
+  if (Fighter.pos.x > (screen::width - 60)) {
+    Fighter.pos.x = screen::width - 60;
   }
-  if (Fighter.pos.y > (SCREEN_HEIGHT - 70)) {
-    Fighter.pos.y = SCREEN_HEIGHT - 70;
+  if (Fighter.pos.y > (screen::height - 70)) {
+    Fighter.pos.y = screen::height - 70;
   }
 
   if (Fighter.shot_timer == 0) {

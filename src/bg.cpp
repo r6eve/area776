@@ -17,7 +17,7 @@ void update_bg() {
     }
     Snow[i].view = true;
     Snow[i].type = rand() % 2;
-    Snow[i].x = rand() % (SCREEN_WIDTH - 8);
+    Snow[i].x = rand() % (screen::width - 8);
     Snow[i].y = -8;
     break;
   }
@@ -27,7 +27,7 @@ void update_bg() {
     }
     int move_speed[2] = {12, 8};
     Snow[i].y += move_speed[Snow[i].type];
-    if (Snow[i].y >= SCREEN_HEIGHT) {
+    if (Snow[i].y >= screen::height) {
       Snow[i].view = false;
     }
   }
