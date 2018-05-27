@@ -1,6 +1,7 @@
 #ifndef BOSS_H
 #define BOSS_H
 
+#include "mixer_manager.hpp"
 #include "vector.hpp"
 
 struct Boss_data {
@@ -21,8 +22,8 @@ struct Boss_shot_data {
 };
 
 void init_boss();
-void mv_boss();
-void mv_boss_shot();
+void move_boss(MixerManager &mixer_manager);
+void move_boss_shot();
 void check_myshots_hit_boss();
 void draw_boss();
 void draw_boss_shot();

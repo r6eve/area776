@@ -3,6 +3,7 @@
 
 #include "area776.hpp"
 #include "vector.hpp"
+#include "mixer_manager.hpp"
 
 struct Enemy_data {
   bool view;
@@ -13,8 +14,8 @@ struct Enemy_data {
 
 void init_enemy();
 void appear_enemy();
-void mv_enemy();
-void mv_enemy_shot();
+void move_enemy(MixerManager &mixer_manager);
+void move_enemy_shot();
 void check_myshots_hit_enemy();
 void draw_enemy();
 void draw_enemy_shot();

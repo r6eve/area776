@@ -1,7 +1,8 @@
+#include <SDL/SDL_mixer.h>
 #include "def_global.hpp"
 #include "image_manager.hpp"
 #include "util.hpp"
-#include <SDL/SDL_mixer.h>
+#include "mixer_manager.hpp"
 
 void init_enemy() {
   for (int i = 0; i < ENEMY_MAX; ++i) {
@@ -33,7 +34,7 @@ void appear_enemy() {
   }
 }
 
-void mv_enemy() {
+void move_enemy(MixerManager &mixer_manager) {
   double speed = 6;
   double shot_pitch = 20;
 
@@ -77,13 +78,13 @@ void mv_enemy() {
         }
         double rot_angle = shot_pitch * M_PI / 180;
         rot_vec(&vec, rot_angle);
-        Mix_PlayChannel(-1, Se[1], 0);
+        Mix_PlayChannel(-1, mixer_manager.get_se(se_type::enemy_shoot), 0);
       }
     }
   }
 }
 
-void mv_enemy_shot() {
+void move_enemy_shot() {
   for (int i = 0; i < ENEMY_SHOT_MAX; ++i) {
     if (!Enemy_shot[i].view) {
       continue;

@@ -1,8 +1,9 @@
 #ifndef FIGHTER_H
 #define FIGHTER_H
 
-#include "vector.hpp"
 #include "input_manager.hpp"
+#include "mixer_manager.hpp"
+#include "vector.hpp"
 
 struct Fighter_data {
   Vector pos;
@@ -10,7 +11,7 @@ struct Fighter_data {
 };
 
 void init_fighter();
-void move_fighter(InputManager &input_manager);
+void move_fighter(InputManager &input_manager, MixerManager &mixer_manager);
 void move_fighter_shot();
 void check_enemyshots_hit_mychara();
 void draw_fighter();

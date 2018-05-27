@@ -2,6 +2,7 @@
 #include "def_global.hpp"
 #include "image_manager.hpp"
 #include "input_manager.hpp"
+#include "mixer_manager.hpp"
 #include "util.hpp"
 
 void init_fighter() {
@@ -13,7 +14,7 @@ void init_fighter() {
   }
 }
 
-void move_fighter(InputManager &input_manager) {
+void move_fighter(InputManager &input_manager, MixerManager &mixer_manager) {
   double move_speed = 4.0;
 
   if (input_manager.press_key_p(input_device::up)) {
@@ -54,7 +55,7 @@ void move_fighter(InputManager &input_manager) {
         add_vec(&Fighter_shot[i].pos, &Fighter.pos, &pos);
         Fighter_shot[i].move.x = 0;
         Fighter_shot[i].move.y = -shot_speed;
-        Mix_PlayChannel(-1, Se[0], 0);
+        Mix_PlayChannel(-1, mixer_manager.get_se(se_type::fighter_shoot), 0);
         break;
       }
       Fighter.shot_timer = 8;

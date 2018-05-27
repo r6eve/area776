@@ -3,6 +3,7 @@
 
 #include "def_global.hpp"
 #include "input_manager.hpp"
+#include "mixer_manager.hpp"
 #include "wipe.hpp"
 
 class Area776 {
@@ -10,12 +11,12 @@ class Area776 {
 
   Wipe wipe_;
   InputManager input_manager_;
+  MixerManager mixer_manager_;
 
  public:
   Area776(const bool debug_mode) noexcept : debug_mode_(debug_mode) {}
   bool init();
   bool init_sdl();
-  bool init_audio();
   bool init_font();
   bool init_game();
   void main_loop();
@@ -31,7 +32,6 @@ class Area776 {
   void draw_fps();
   void end();
   void draw_map();
-  void end_audio();
   void draw_translucence();
   ~Area776() {}
 };

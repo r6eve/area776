@@ -19,7 +19,7 @@ enum {
 }  // namespace input_device
 
 class InputManager {
-  SDL_Joystick *joystick_;
+  SDL_Joystick *joystick_ = nullptr;
   bool press_key_[input_device::count];
   bool edge_key_[input_device::count];
 

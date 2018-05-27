@@ -26,19 +26,17 @@ static int Blink_count;
 bool Area776::init() {
   if (!init_sdl()) {
     return false;
-  } else if (!init_audio()) {
-    end();
-    return false;
-  } else if (!init_font()) {
-    end();
-    return false;
-  } else if (!init_game()) {
-    end();
-    return false;
-  } else {
-    init_color();
-    return true;
   }
+  if (!init_font()) {
+    end();
+    return false;
+  }
+  if (!init_game()) {
+    end();
+    return false;
+  }
+  init_color();
+  return true;
 }
 
 bool Area776::init_sdl() {
@@ -57,27 +55,6 @@ bool Area776::init_sdl() {
     return false;
   }
   SDL_ShowCursor(SDL_DISABLE);
-
-  return true;
-}
-
-bool Area776::init_audio() {
-  if (Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 1024) < 0) {
-    fprintf(stderr, "Can't initialize sdl_mixer. : %s\n", Mix_GetError());
-    return false;
-  }
-  if ((Music = Mix_LoadMUS("./data/batof2s.mp3")) == NULL) {
-    fprintf(stderr, "Can't load se. : %s\n", Mix_GetError());
-    return false;
-  }
-  if ((Se[MAIN_SHOT_SE] = Mix_LoadWAV("./data/tm2_wood001.wav")) == NULL) {
-    fprintf(stderr, "Can't load se. : %s\n", Mix_GetError());
-    return false;
-  }
-  if ((Se[ENEMY_SHOT_SE] = Mix_LoadWAV("./data/tm2_shoot003.wav")) == NULL) {
-    fprintf(stderr, "Can't load se. : %s\n", Mix_GetError());
-    return false;
-  }
 
   return true;
 }
@@ -207,7 +184,7 @@ void Area776::title() {
       Kanji_PutText(Screen, 240, 300, Font[FONT_SIZE_16], BLACK,
                     "P r e s s  S p a c e  K e y");
       wipe_.draw(Screen);
-      Mix_PlayMusic(Music, -1);
+      Mix_PlayMusic(mixer_manager_.get_music(), -1);
       if (wipe_.update()) {
         init_fighter();
         init_enemy();
@@ -228,7 +205,7 @@ void Area776::title() {
 }
 
 void Area776::game_start() {
-  move_fighter(input_manager_);
+  move_fighter(input_manager_, mixer_manager_);
   move_fighter_shot();
   draw_map();
   draw_fighter();
@@ -261,15 +238,15 @@ void Area776::game_start() {
 }
 
 void Area776::play_game() {
-  move_fighter(input_manager_);
+  move_fighter(input_manager_, mixer_manager_);
   move_fighter_shot();
   check_enemyshots_hit_mychara(); /* do GameSelect = GAME_STATE_OVER;  */
   update_effect();
   draw_map();
   if (Enemy_select == ENEMY_1) {
     appear_enemy();
-    mv_enemy();
-    mv_enemy_shot();
+    move_enemy(mixer_manager_);
+    move_enemy_shot();
     check_myshots_hit_enemy(); /* do Enemy_select = BOSS_1; */
     update_bg();
     draw_bg();
@@ -293,8 +270,8 @@ void Area776::play_game() {
       ++Game_count;
       ++Blink_count;
     } else {
-      mv_boss();
-      mv_boss_shot();
+      move_boss(mixer_manager_);
+      move_boss_shot();
 
       /* In this function, Game_state = GAME_STATE_CLEAR; Game_count = 0 */
       check_myshots_hit_boss();
@@ -310,7 +287,7 @@ void Area776::play_game() {
 }
 
 void Area776::game_clear() {
-  move_fighter(input_manager_);
+  move_fighter(input_manager_, mixer_manager_);
   move_fighter_shot();
   draw_map();
   draw_fighter();
@@ -456,7 +433,6 @@ void Area776::end() {
   for (int i = 0; i < NUM_FONT; ++i) {
     Kanji_CloseFont(Font[i]);
   }
-  end_audio();
   SDL_Quit();
 }
 
@@ -464,16 +440,6 @@ void Area776::draw_map() {
   SDL_Surface *pSurface = get_img("map");
   SDL_Rect dst = {0, 0};
   SDL_BlitSurface(pSurface, NULL, Screen, &dst);
-}
-
-void Area776::end_audio() {
-  Mix_HaltMusic();
-  Mix_HaltChannel(-1);
-  for (int i = 0; i < NUM_SE; ++i) {
-    Mix_FreeChunk(Se[i]);
-  }
-  Mix_FreeMusic(Music);
-  Mix_CloseAudio();
 }
 
 void Area776::draw_translucence() {

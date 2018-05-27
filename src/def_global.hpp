@@ -22,6 +22,7 @@ const int EFFECT_MAX = 64;
 const int OFFSET_Y = 48;
 const int BOSS_SHOT_MAX = 256;
 
+// TODO:
 enum {
   MAIN_SHOT_SE = 0,
   ENEMY_SHOT_SE,

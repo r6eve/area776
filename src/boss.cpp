@@ -1,6 +1,7 @@
+#include <SDL/SDL_mixer.h>
 #include "def_global.hpp"
 #include "image_manager.hpp"
-#include <SDL/SDL_mixer.h>
+#include "mixer_manager.hpp"
 #include "util.hpp"
 
 void init_boss() {
@@ -13,7 +14,7 @@ void init_boss() {
   }
 }
 
-void mv_boss() {
+void move_boss(MixerManager &mixer_manager) {
   Boss.x += Boss.move;
   if (Boss.x < 0) {
     Boss.x = 0;
@@ -88,7 +89,7 @@ void mv_boss() {
         Boss_shot[i].count = 0;
         Boss_shot[i].rot = 0;
       }
-      Mix_PlayChannel(-1, Se[1], 0);
+      Mix_PlayChannel(-1, mixer_manager.get_se(se_type::enemy_shoot), 0);
       Boss.shot_count = 0;
       Boss.shot_rot = 0;
       if (Boss.state == BOSS_STATE_ATTACK_01) {
@@ -101,7 +102,7 @@ void mv_boss() {
   }
 }
 
-void mv_boss_shot() {
+void move_boss_shot() {
   for (int i = 0; i < BOSS_SHOT_MAX; ++i) {
     if (!Boss_shot[i].view) {
       continue;
