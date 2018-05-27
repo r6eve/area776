@@ -1,4 +1,6 @@
 #include "def_global.hpp"
+#include "image_manager.hpp"
+#include "bg.hpp"
 
 static Snow_data Snow[NUM_SNOW];
 

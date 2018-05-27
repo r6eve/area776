@@ -2,22 +2,13 @@
 #define DEF_GLOBAL_H
 
 #include <SDL/SDL.h>
-#include <SDL/SDL_image.h>
 #include <SDL/SDL_mixer.h>
 #include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-#include "SDL_kanji.hpp"
-#include "bg.hpp"
 #include "boss.hpp"
 #include "effect.hpp"
 #include "enemy.hpp"
 #include "fighter.hpp"
-#include "image_manager.hpp"
-#include "input.hpp"
 #include "vector.hpp"
-#include "wipe.hpp"
 
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;

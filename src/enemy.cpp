@@ -1,4 +1,6 @@
 #include "def_global.hpp"
+#include "image_manager.hpp"
+#include <SDL/SDL_mixer.h>
 
 void init_enemy() {
   for (int i = 0; i < ENEMY_MAX; ++i) {

@@ -1,4 +1,5 @@
 #include "def_global.hpp"
+#include "image_manager.hpp"
 
 void init_effect() {
   for (int i = 0; i < EFFECT_MAX; ++i) {

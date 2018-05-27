@@ -1,6 +1,23 @@
 #define MAIN
 
+#include "def_global.hpp"
 #include "area776.hpp"
+#include "image_manager.hpp"
+#include <SDL/SDL_mixer.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include "SDL_kanji.hpp"
+#include "bg.hpp"
+#include "boss.hpp"
+#include "effect.hpp"
+#include "enemy.hpp"
+#include "fighter.hpp"
+#include "image_manager.hpp"
+#include "input.hpp"
+#include "vector.hpp"
+#include "wipe.hpp"
 
 static Kanji_Font *Font[2];
 enum { FONT_SIZE_16, FONT_SIZE_24, NUM_FONT };

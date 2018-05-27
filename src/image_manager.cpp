@@ -1,7 +1,9 @@
 #include <SDL/SDL_image.h>
 #include <string.h>
 #include <new>
-#include "def_global.hpp"
+#include <SDL/SDL_image.h>
+#include <stdio.h>
+#include "image_manager.hpp"
 using namespace std;
 
 // #define DEBUG
