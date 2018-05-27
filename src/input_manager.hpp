@@ -41,7 +41,8 @@ class InputManager {
           SDL_JoystickGetButton(joystick_, 0) == SDL_PRESSED;
       new_press_key[input_device::x] =
           SDL_JoystickGetButton(joystick_, 1) == SDL_PRESSED;
-      new_press_key[input_device::up] = SDL_JoystickGetAxis(joystick_, 1) < -256;
+      new_press_key[input_device::up] =
+          SDL_JoystickGetAxis(joystick_, 1) < -256;
       new_press_key[input_device::down] =
           SDL_JoystickGetAxis(joystick_, 1) > 256;
       new_press_key[input_device::left] =
