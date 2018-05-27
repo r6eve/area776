@@ -23,7 +23,7 @@ static Kanji_Font *Font[2];
 enum { FONT_SIZE_16, FONT_SIZE_24, NUM_FONT };
 static int Blink_count;
 
-bool init() {
+bool Area776::init() {
   if (!init_sdl()) {
     return false;
   } else if (!init_audio()) {
@@ -42,7 +42,7 @@ bool init() {
   }
 }
 
-bool init_sdl() {
+bool Area776::init_sdl() {
   if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
     fprintf(stderr, "Can't initialize sdl. : %s\n", SDL_GetError());
     return false;
@@ -62,7 +62,7 @@ bool init_sdl() {
   return true;
 }
 
-bool init_audio() {
+bool Area776::init_audio() {
   if (Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 1024) < 0) {
     fprintf(stderr, "Can't initialize sdl_mixer. : %s\n", Mix_GetError());
     return false;
@@ -83,7 +83,7 @@ bool init_audio() {
   return true;
 }
 
-bool init_font() {
+bool Area776::init_font() {
   Font[FONT_SIZE_16] = Kanji_OpenFont("./data/jiskan16.bdf", 16);
   Kanji_AddFont(Font[FONT_SIZE_16], "./data/8x16.bdf");
   Font[FONT_SIZE_24] = Kanji_OpenFont("./data/jiskan24.bdf", 24);
@@ -100,7 +100,7 @@ bool init_font() {
   return true;
 }
 
-bool init_game() {
+bool Area776::init_game() {
   if (!load_img("./data/fighter.png", "fighter")) {
     return false;
   }
@@ -132,7 +132,7 @@ bool init_game() {
   return true;
 }
 
-void main_loop() {
+void Area776::main_loop() {
   for (;;) {
     update_input();
     switch (Game_state) {
@@ -166,7 +166,7 @@ void main_loop() {
   }
 }
 
-void title() {
+void Area776::title() {
   SDL_Rect dst_back = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
   Uint32 col = 0xffffffff;
   SDL_FillRect(Screen, &dst_back, col);
@@ -228,7 +228,7 @@ void title() {
   }
 }
 
-void game_start() {
+void Area776::game_start() {
   mv_fighter();
   mv_fighter_shot();
   draw_map();
@@ -261,7 +261,7 @@ void game_start() {
   }
 }
 
-void play_game() {
+void Area776::play_game() {
   mv_fighter();
   mv_fighter_shot();
   check_enemyshots_hit_mychara(); /* do GameSelect = GAME_STATE_OVER;  */
@@ -310,7 +310,7 @@ void play_game() {
   draw_life();
 }
 
-void game_clear() {
+void Area776::game_clear() {
   mv_fighter();
   mv_fighter_shot();
   draw_map();
@@ -359,7 +359,7 @@ void game_clear() {
   }
 }
 
-void game_over() {
+void Area776::game_over() {
   Kanji_PutText(Screen, 222, 150, Font[FONT_SIZE_24], RED, "G a m e O v e r");
   ++Game_count;
   if (Game_count > 200) {
@@ -373,7 +373,7 @@ void game_over() {
   }
 }
 
-void game_pause() {
+void Area776::game_pause() {
   draw_map();
   if (Enemy_select == ENEMY_1) {
     draw_bg();
@@ -393,7 +393,7 @@ void game_pause() {
   }
 }
 
-void draw_life() {
+void Area776::draw_life() {
   if (Enemy_select == ENEMY_1) {
     Kanji_PutText(Screen, 32, 24, Font[FONT_SIZE_16], RED, "Enemy_life %d",
                   30 - Enemy_life);
@@ -405,7 +405,7 @@ void draw_life() {
                 WHITE, "Life %d", Chara_life);
 }
 
-bool poll_event() {
+bool Area776::poll_event() {
   SDL_Event event;
 
   while (SDL_PollEvent(&event)) {
@@ -422,7 +422,7 @@ bool poll_event() {
   return true;
 }
 
-void wait_game() {
+void Area776::wait_game() {
   static Uint32 pre_count;
   double wait_time = 1000.0 / MAX_FPS;
   Uint32 wait_count = (wait_time + 0.5);
@@ -437,7 +437,7 @@ void wait_game() {
   pre_count = SDL_GetTicks();
 }
 
-void draw_fps() {
+void Area776::draw_fps() {
   static Uint32 pre_count;
   Uint32 now_count = SDL_GetTicks();
   if (pre_count) {
@@ -452,7 +452,7 @@ void draw_fps() {
   pre_count = now_count;
 }
 
-void end() {
+void Area776::end() {
   del_all_img();
   for (int i = 0; i < NUM_FONT; ++i) {
     Kanji_CloseFont(Font[i]);
@@ -462,22 +462,13 @@ void end() {
   SDL_Quit();
 }
 
-void draw_map() {
+void Area776::draw_map() {
   SDL_Surface *pSurface = get_img("map");
   SDL_Rect dst = {0, 0};
   SDL_BlitSurface(pSurface, NULL, Screen, &dst);
 }
 
-bool check_hit_rect(SDL_Rect *a, SDL_Rect *b) {
-  if (((a->x) < (b->x + b->w)) && ((b->x) < (a->x + a->w)) &&
-      ((a->y) < (b->y + b->h)) && ((b->y) < (a->y + a->h))) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
-void end_audio() {
+void Area776::end_audio() {
   Mix_HaltMusic();
   Mix_HaltChannel(-1);
   for (int i = 0; i < NUM_SE; ++i) {
@@ -487,7 +478,7 @@ void end_audio() {
   Mix_CloseAudio();
 }
 
-void draw_translucence() {
+void Area776::draw_translucence() {
   Uint32 rmask, gmask, bmask;
   Uint8 alpha = 128;
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN

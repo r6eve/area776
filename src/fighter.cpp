@@ -1,6 +1,7 @@
 #include "def_global.hpp"
 #include "image_manager.hpp"
 #include <SDL/SDL_mixer.h>
+#include "util.hpp"
 
 void init_fighter() {
   Fighter.pos.x = 280;
