@@ -2,6 +2,7 @@
 #define EFFECT_H
 
 #include "vector.hpp"
+#include "image_manager.hpp"
 
 struct Effect_data {
   bool view;
@@ -11,6 +12,6 @@ struct Effect_data {
 
 void init_effect();
 void update_effect();
-void draw_effect();
+void draw_effect(ImageManager &image_manager);
 
 #endif

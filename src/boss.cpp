@@ -159,18 +159,18 @@ void check_myshots_hit_boss() {
   }
 }
 
-void draw_boss() {
-  SDL_Surface *p_surface = get_img("boss");
+void draw_boss(ImageManager &image_manager) {
+  SDL_Surface *p_surface = image_manager.get(image::boss);
   SDL_Rect dst = {Boss.x, Boss.y};
   SDL_BlitSurface(p_surface, NULL, Screen, &dst);
 }
 
-void draw_boss_shot() {
+void draw_boss_shot(ImageManager &image_manager) {
   for (int i = 0; i < BOSS_SHOT_MAX; ++i) {
     if (!Boss_shot[i].view) {
       continue;
     }
-    SDL_Surface *p_surface = get_img("bm01");
+    SDL_Surface *p_surface = image_manager.get(image::bm01);
     SDL_Rect dst = {Boss_shot[i].pos.x, Boss_shot[i].pos.y};
     SDL_BlitSurface(p_surface, NULL, Screen, &dst);
   }

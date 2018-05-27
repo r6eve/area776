@@ -14,7 +14,7 @@ void init_fighter();
 void move_fighter(InputManager &input_manager, MixerManager &mixer_manager);
 void move_fighter_shot();
 void check_enemyshots_hit_mychara();
-void draw_fighter();
-void draw_fighter_shot();
+void draw_fighter(ImageManager &image_manager);
+void draw_fighter_shot(ImageManager &image_manager);
 
 #endif

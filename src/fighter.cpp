@@ -133,14 +133,14 @@ void check_enemyshots_hit_mychara() {
   }
 }
 
-void draw_fighter() {
-  SDL_Surface *p_surface = get_img("fighter");
+void draw_fighter(ImageManager &image_manager) {
+  SDL_Surface *p_surface = image_manager.get(image::fighter);
   SDL_Rect dst = {Fighter.pos.x, Fighter.pos.y};
   SDL_BlitSurface(p_surface, NULL, Screen, &dst);
 }
 
-void draw_fighter_shot() {
-  SDL_Surface *p_surface = get_img("oval_re");
+void draw_fighter_shot(ImageManager &image_manager) {
+  SDL_Surface *p_surface = image_manager.get(image::oval_re);
 
   for (int i = 0; i < FIGHTER_SHOT_MAX; ++i) {
     if (!Fighter_shot[i].view) {

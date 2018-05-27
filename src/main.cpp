@@ -61,9 +61,7 @@ int main(int argc, char **argv) {
   Area776 game(debug_mode);
   if (!game.init()) {
     exit(EXIT_FAILURE);
-  } else {
-    game.main_loop();
-    game.end();
-    exit(EXIT_SUCCESS);
   }
+  game.main_loop();
+  exit(EXIT_SUCCESS);
 }

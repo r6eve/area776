@@ -28,13 +28,13 @@ bool Area776::init() {
     return false;
   }
   if (!init_font()) {
-    end();
     return false;
   }
-  if (!init_game()) {
-    end();
-    return false;
-  }
+
+  Game_count = 0;
+  Game_state = GAME_STATE_TITLE;
+  Blink_count = 0;
+
   init_color();
   return true;
 }
@@ -79,44 +79,12 @@ bool Area776::init_font() {
   return true;
 }
 
-bool Area776::init_game() {
-  if (!load_img("./data/fighter.png", "fighter")) {
-    return false;
-  }
-  if (!load_img("./data/mons13.png", "mons13")) {
-    return false;
-  }
-  if (!load_img("./data/boss.png", "boss")) {
-    return false;
-  }
-  if (!load_img("./data/oval_re.png", "oval_re")) {
-    return false;
-  }
-  if (!load_img("./data/bm01.png", "bm01")) {
-    return false;
-  }
-  if (!load_img("./data/effect01.png", "effect01")) {
-    return false;
-  }
-  if (!load_img("./data/snow.png", "snow")) {
-    return false;
-  }
-  if (!load_img("./data/72.png", "map")) {
-    return false;
-  }
-  Game_count = 0;
-  Game_state = GAME_STATE_TITLE;
-  Blink_count = 0;
-
-  return true;
-}
-
 void Area776::main_loop() {
   for (;;) {
     input_manager_.update();
     switch (Game_state) {
       case GAME_STATE_TITLE:
-        title();
+        game_title();
         break;
       case GAME_STATE_START:
         game_start();
@@ -145,10 +113,10 @@ void Area776::main_loop() {
   }
 }
 
-void Area776::title() {
+void Area776::game_title() {
   SDL_Rect dst_back = {0, 0, screen::width, screen::height};
-  Uint32 col = 0xffffffff;
-  SDL_FillRect(Screen, &dst_back, col);
+  Uint32 bg_col = 0x504a33;
+  SDL_FillRect(Screen, &dst_back, bg_col);
   switch (Game_count) {
     case 0:
       wipe_.set_wipe_in();
@@ -168,11 +136,10 @@ void Area776::title() {
       Kanji_PutText(Screen, 240, 300, Font[FONT_SIZE_16], BLACK,
                     "P r e s s  S p a c e  K e y");
       ++Blink_count;
-      if (Blink_count >= 20) {
+      if (Blink_count >= 30) {
         SDL_Rect dst_back = {240, 300, screen::width - 240, screen::height - 300};
-        Uint32 col = 0xffffffff;
-        SDL_FillRect(Screen, &dst_back, col);
-        if (Blink_count >= 40) {
+        SDL_FillRect(Screen, &dst_back, bg_col);
+        if (Blink_count >= 60) {
           Blink_count = 0;
         }
       }
@@ -211,8 +178,8 @@ void Area776::game_start() {
   move_fighter(input_manager_, mixer_manager_);
   move_fighter_shot();
   draw_map();
-  draw_fighter();
-  draw_fighter_shot();
+  draw_fighter(image_manager_);
+  draw_fighter_shot(image_manager_);
 
   if (Game_count == 0) {
     wipe_.set_wipe_in();
@@ -252,9 +219,9 @@ void Area776::play_game() {
     move_enemy_shot();
     check_myshots_hit_enemy(); /* do Enemy_select = BOSS_1; */
     update_bg();
-    draw_bg();
-    draw_enemy();
-    draw_enemy_shot();
+    draw_bg(image_manager_);
+    draw_enemy(image_manager_);
+    draw_enemy_shot(image_manager_);
   } else if (Enemy_select == BOSS_1) {
     if ((Game_count < 130) && (Blink_count < 20)) {
       Kanji_PutText(Screen, 272, 232, Font[FONT_SIZE_24], RED, "B O O S  %d",
@@ -279,13 +246,13 @@ void Area776::play_game() {
       /* In this function, Game_state = GAME_STATE_CLEAR; Game_count = 0 */
       check_myshots_hit_boss();
 
-      draw_boss();
-      draw_boss_shot();
+      draw_boss(image_manager_);
+      draw_boss_shot(image_manager_);
     }
   }
-  draw_fighter_shot();
-  draw_fighter();
-  draw_effect();
+  draw_fighter_shot(image_manager_);
+  draw_fighter(image_manager_);
+  draw_effect(image_manager_);
   draw_life();
 }
 
@@ -293,8 +260,8 @@ void Area776::game_clear() {
   move_fighter(input_manager_, mixer_manager_);
   move_fighter_shot();
   draw_map();
-  draw_fighter();
-  draw_fighter_shot();
+  draw_fighter(image_manager_);
+  draw_fighter_shot(image_manager_);
   draw_life();
 
   if (Game_count == 0) {
@@ -353,16 +320,16 @@ void Area776::game_over() {
 void Area776::game_pause() {
   draw_map();
   if (Enemy_select == ENEMY_1) {
-    draw_bg();
-    draw_enemy();
-    draw_enemy_shot();
+    draw_bg(image_manager_);
+    draw_enemy(image_manager_);
+    draw_enemy_shot(image_manager_);
   } else if (Enemy_select == BOSS_1) {
-    draw_boss();
-    draw_boss_shot();
+    draw_boss(image_manager_);
+    draw_boss_shot(image_manager_);
   }
-  draw_fighter_shot();
-  draw_fighter();
-  draw_effect();
+  draw_fighter_shot(image_manager_);
+  draw_fighter(image_manager_);
+  draw_effect(image_manager_);
   draw_life();
   draw_translucence();
   if (input_manager_.edge_key_p(input_device::space)) {
@@ -429,16 +396,8 @@ void Area776::draw_fps() {
   pre_count = now_count;
 }
 
-void Area776::end() {
-  del_all_img();
-  for (int i = 0; i < NUM_FONT; ++i) {
-    Kanji_CloseFont(Font[i]);
-  }
-  SDL_Quit();
-}
-
 void Area776::draw_map() {
-  SDL_Surface *pSurface = get_img("map");
+  SDL_Surface *pSurface = image_manager_.get(image::map);
   SDL_Rect dst = {0, 0};
   SDL_BlitSurface(pSurface, NULL, Screen, &dst);
 }

@@ -33,12 +33,12 @@ void update_bg() {
   }
 }
 
-void draw_bg() {
+void draw_bg(ImageManager &image_manager) {
   for (int i = 0; i < NUM_SNOW; ++i) {
     if (!Snow[i].view) {
       continue;
     }
-    SDL_Surface *p_surface = get_img("snow");
+    SDL_Surface *p_surface = image_manager.get(image::snow);
     SDL_Rect src = {8 * Snow[i].type, 0, 8, 8};
     SDL_Rect dst = {Snow[i].x, Snow[i].y};
     SDL_BlitSurface(p_surface, &src, Screen, &dst);

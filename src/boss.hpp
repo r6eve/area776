@@ -1,6 +1,7 @@
 #ifndef BOSS_H
 #define BOSS_H
 
+#include "image_manager.hpp"
 #include "mixer_manager.hpp"
 #include "vector.hpp"
 
@@ -25,7 +26,7 @@ void init_boss();
 void move_boss(MixerManager &mixer_manager);
 void move_boss_shot();
 void check_myshots_hit_boss();
-void draw_boss();
-void draw_boss_shot();
+void draw_boss(ImageManager &image_manager);
+void draw_boss_shot(ImageManager &image_manager);
 
 #endif

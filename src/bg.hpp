@@ -1,6 +1,8 @@
 #ifndef BG_H
 #define BG_H
 
+#include "image_manager.hpp"
+
 struct Snow_data {
   bool view;
   int x;
@@ -10,6 +12,6 @@ struct Snow_data {
 
 void init_bg();
 void update_bg();
-void draw_bg();
+void draw_bg(ImageManager &image_manager);
 
 #endif
