@@ -2,13 +2,14 @@
 
 #include "area776.hpp"
 #include <SDL/SDL_mixer.h>
+#include <iomanip>
+#include <sstream>
 #include "def_global.hpp"
 #include "image_manager.hpp"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include "SDL_kanji.hpp"
 #include "bg.hpp"
 #include "boss.hpp"
 #include "effect.hpp"
@@ -19,23 +20,16 @@
 #include "vector.hpp"
 #include "wipe.hpp"
 
-static Kanji_Font *Font[2];
-enum { FONT_SIZE_16, FONT_SIZE_24, NUM_FONT };
 static int Blink_count;
 
 bool Area776::init() {
   if (!init_sdl()) {
     return false;
   }
-  if (!init_font()) {
-    return false;
-  }
-
   Game_count = 0;
   Game_state = GAME_STATE_TITLE;
   Blink_count = 0;
 
-  init_color();
   return true;
 }
 
@@ -47,10 +41,10 @@ bool Area776::init_sdl() {
   SDL_WM_SetCaption("SDL_SHOOTING", NULL);
   if (debug_mode_) {
     screen_ = SDL_SetVideoMode(screen::width, screen::height, screen::bpp,
-                              SDL_HWSURFACE | SDL_DOUBLEBUF);
+                               SDL_HWSURFACE | SDL_DOUBLEBUF);
   } else {
     screen_ = SDL_SetVideoMode(screen::width, screen::height, screen::bpp,
-                              SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_FULLSCREEN);
+                               SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_FULLSCREEN);
   }
   if (!screen_) {
     fprintf(stderr, "Can't initialize screen. : %s\n", SDL_GetError());
@@ -58,23 +52,6 @@ bool Area776::init_sdl() {
     return false;
   }
   SDL_ShowCursor(SDL_DISABLE);
-
-  return true;
-}
-
-bool Area776::init_font() {
-  Font[FONT_SIZE_16] = Kanji_OpenFont("./data/jiskan16.bdf", 16);
-  Kanji_AddFont(Font[FONT_SIZE_16], "./data/8x16.bdf");
-  Font[FONT_SIZE_24] = Kanji_OpenFont("./data/jiskan24.bdf", 24);
-  Kanji_AddFont(Font[FONT_SIZE_24], "./data/12x24.bdf");
-  for (int i = 0; i < NUM_FONT; ++i) {
-    if (Font[i] == NULL) {
-      fprintf(stderr, "Can't initialize Font[%d]. : %s\n", i, SDL_GetError());
-      return false;
-    } else {
-      Kanji_SetCodingSystem(Font[i], KANJI_UTF8);
-    }
-  }
 
   return true;
 }
@@ -115,29 +92,32 @@ void Area776::main_loop() {
 
 void Area776::game_title() {
   SDL_Rect dst_back = {0, 0, screen::width, screen::height};
-  Uint32 bg_col = 0x504a33;
+  Uint32 bg_col = 0x45402b;
   SDL_FillRect(screen_, &dst_back, bg_col);
+  const Point title_pos = Point{160, 180};
+  const Point message_pos = Point{210, 300};
+  const char *title_str = "A  r  e  a  7  7  6";
+  const char *message_str = "P r e s s  S p a c e  K e y";
   switch (Game_count) {
     case 0:
       wipe_.set_wipe_in();
       ++Game_count;
       break;
     case 1:
-      Kanji_PutText(screen_, 160, 180, Font[FONT_SIZE_24], BLACK,
-                    "S H O O T I N G - G A M E");
+      draw_text(font_size::x36, rgb::dark_red, title_pos, title_str);
       wipe_.draw(screen_);
       if (wipe_.update()) {
         ++Game_count;
       }
       break;
     case 2:
-      Kanji_PutText(screen_, 160, 180, Font[FONT_SIZE_24], BLACK,
-                    "S H O O T I N G - G A M E");
-      Kanji_PutText(screen_, 240, 300, Font[FONT_SIZE_16], BLACK,
-                    "P r e s s  S p a c e  K e y");
+      draw_text(font_size::x36, rgb::dark_red, title_pos, title_str);
+      draw_text(font_size::x16, rgb::black, message_pos, message_str);
       ++Blink_count;
       if (Blink_count >= 30) {
-        SDL_Rect dst_back = {240, 300, screen::width - 240, screen::height - 300};
+        SDL_Rect dst_back = {static_cast<Sint16>(message_pos.x),
+                             static_cast<Sint16>(message_pos.y),
+                             screen::width - 240, screen::height - 300};
         SDL_FillRect(screen_, &dst_back, bg_col);
         if (Blink_count >= 60) {
           Blink_count = 0;
@@ -149,13 +129,11 @@ void Area776::game_title() {
       }
       break;
     case 3:
-      Kanji_PutText(screen_, 160, 180, Font[FONT_SIZE_24], BLACK,
-                    "S H O O T I N G - G A M E");
-      Kanji_PutText(screen_, 240, 300, Font[FONT_SIZE_16], BLACK,
-                    "P r e s s  S p a c e  K e y");
+      draw_text(font_size::x36, rgb::dark_red, title_pos, title_str);
+      draw_text(font_size::x16, rgb::black, message_pos, message_str);
       wipe_.draw(screen_);
-      Mix_PlayMusic(mixer_manager_.get_music(), -1);
       if (wipe_.update()) {
+        Mix_PlayMusic(mixer_manager_.get_music(), -1);
         init_fighter();
         init_enemy();
         init_effect();
@@ -195,10 +173,11 @@ void Area776::game_start() {
   }
 
   if (Game_count < 130) {
-    Kanji_PutText(screen_, 272, 232, Font[FONT_SIZE_16], RED, "S t a g e %d",
-                  Game_level);
+    std::stringstream ss;
+    ss << "S t a g e " << Game_level;
+    draw_text(font_size::x36, rgb::red, Point{210, 180}, ss.str().c_str());
   } else if (Game_count < 200) {
-    Kanji_PutText(screen_, 284, 232, Font[FONT_SIZE_16], RED, "S t a r t");
+    draw_text(font_size::x36, rgb::red, Point{220, 180}, "S t a r t");
   }
 
   if (Game_count > 220) {
@@ -224,8 +203,9 @@ void Area776::play_game() {
     draw_enemy_shot(screen_, image_manager_);
   } else if (Enemy_select == BOSS_1) {
     if ((Game_count < 130) && (Blink_count < 20)) {
-      Kanji_PutText(screen_, 272, 232, Font[FONT_SIZE_24], RED, "B O O S  %d",
-                    Game_level);
+      std::stringstream ss;
+      ss << "B O O S  " << Game_level;
+      draw_text(font_size::x36, rgb::red, Point{210, 180}, ss.str().c_str());
       ++Game_count;
       ++Blink_count;
       if (Blink_count >= 20) {
@@ -275,10 +255,8 @@ void Area776::game_clear() {
         SDL_Rect dst_back = {0, 0, screen::width, screen::height};
         Uint32 col = 0xffffffff;
         SDL_FillRect(screen_, &dst_back, col);
-        Kanji_PutText(screen_, 200, 160, Font[FONT_SIZE_24], BLACK,
-                      "G A M E  C L E A R");
-        Kanji_PutText(screen_, 200, 280, Font[FONT_SIZE_16], RED,
-                      "C o n g r a t u l a t i o n s");
+        draw_text(font_size::x36, rgb::red, Point{200, 180},
+                  "G A M E  C L E A R");
         ++Game_count;
         if (Game_count > 200) {
           wipe_.draw(screen_);
@@ -305,7 +283,7 @@ void Area776::game_clear() {
 }
 
 void Area776::game_over() {
-  Kanji_PutText(screen_, 222, 150, Font[FONT_SIZE_24], RED, "G a m e O v e r");
+  draw_text(font_size::x36, rgb::red, Point{200, 180}, "G a m e O v e r");
   ++Game_count;
   if (Game_count > 200) {
     wipe_.draw(screen_);
@@ -339,14 +317,20 @@ void Area776::game_pause() {
 
 void Area776::draw_life() {
   if (Enemy_select == ENEMY_1) {
-    Kanji_PutText(screen_, 32, 24, Font[FONT_SIZE_16], RED, "Enemy_life %d",
-                  30 - Enemy_life);
+    std::stringstream ss;
+    ss << "ENEMY LIFE:  " << 30 - Enemy_life;
+    draw_text(font_size::x16, rgb::white, Point{32, 24}, ss.str().c_str());
   } else if (Enemy_select == BOSS_1) {
-    Kanji_PutText(screen_, 32, 24, Font[FONT_SIZE_16], RED, "Boss_life %d",
-                  100 - Boss_life);
+    std::stringstream ss;
+    ss << "BOSS LIFE:  " << 100 - Boss_life;
+    draw_text(font_size::x16, rgb::white, Point{32, 24}, ss.str().c_str());
   }
-  Kanji_PutText(screen_, Fighter.pos.x, Fighter.pos.y + 55, Font[FONT_SIZE_16],
-                WHITE, "Life %d", Chara_life);
+  std::stringstream ss;
+  ss << "LIFE:  " << Chara_life;
+  draw_text(font_size::x16, rgb::white,
+            Point{static_cast<int>(Fighter.pos.x),
+                  static_cast<int>(Fighter.pos.y + 55)},
+            ss.str().c_str());
 }
 
 bool Area776::poll_event() {
@@ -390,8 +374,11 @@ void Area776::draw_fps() {
       interval = 1;
     }
     double frame_rate = 1000.0 / interval;
-    Kanji_PutText(screen_, screen::width - 140, 16, Font[FONT_SIZE_16], GREEN,
-                  "FrameRate[%0.2f]", frame_rate);
+    std::stringstream ss;
+    ss << "FrameRate[" << std::setprecision(2)
+       << std::setiosflags(std::ios::fixed) << frame_rate << "]";
+    draw_text(font_size::x16, rgb::green, Point{screen::width - 140, 16},
+              ss.str().c_str());
   }
   pre_count = now_count;
 }
@@ -427,7 +414,7 @@ void Area776::draw_translucence() {
   SDL_SetAlpha(trans_surface, SDL_SRCALPHA, alpha);
   SDL_BlitSurface(trans_surface, NULL, screen_, &dst_back);
   if (Blink_count < 30) {
-    Kanji_PutText(screen_, 240, 200, Font[FONT_SIZE_24], WHITE, "P a u s e");
+    draw_text(font_size::x36, rgb::white, Point{220, 180}, "P a u s e");
     ++Blink_count;
   } else if (Blink_count < 60) {
     ++Blink_count;

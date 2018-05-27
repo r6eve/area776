@@ -46,6 +46,8 @@ namespace rgb {
 
 const RGB black = RGB{0x00, 0x00, 0x00};
 const RGB red = RGB{0xff, 0x00, 0x00};
+const RGB dark_red = RGB{0xb0, 0x00, 0x00};
+const RGB green = RGB{0x00, 0xff, 0x00};
 const RGB white = RGB{0xff, 0xff, 0xff};
 
 }  // namespace rgb
@@ -91,7 +93,6 @@ class Area776 {
   Area776(const bool debug_mode) noexcept : debug_mode_(debug_mode) {}
   bool init();
   bool init_sdl();
-  bool init_font();
   void main_loop();
   void game_title();
   void game_start();
