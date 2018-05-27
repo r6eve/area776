@@ -136,24 +136,24 @@ void check_myshots_hit_enemy() {
   }
 }
 
-void draw_enemy(ImageManager &image_manager) {
+void draw_enemy(SDL_Surface *screen, ImageManager &image_manager) {
   for (int i = 0; i < ENEMY_MAX; ++i) {
     if (!Enemy[i].view) {
       continue;
     }
     SDL_Surface *p_surface = image_manager.get(image::mons13);
     SDL_Rect dst = {Enemy[i].pos.x, Enemy[i].pos.y};
-    SDL_BlitSurface(p_surface, NULL, Screen, &dst);
+    SDL_BlitSurface(p_surface, NULL, screen, &dst);
   }
 }
 
-void draw_enemy_shot(ImageManager &image_manager) {
+void draw_enemy_shot(SDL_Surface *screen, ImageManager &image_manager) {
   for (int i = 0; i < ENEMY_SHOT_MAX; ++i) {
     if (!Enemy_shot[i].view) {
       continue;
     }
     SDL_Surface *p_surface = image_manager.get(image::bm01);
     SDL_Rect dst = {Enemy_shot[i].pos.x, Enemy_shot[i].pos.y};
-    SDL_BlitSurface(p_surface, NULL, Screen, &dst);
+    SDL_BlitSurface(p_surface, NULL, screen, &dst);
   }
 }

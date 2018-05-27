@@ -12,6 +12,6 @@ struct Snow_data {
 
 void init_bg();
 void update_bg();
-void draw_bg(ImageManager &image_manager);
+void draw_bg(SDL_Surface *screen, ImageManager &image_manager);
 
 #endif

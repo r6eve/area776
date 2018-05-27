@@ -19,7 +19,7 @@ void update_effect() {
   }
 }
 
-void draw_effect(ImageManager &image_manager) {
+void draw_effect(SDL_Surface *screen, ImageManager &image_manager) {
   for (int i = 0; i < EFFECT_MAX; ++i) {
     if (!Effect[i].view) {
       continue;
@@ -28,6 +28,6 @@ void draw_effect(ImageManager &image_manager) {
     SDL_Surface *p_surface = image_manager.get(image::effect01);
     SDL_Rect src = {n % 4 * 160, n / 4 * 160, 160, 160};
     SDL_Rect dst = {Effect[i].pos.x, Effect[i].pos.y};
-    SDL_BlitSurface(p_surface, &src, Screen, &dst);
+    SDL_BlitSurface(p_surface, &src, screen, &dst);
   }
 }

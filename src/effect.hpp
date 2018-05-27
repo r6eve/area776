@@ -12,6 +12,6 @@ struct Effect_data {
 
 void init_effect();
 void update_effect();
-void draw_effect(ImageManager &image_manager);
+void draw_effect(SDL_Surface *screen, ImageManager &image_manager);
 
 #endif

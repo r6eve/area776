@@ -17,7 +17,7 @@ void appear_enemy();
 void move_enemy(MixerManager &mixer_manager);
 void move_enemy_shot();
 void check_myshots_hit_enemy();
-void draw_enemy(ImageManager &image_manager);
-void draw_enemy_shot(ImageManager &image_manager);
+void draw_enemy(SDL_Surface *screen, ImageManager &image_manager);
+void draw_enemy_shot(SDL_Surface *screen, ImageManager &image_manager);
 
 #endif

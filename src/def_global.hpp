@@ -63,7 +63,6 @@ struct Shot_data {
 #define GLOBAL extern
 #endif
 
-GLOBAL SDL_Surface *Screen;
 GLOBAL int Enemy_life;
 GLOBAL int Boss_life;
 GLOBAL int Chara_life;

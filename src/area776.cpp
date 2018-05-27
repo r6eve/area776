@@ -46,13 +46,13 @@ bool Area776::init_sdl() {
   }
   SDL_WM_SetCaption("SDL_SHOOTING", NULL);
   if (debug_mode_) {
-    Screen = SDL_SetVideoMode(screen::width, screen::height, screen::bpp,
+    screen_ = SDL_SetVideoMode(screen::width, screen::height, screen::bpp,
                               SDL_HWSURFACE | SDL_DOUBLEBUF);
   } else {
-    Screen = SDL_SetVideoMode(screen::width, screen::height, screen::bpp,
+    screen_ = SDL_SetVideoMode(screen::width, screen::height, screen::bpp,
                               SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_FULLSCREEN);
   }
-  if (!Screen) {
+  if (!screen_) {
     fprintf(stderr, "Can't initialize screen. : %s\n", SDL_GetError());
     SDL_Quit();
     return false;
@@ -108,7 +108,7 @@ void Area776::main_loop() {
     if (debug_mode_) {
       draw_fps();
     }
-    SDL_Flip(Screen);
+    SDL_Flip(screen_);
     wait_game();
   }
 }
@@ -116,29 +116,29 @@ void Area776::main_loop() {
 void Area776::game_title() {
   SDL_Rect dst_back = {0, 0, screen::width, screen::height};
   Uint32 bg_col = 0x504a33;
-  SDL_FillRect(Screen, &dst_back, bg_col);
+  SDL_FillRect(screen_, &dst_back, bg_col);
   switch (Game_count) {
     case 0:
       wipe_.set_wipe_in();
       ++Game_count;
       break;
     case 1:
-      Kanji_PutText(Screen, 160, 180, Font[FONT_SIZE_24], BLACK,
+      Kanji_PutText(screen_, 160, 180, Font[FONT_SIZE_24], BLACK,
                     "S H O O T I N G - G A M E");
-      wipe_.draw(Screen);
+      wipe_.draw(screen_);
       if (wipe_.update()) {
         ++Game_count;
       }
       break;
     case 2:
-      Kanji_PutText(Screen, 160, 180, Font[FONT_SIZE_24], BLACK,
+      Kanji_PutText(screen_, 160, 180, Font[FONT_SIZE_24], BLACK,
                     "S H O O T I N G - G A M E");
-      Kanji_PutText(Screen, 240, 300, Font[FONT_SIZE_16], BLACK,
+      Kanji_PutText(screen_, 240, 300, Font[FONT_SIZE_16], BLACK,
                     "P r e s s  S p a c e  K e y");
       ++Blink_count;
       if (Blink_count >= 30) {
         SDL_Rect dst_back = {240, 300, screen::width - 240, screen::height - 300};
-        SDL_FillRect(Screen, &dst_back, bg_col);
+        SDL_FillRect(screen_, &dst_back, bg_col);
         if (Blink_count >= 60) {
           Blink_count = 0;
         }
@@ -149,11 +149,11 @@ void Area776::game_title() {
       }
       break;
     case 3:
-      Kanji_PutText(Screen, 160, 180, Font[FONT_SIZE_24], BLACK,
+      Kanji_PutText(screen_, 160, 180, Font[FONT_SIZE_24], BLACK,
                     "S H O O T I N G - G A M E");
-      Kanji_PutText(Screen, 240, 300, Font[FONT_SIZE_16], BLACK,
+      Kanji_PutText(screen_, 240, 300, Font[FONT_SIZE_16], BLACK,
                     "P r e s s  S p a c e  K e y");
-      wipe_.draw(Screen);
+      wipe_.draw(screen_);
       Mix_PlayMusic(mixer_manager_.get_music(), -1);
       if (wipe_.update()) {
         init_fighter();
@@ -178,15 +178,15 @@ void Area776::game_start() {
   move_fighter(input_manager_, mixer_manager_);
   move_fighter_shot();
   draw_map();
-  draw_fighter(image_manager_);
-  draw_fighter_shot(image_manager_);
+  draw_fighter(screen_, image_manager_);
+  draw_fighter_shot(screen_, image_manager_);
 
   if (Game_count == 0) {
     wipe_.set_wipe_in();
-    wipe_.draw(Screen);
+    wipe_.draw(screen_);
     ++Game_count;
   } else if (Game_count == 1) {
-    wipe_.draw(Screen);
+    wipe_.draw(screen_);
     if (wipe_.update()) {
       ++Game_count;
     }
@@ -195,10 +195,10 @@ void Area776::game_start() {
   }
 
   if (Game_count < 130) {
-    Kanji_PutText(Screen, 272, 232, Font[FONT_SIZE_16], RED, "S t a g e %d",
+    Kanji_PutText(screen_, 272, 232, Font[FONT_SIZE_16], RED, "S t a g e %d",
                   Game_level);
   } else if (Game_count < 200) {
-    Kanji_PutText(Screen, 284, 232, Font[FONT_SIZE_16], RED, "S t a r t");
+    Kanji_PutText(screen_, 284, 232, Font[FONT_SIZE_16], RED, "S t a r t");
   }
 
   if (Game_count > 220) {
@@ -219,12 +219,12 @@ void Area776::play_game() {
     move_enemy_shot();
     check_myshots_hit_enemy(); /* do Enemy_select = BOSS_1; */
     update_bg();
-    draw_bg(image_manager_);
-    draw_enemy(image_manager_);
-    draw_enemy_shot(image_manager_);
+    draw_bg(screen_, image_manager_);
+    draw_enemy(screen_, image_manager_);
+    draw_enemy_shot(screen_, image_manager_);
   } else if (Enemy_select == BOSS_1) {
     if ((Game_count < 130) && (Blink_count < 20)) {
-      Kanji_PutText(Screen, 272, 232, Font[FONT_SIZE_24], RED, "B O O S  %d",
+      Kanji_PutText(screen_, 272, 232, Font[FONT_SIZE_24], RED, "B O O S  %d",
                     Game_level);
       ++Game_count;
       ++Blink_count;
@@ -246,13 +246,13 @@ void Area776::play_game() {
       /* In this function, Game_state = GAME_STATE_CLEAR; Game_count = 0 */
       check_myshots_hit_boss();
 
-      draw_boss(image_manager_);
-      draw_boss_shot(image_manager_);
+      draw_boss(screen_, image_manager_);
+      draw_boss_shot(screen_, image_manager_);
     }
   }
-  draw_fighter_shot(image_manager_);
-  draw_fighter(image_manager_);
-  draw_effect(image_manager_);
+  draw_fighter_shot(screen_, image_manager_);
+  draw_fighter(screen_, image_manager_);
+  draw_effect(screen_, image_manager_);
   draw_life();
 }
 
@@ -260,28 +260,28 @@ void Area776::game_clear() {
   move_fighter(input_manager_, mixer_manager_);
   move_fighter_shot();
   draw_map();
-  draw_fighter(image_manager_);
-  draw_fighter_shot(image_manager_);
+  draw_fighter(screen_, image_manager_);
+  draw_fighter_shot(screen_, image_manager_);
   draw_life();
 
   if (Game_count == 0) {
     wipe_.set_wipe_out();
-    wipe_.draw(Screen);
+    wipe_.draw(screen_);
     ++Game_count;
   } else if (Game_count >= 1) {
-    wipe_.draw(Screen);
+    wipe_.draw(screen_);
     if (wipe_.update()) {
       if (Game_level == 1) {
         SDL_Rect dst_back = {0, 0, screen::width, screen::height};
         Uint32 col = 0xffffffff;
-        SDL_FillRect(Screen, &dst_back, col);
-        Kanji_PutText(Screen, 200, 160, Font[FONT_SIZE_24], BLACK,
+        SDL_FillRect(screen_, &dst_back, col);
+        Kanji_PutText(screen_, 200, 160, Font[FONT_SIZE_24], BLACK,
                       "G A M E  C L E A R");
-        Kanji_PutText(Screen, 200, 280, Font[FONT_SIZE_16], RED,
+        Kanji_PutText(screen_, 200, 280, Font[FONT_SIZE_16], RED,
                       "C o n g r a t u l a t i o n s");
         ++Game_count;
         if (Game_count > 200) {
-          wipe_.draw(Screen);
+          wipe_.draw(screen_);
           if (wipe_.update()) {
             Game_count = 0;
             Game_state = GAME_STATE_TITLE;
@@ -305,10 +305,10 @@ void Area776::game_clear() {
 }
 
 void Area776::game_over() {
-  Kanji_PutText(Screen, 222, 150, Font[FONT_SIZE_24], RED, "G a m e O v e r");
+  Kanji_PutText(screen_, 222, 150, Font[FONT_SIZE_24], RED, "G a m e O v e r");
   ++Game_count;
   if (Game_count > 200) {
-    wipe_.draw(Screen);
+    wipe_.draw(screen_);
     if (wipe_.update()) {
       Game_count = 0;
       Game_state = GAME_STATE_TITLE;
@@ -320,16 +320,16 @@ void Area776::game_over() {
 void Area776::game_pause() {
   draw_map();
   if (Enemy_select == ENEMY_1) {
-    draw_bg(image_manager_);
-    draw_enemy(image_manager_);
-    draw_enemy_shot(image_manager_);
+    draw_bg(screen_, image_manager_);
+    draw_enemy(screen_, image_manager_);
+    draw_enemy_shot(screen_, image_manager_);
   } else if (Enemy_select == BOSS_1) {
-    draw_boss(image_manager_);
-    draw_boss_shot(image_manager_);
+    draw_boss(screen_, image_manager_);
+    draw_boss_shot(screen_, image_manager_);
   }
-  draw_fighter_shot(image_manager_);
-  draw_fighter(image_manager_);
-  draw_effect(image_manager_);
+  draw_fighter_shot(screen_, image_manager_);
+  draw_fighter(screen_, image_manager_);
+  draw_effect(screen_, image_manager_);
   draw_life();
   draw_translucence();
   if (input_manager_.edge_key_p(input_device::space)) {
@@ -339,13 +339,13 @@ void Area776::game_pause() {
 
 void Area776::draw_life() {
   if (Enemy_select == ENEMY_1) {
-    Kanji_PutText(Screen, 32, 24, Font[FONT_SIZE_16], RED, "Enemy_life %d",
+    Kanji_PutText(screen_, 32, 24, Font[FONT_SIZE_16], RED, "Enemy_life %d",
                   30 - Enemy_life);
   } else if (Enemy_select == BOSS_1) {
-    Kanji_PutText(Screen, 32, 24, Font[FONT_SIZE_16], RED, "Boss_life %d",
+    Kanji_PutText(screen_, 32, 24, Font[FONT_SIZE_16], RED, "Boss_life %d",
                   100 - Boss_life);
   }
-  Kanji_PutText(Screen, Fighter.pos.x, Fighter.pos.y + 55, Font[FONT_SIZE_16],
+  Kanji_PutText(screen_, Fighter.pos.x, Fighter.pos.y + 55, Font[FONT_SIZE_16],
                 WHITE, "Life %d", Chara_life);
 }
 
@@ -390,7 +390,7 @@ void Area776::draw_fps() {
       interval = 1;
     }
     double frame_rate = 1000.0 / interval;
-    Kanji_PutText(Screen, screen::width - 140, 16, Font[FONT_SIZE_16], GREEN,
+    Kanji_PutText(screen_, screen::width - 140, 16, Font[FONT_SIZE_16], GREEN,
                   "FrameRate[%0.2f]", frame_rate);
   }
   pre_count = now_count;
@@ -399,7 +399,7 @@ void Area776::draw_fps() {
 void Area776::draw_map() {
   SDL_Surface *pSurface = image_manager_.get(image::map);
   SDL_Rect dst = {0, 0};
-  SDL_BlitSurface(pSurface, NULL, Screen, &dst);
+  SDL_BlitSurface(pSurface, NULL, screen_, &dst);
 }
 
 void Area776::draw_translucence() {
@@ -425,9 +425,9 @@ void Area776::draw_translucence() {
     exit(EXIT_FAILURE);
   }
   SDL_SetAlpha(trans_surface, SDL_SRCALPHA, alpha);
-  SDL_BlitSurface(trans_surface, NULL, Screen, &dst_back);
+  SDL_BlitSurface(trans_surface, NULL, screen_, &dst_back);
   if (Blink_count < 30) {
-    Kanji_PutText(Screen, 240, 200, Font[FONT_SIZE_24], WHITE, "P a u s e");
+    Kanji_PutText(screen_, 240, 200, Font[FONT_SIZE_24], WHITE, "P a u s e");
     ++Blink_count;
   } else if (Blink_count < 60) {
     ++Blink_count;
