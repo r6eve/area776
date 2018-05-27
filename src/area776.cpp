@@ -1,9 +1,9 @@
 #define MAIN
 
-#include "def_global.hpp"
 #include "area776.hpp"
-#include "image_manager.hpp"
 #include <SDL/SDL_mixer.h>
+#include "def_global.hpp"
+#include "image_manager.hpp"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -158,9 +158,9 @@ void Area776::main_loop() {
     if (!poll_event()) {
       return;
     }
-#ifdef DEBUG
-    draw_fps();
-#endif
+    if (debug_mode_) {
+      draw_fps();
+    }
     SDL_Flip(Screen);
     wait_game();
   }
@@ -172,14 +172,14 @@ void Area776::title() {
   SDL_FillRect(Screen, &dst_back, col);
   switch (Game_count) {
     case 0:
-      set_wipe_in();
+      wipe_.set_wipe_in();
       ++Game_count;
       break;
     case 1:
       Kanji_PutText(Screen, 160, 180, Font[FONT_SIZE_24], BLACK,
                     "S H O O T I N G - G A M E");
-      draw_wipe(0);
-      if (update_wipe()) {
+      wipe_.draw(Screen);
+      if (wipe_.update()) {
         ++Game_count;
       }
       break;
@@ -198,7 +198,7 @@ void Area776::title() {
         }
       }
       if (Press_key[PRESS_KEY_BUTTON_0]) {
-        set_wipe_out();
+        wipe_.set_wipe_out();
         ++Game_count;
       }
       break;
@@ -207,9 +207,9 @@ void Area776::title() {
                     "S H O O T I N G - G A M E");
       Kanji_PutText(Screen, 240, 300, Font[FONT_SIZE_16], BLACK,
                     "P r e s s  Z");
-      draw_wipe(0);
+      wipe_.draw(Screen);
       Mix_PlayMusic(Music, -1);
-      if (update_wipe()) {
+      if (wipe_.update()) {
         init_fighter();
         init_enemy();
         init_effect();
@@ -236,12 +236,12 @@ void Area776::game_start() {
   draw_fighter_shot();
 
   if (Game_count == 0) {
-    set_wipe_in();
-    draw_wipe(0);
+    wipe_.set_wipe_in();
+    wipe_.draw(Screen);
     ++Game_count;
   } else if (Game_count == 1) {
-    draw_wipe(0);
-    if (update_wipe()) {
+    wipe_.draw(Screen);
+    if (wipe_.update()) {
       ++Game_count;
     }
   } else {
@@ -319,12 +319,12 @@ void Area776::game_clear() {
   draw_life();
 
   if (Game_count == 0) {
-    set_wipe_out();
-    draw_wipe(0);
+    wipe_.set_wipe_out();
+    wipe_.draw(Screen);
     ++Game_count;
   } else if (Game_count >= 1) {
-    draw_wipe(0);
-    if (update_wipe()) {
+    wipe_.draw(Screen);
+    if (wipe_.update()) {
       if (Game_level == 1) {
         SDL_Rect dst_back = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
         Uint32 col = 0xffffffff;
@@ -335,8 +335,8 @@ void Area776::game_clear() {
                       "C o n g r a t u l a t i o n s");
         ++Game_count;
         if (Game_count > 200) {
-          draw_wipe(0);
-          if (update_wipe()) {
+          wipe_.draw(Screen);
+          if (wipe_.update()) {
             Game_count = 0;
             Game_state = GAME_STATE_TITLE;
             Mix_HaltMusic();
@@ -363,8 +363,8 @@ void Area776::game_over() {
   Kanji_PutText(Screen, 222, 150, Font[FONT_SIZE_24], RED, "G a m e O v e r");
   ++Game_count;
   if (Game_count > 200) {
-    draw_wipe(0);
-    if (update_wipe()) {
+    wipe_.draw(Screen);
+    if (wipe_.update()) {
       Game_count = 0;
       Game_state = GAME_STATE_TITLE;
       Mix_HaltMusic();

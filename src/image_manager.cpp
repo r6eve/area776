@@ -6,8 +6,6 @@
 #include "image_manager.hpp"
 using namespace std;
 
-// #define DEBUG
-
 static Img_list *Img_list_top = NULL;
 
 bool load_img(const char *filename, const char *name) {

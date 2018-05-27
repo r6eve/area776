@@ -2,10 +2,15 @@
 #define AREA776_H
 
 #include "def_global.hpp"
+#include "wipe.hpp"
 
 class Area776 {
-public:
-  Area776() {}
+  const bool debug_mode_;
+
+  Wipe wipe_;
+
+ public:
+  Area776(const bool debug_mode) noexcept : debug_mode_(debug_mode) {}
   bool init();
   bool init_sdl();
   bool init_audio();

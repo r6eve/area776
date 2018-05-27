@@ -2,8 +2,6 @@
 #include <iostream>
 #include "area776.hpp"
 
-// #define DEBUG
-
 const std::string Version = "v0.0.1";
 
 bool parse_options(const int argc, char **argv) noexcept {
@@ -60,7 +58,7 @@ Options:
 
 int main(int argc, char **argv) {
   const bool debug_mode = parse_options(argc, argv);
-  Area776 game;
+  Area776 game(debug_mode);
   if (!game.init()) {
     exit(EXIT_FAILURE);
   } else {
