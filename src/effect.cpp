@@ -2,32 +2,34 @@
 #include "image_manager.hpp"
 
 void init_effect() {
-  for (int i = 0; i < EFFECT_MAX; ++i) {
-    Effect[i].view = false;
+  for (auto &effect : Effect) {
+    effect.view = false;
   }
 }
 
 void update_effect() {
-  for (int i = 0; i < EFFECT_MAX; ++i) {
-    if (!Effect[i].view) {
+  for (auto &effect : Effect) {
+    if (!effect.view) {
       continue;
     }
-    ++Effect[i].count;
-    if (Effect[i].count >= 24) {
-      Effect[i].view = false;
+    ++effect.count;
+    if (effect.count >= 24) {
+      effect.view = false;
     }
   }
 }
 
 void draw_effect(SDL_Surface *screen, ImageManager &image_manager) {
-  for (int i = 0; i < EFFECT_MAX; ++i) {
-    if (!Effect[i].view) {
+  for (auto &effect : Effect) {
+    if (!effect.view) {
       continue;
     }
-    int n = Effect[i].count / 2;
+    const int n = effect.count / 2;
     SDL_Surface *p_surface = image_manager.get(image::effect01);
-    SDL_Rect src = {n % 4 * 160, n / 4 * 160, 160, 160};
-    SDL_Rect dst = {Effect[i].pos.x, Effect[i].pos.y};
+    SDL_Rect src = {static_cast<Sint16>(n % 4 * 160),
+                    static_cast<Sint16>(n / 4 * 160), 160, 160};
+    SDL_Rect dst = {static_cast<Sint16>(effect.pos.x),
+                    static_cast<Sint16>(effect.pos.y), 160, 160};
     SDL_BlitSurface(p_surface, &src, screen, &dst);
   }
 }
