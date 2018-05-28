@@ -7,6 +7,7 @@
 #include "input_manager.hpp"
 #include "mixer_manager.hpp"
 #include "wipe.hpp"
+#include "bg.hpp"
 
 struct Point {
   int x;
@@ -71,6 +72,7 @@ class Area776 {
   int game_level_;
 
   Wipe wipe_;
+  Snow snow_;
   FontManager font_manager_;
   ImageManager image_manager_;
   InputManager input_manager_;

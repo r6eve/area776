@@ -1,48 +1,47 @@
+#include "bg.hpp"
 #include "def_global.hpp"
 #include "image_manager.hpp"
-#include "bg.hpp"
 
-const int NUM_SNOW = 256;
-
-Snow_data Snow[NUM_SNOW];
-
-void init_bg() {
-  for (int i = 0; i < NUM_SNOW; ++i) {
-    Snow[i].view = false;
+void Snow::init() {
+  for (auto &snow : snows_) {
+    snow.view = false;
   }
 }
 
-void update_bg() {
-  for (int i = 0; i < NUM_SNOW; ++i) {
-    if (Snow[i].view) {
+void Snow::update() {
+  for (auto &snow : snows_) {
+    if (snow.view) {
       continue;
     }
-    Snow[i].view = true;
-    Snow[i].type = rand() % 2;
-    Snow[i].x = rand() % (screen::width - 8);
-    Snow[i].y = -8;
+    snow.view = true;
+    snow.x = rand() % (screen::width - 8);
+    snow.y = -8;
+    snow.type = rand() % 2;
     break;
   }
-  for (int i = 0; i < NUM_SNOW; ++i) {
-    if (!Snow[i].view) {
+
+  for (auto &snow : snows_) {
+    if (!snow.view) {
       continue;
     }
     int move_speed[2] = {12, 8};
-    Snow[i].y += move_speed[Snow[i].type];
-    if (Snow[i].y >= screen::height) {
-      Snow[i].view = false;
+    snow.y += move_speed[snow.type];
+    if (snow.y >= screen::height) {
+      snow.view = false;
     }
   }
 }
 
-void draw_bg(SDL_Surface *screen, ImageManager &image_manager) {
-  for (int i = 0; i < NUM_SNOW; ++i) {
-    if (!Snow[i].view) {
+void Snow::draw(SDL_Surface *screen, ImageManager &image_manager) {
+  for (auto &snow : snows_) {
+    if (!snow.view) {
       continue;
     }
     SDL_Surface *p_surface = image_manager.get(image::snow);
-    SDL_Rect src = {8 * Snow[i].type, 0, 8, 8};
-    SDL_Rect dst = {Snow[i].x, Snow[i].y};
+    SDL_Rect src = {static_cast<Sint16>(8 * snow.type), 0, 8,
+                    8};  // TODO: 8 is a size of snow.
+    SDL_Rect dst = {static_cast<Sint16>(snow.x), static_cast<Sint16>(snow.y), 8,
+                    8};
     SDL_BlitSurface(p_surface, &src, screen, &dst);
   }
 }

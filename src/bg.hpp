@@ -1,17 +1,27 @@
 #ifndef BG_H
 #define BG_H
 
+#include "def_global.hpp"
 #include "image_manager.hpp"
 
-struct Snow_data {
-  bool view;
-  int x;
-  int y;
-  int type;
-};
+const int snow_count = 256;
 
-void init_bg();
-void update_bg();
-void draw_bg(SDL_Surface *screen, ImageManager &image_manager);
+class Snow {
+  struct Snow_data {
+    bool view;
+    int x;
+    int y;
+    int type;
+  };
+
+  Snow_data snows_[snow_count];
+
+public:
+  Snow() {}
+  void init();
+  void update();
+  void draw(SDL_Surface *screen, ImageManager &image_manager);
+  ~Snow() {}
+};
 
 #endif

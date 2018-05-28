@@ -105,7 +105,7 @@ void Area776::game_title() {
         init_fighter();
         init_enemy();
         init_effect();
-        init_bg();
+        snow_.init();
         init_boss();
         game_count_ = 0;
         game_state_ = game_state::start;
@@ -183,8 +183,8 @@ void Area776::play_game() {
     if (check_myshots_hit_enemy()) {
       Enemy_select = BOSS_1;
     }
-    update_bg();
-    draw_bg(screen_, image_manager_);
+    snow_.update();
+    snow_.draw(screen_, image_manager_);
     draw_enemy(screen_, image_manager_);
     draw_enemy_shot(screen_, image_manager_);
   } else if (Enemy_select == BOSS_1) {
@@ -261,7 +261,7 @@ void Area776::game_clear() {
   init_enemy();
   init_boss();
   init_effect();
-  init_bg();
+  snow_.init();
   game_count_ = 0;
   game_state_ = game_state::start;
   ++game_level_;
@@ -289,7 +289,7 @@ void Area776::game_over() {
 void Area776::game_pause() {
   draw_map();
   if (Enemy_select == ENEMY_1) {
-    draw_bg(screen_, image_manager_);
+    snow_.draw(screen_, image_manager_);
     draw_enemy(screen_, image_manager_);
     draw_enemy_shot(screen_, image_manager_);
   } else if (Enemy_select == BOSS_1) {
