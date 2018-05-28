@@ -60,7 +60,7 @@ void move_boss(MixerManager &mixer_manager) {
               r = -r;
             }
             Vector vec = {0, 4};
-            rot_vec(&Boss_shot[i].move, &vec, r);
+            rot_vec(Boss_shot[i].move, vec, r);
             Boss_shot[i].view = true;
             Boss_shot[i].count = 0;
             Boss_shot[i].rot = 0;
@@ -92,7 +92,7 @@ void move_boss(MixerManager &mixer_manager) {
         Boss_shot[i].pos.y = Boss.y + 105;
         double r = M_PI * i / 24;
         Vector vec = {0, 3};
-        rot_vec(&Boss_shot[i].move, &vec, r);
+        rot_vec(Boss_shot[i].move, vec, r);
         Boss_shot[i].view = true;
         Boss_shot[i].count = 0;
         Boss_shot[i].rot = 0;
@@ -115,7 +115,7 @@ void move_boss_shot() {
     if (!Boss_shot[i].view) {
       continue;
     }
-    add_vec(&Boss_shot[i].pos, &Boss_shot[i].move);
+    add_vec(Boss_shot[i].pos, Boss_shot[i].move);
     if (Boss_shot[i].pos.x < -16) {
       Boss_shot[i].view = false;
     }

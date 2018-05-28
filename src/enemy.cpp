@@ -26,9 +26,9 @@ void appear_enemy() {
       Enemy[i].pos.x = rand() % (screen::width - 64);
       Enemy[i].pos.y = -64;
       Enemy[i].shot_timer = rand() % 15 + 15;
-      sub_vec(&Enemy[i].move, &Fighter.pos, &Enemy[i].pos);
-      normalize_vec(&Enemy[i].move);
-      mul_vec(&Enemy[i].move, speed);
+      sub_vec(Enemy[i].move, Fighter.pos, Enemy[i].pos);
+      normalize_vec(Enemy[i].move);
+      mul_vec(Enemy[i].move, speed);
       break;
     }
   }
@@ -42,7 +42,7 @@ void move_enemy(MixerManager &mixer_manager) {
     if (!Enemy[i].view) {
       continue;
     }
-    add_vec(&Enemy[i].pos, &Enemy[i].move);
+    add_vec(Enemy[i].pos, Enemy[i].move);
     if (Enemy[i].pos.x < -35) {
       Enemy[i].view = 0;
     }
@@ -60,24 +60,24 @@ void move_enemy(MixerManager &mixer_manager) {
       Vector enemy_center = {Enemy[i].pos.x + 32, Enemy[i].pos.y + 32};
       Vector fighter_center = {Fighter.pos.x + 32, Fighter.pos.y + 32};
       Vector vec;
-      sub_vec(&vec, &fighter_center, &enemy_center);
-      normalize_vec(&vec);
-      mul_vec(&vec, speed);
+      sub_vec(vec, fighter_center, enemy_center);
+      normalize_vec(vec);
+      mul_vec(vec, speed);
       /* 時計回りに(shot_pitch * 2)度回転させておく */
       double rot_angle = -(shot_pitch * 2) * M_PI / 180;
-      rot_vec(&vec, rot_angle);
+      rot_vec(vec, rot_angle);
       for (int j = 0; j < 5; ++j) {
         for (int k = 0; k < ENEMY_SHOT_MAX; ++k) {
           if (Enemy_shot[k].view) {
             continue;
           }
           Enemy_shot[k].view = true;
-          cp_vec(&Enemy_shot[k].pos, &enemy_center);
-          cp_vec(&Enemy_shot[k].move, &vec);
+          cp_vec(Enemy_shot[k].pos, enemy_center);
+          cp_vec(Enemy_shot[k].move, vec);
           break;
         }
         double rot_angle = shot_pitch * M_PI / 180;
-        rot_vec(&vec, rot_angle);
+        rot_vec(vec, rot_angle);
         Mix_PlayChannel(-1, mixer_manager.get_se(se_type::enemy_shoot), 0);
       }
     }
@@ -89,7 +89,7 @@ void move_enemy_shot() {
     if (!Enemy_shot[i].view) {
       continue;
     }
-    add_vec(&Enemy_shot[i].pos, &Enemy_shot[i].move);
+    add_vec(Enemy_shot[i].pos, Enemy_shot[i].move);
     if (Enemy_shot[i].pos.x < -16) {
       Enemy_shot[i].view = false;
     }
