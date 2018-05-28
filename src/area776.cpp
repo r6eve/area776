@@ -56,26 +56,28 @@ void Area776::run() {
 }
 
 void Area776::game_title() {
-  SDL_Rect dst_back = {0, 0, screen::width, screen::height};
-  Uint32 bg_col = 0x45402b;
-  SDL_FillRect(screen_, &dst_back, bg_col);
+  SDL_Rect dst = {0, 0, screen::width, screen::height};
+  const Uint32 bg_col = 0x45402b;
+  SDL_FillRect(screen_, &dst, bg_col);
   const Point title_pos = Point{160, 180};
   const Point message_pos = Point{210, 300};
   const char *title_str = "A  r  e  a  7  7  6";
   const char *message_str = "P r e s s  S p a c e  K e y";
   switch (game_count_) {
-    case 0:
+    case 0: {
       wipe_.set_wipe_in();
       ++game_count_;
       break;
-    case 1:
+    }
+    case 1: {
       draw_text(font_size::x36, rgb::dark_red, title_pos, title_str);
       wipe_.draw(screen_);
       if (wipe_.update()) {
         ++game_count_;
       }
       break;
-    case 2:
+    }
+    case 2: {
       draw_text(font_size::x36, rgb::dark_red, title_pos, title_str);
       draw_text(font_size::x16, rgb::black, message_pos, message_str);
       ++blink_count_;
@@ -93,7 +95,8 @@ void Area776::game_title() {
         ++game_count_;
       }
       break;
-    case 3:
+    }
+    case 3: {
       draw_text(font_size::x36, rgb::dark_red, title_pos, title_str);
       draw_text(font_size::x16, rgb::black, message_pos, message_str);
       wipe_.draw(screen_);
@@ -111,8 +114,12 @@ void Area776::game_title() {
         Chara_life = 20;
         Enemy_life = 0;
         Boss_life = 0;
-        srand((unsigned int)time(NULL));
+        srand((unsigned int)time(nullptr));
       }
+      break;
+    }
+    default:
+      // NOTREACHED
       break;
   }
 }
@@ -124,17 +131,23 @@ void Area776::game_start() {
   draw_fighter(screen_, image_manager_);
   draw_fighter_shot(screen_, image_manager_);
 
-  if (game_count_ == 0) {
-    wipe_.set_wipe_in();
-    wipe_.draw(screen_);
-    ++game_count_;
-  } else if (game_count_ == 1) {
-    wipe_.draw(screen_);
-    if (wipe_.update()) {
+  switch (game_count_) {
+    case 0: {
+      wipe_.set_wipe_in();
+      wipe_.draw(screen_);
       ++game_count_;
+      break;
     }
-  } else {
-    ++game_count_;
+    case 1: {
+      wipe_.draw(screen_);
+      if (wipe_.update()) {
+        ++game_count_;
+      }
+      break;
+    }
+    default:
+      ++game_count_;
+      break;
   }
 
   if (game_count_ < 130) {
@@ -177,10 +190,8 @@ void Area776::play_game() {
       draw_text(font_size::x36, rgb::red, Point{210, 180}, ss.str().c_str());
       ++game_count_;
       ++blink_count_;
-      if (blink_count_ >= 20) {
-        if (blink_count_ >= 40) {
-          blink_count_ = 0;
-        }
+      if (blink_count_ >= 40) {
+        blink_count_ = 0;
       }
     } else if ((game_count_ < 130) && (blink_count_ >= 20)) {
       if (blink_count_ >= 40) {
@@ -219,51 +230,57 @@ void Area776::game_clear() {
     wipe_.set_wipe_out();
     wipe_.draw(screen_);
     ++game_count_;
-  } else if (game_count_ >= 1) {
-    wipe_.draw(screen_);
-    if (wipe_.update()) {
-      if (game_level_ == 1) {
-        SDL_Rect dst_back = {0, 0, screen::width, screen::height};
-        Uint32 col = 0xffffffff;
-        SDL_FillRect(screen_, &dst_back, col);
-        draw_text(font_size::x36, rgb::red, Point{200, 180},
-                  "G A M E  C L E A R");
-        ++game_count_;
-        if (game_count_ > 200) {
-          wipe_.draw(screen_);
-          if (wipe_.update()) {
-            game_count_ = 0;
-            game_state_ = game_state::title;
-            Mix_HaltMusic();
-          }
-        }
-      } else {
-        init_fighter();
-        init_enemy();
-        init_boss();
-        init_effect();
-        init_bg();
+    return;
+  }
+
+  wipe_.draw(screen_);
+  if (!wipe_.update()) {
+    return;
+  }
+
+  if (game_level_ == 1) {
+    SDL_Rect dst = {0, 0, screen::width, screen::height};
+    SDL_FillRect(screen_, &dst, 0xffffffff);
+    draw_text(font_size::x36, rgb::red, Point{200, 180}, "G A M E  C L E A R");
+    ++game_count_;
+    if (game_count_ > 200) {
+      wipe_.draw(screen_);
+      if (wipe_.update()) {
         game_count_ = 0;
-        game_state_ = game_state::start;
-        ++game_level_;
-        Enemy_life = 0;
-        Boss_life = 0;
+        game_state_ = game_state::title;
+        Mix_HaltMusic();
       }
     }
+    return;
   }
+
+  init_fighter();
+  init_enemy();
+  init_boss();
+  init_effect();
+  init_bg();
+  game_count_ = 0;
+  game_state_ = game_state::start;
+  ++game_level_;
+  Enemy_life = 0;
+  Boss_life = 0;
 }
 
 void Area776::game_over() {
   draw_text(font_size::x36, rgb::red, Point{200, 180}, "G a m e O v e r");
   ++game_count_;
-  if (game_count_ > 200) {
-    wipe_.draw(screen_);
-    if (wipe_.update()) {
-      game_count_ = 0;
-      game_state_ = game_state::title;
-      Mix_HaltMusic();
-    }
+  if (game_count_ <= 200) {
+    return;
   }
+
+  wipe_.draw(screen_);
+  if (!wipe_.update()) {
+    return;
+  }
+
+  game_count_ = 0;
+  game_state_ = game_state::title;
+  Mix_HaltMusic();
 }
 
 void Area776::game_pause() {
@@ -275,6 +292,8 @@ void Area776::game_pause() {
   } else if (Enemy_select == BOSS_1) {
     draw_boss(screen_, image_manager_);
     draw_boss_shot(screen_, image_manager_);
+  } else {
+    // NOTREACHED
   }
   draw_fighter_shot(screen_, image_manager_);
   draw_fighter(screen_, image_manager_);
@@ -295,6 +314,8 @@ void Area776::draw_life() {
     std::stringstream ss;
     ss << "BOSS LIFE:  " << 100 - Boss_life;
     draw_text(font_size::x16, rgb::white, Point{32, 24}, ss.str().c_str());
+  } else {
+    // NOTREACHED
   }
   std::stringstream ss;
   ss << "LIFE:  " << Chara_life;
@@ -306,7 +327,6 @@ void Area776::draw_life() {
 
 bool Area776::poll_event() {
   SDL_Event event;
-
   while (SDL_PollEvent(&event)) {
     switch (event.type) {
       case SDL_QUIT:
@@ -316,6 +336,9 @@ bool Area776::poll_event() {
           return false;
         }
         break;
+      default:
+        // do nothing
+        break;
     }
   }
   return true;
@@ -323,13 +346,13 @@ bool Area776::poll_event() {
 
 void Area776::wait_game() {
   static Uint32 pre_count;
-  double wait_time = 1000.0 / screen::max_fps;
-  Uint32 wait_count = (wait_time + 0.5);
+  const double wait_time = 1000.0 / screen::max_fps;
+  const Uint32 wait_count = (wait_time + 0.5);
   if (pre_count) {
-    Uint32 now_count = SDL_GetTicks();
-    Uint32 interval = now_count - pre_count;
+    const Uint32 now_count = SDL_GetTicks();
+    const Uint32 interval = now_count - pre_count;
     if (interval < wait_count) {
-      Uint32 delay_time = wait_count - interval;
+      const Uint32 delay_time = wait_count - interval;
       SDL_Delay(delay_time);
     }
   }
@@ -338,13 +361,19 @@ void Area776::wait_game() {
 
 void Area776::draw_fps() {
   static Uint32 pre_count;
-  Uint32 now_count = SDL_GetTicks();
+  const Uint32 now_count = SDL_GetTicks();
   if (pre_count) {
-    Uint32 interval = now_count - pre_count;
-    if (interval < 1) {
-      interval = 1;
+    static double frame_rate;
+    Uint32 mut_interval = now_count - pre_count;
+    if (mut_interval < 1) {
+      mut_interval = 1;
     }
-    double frame_rate = 1000.0 / interval;
+    const Uint32 interval = mut_interval;
+
+    if (!(pre_count % 30)) {
+      frame_rate = 1000.0 / interval;
+    }
+
     std::stringstream ss;
     ss << "FrameRate[" << std::setprecision(2)
        << std::setiosflags(std::ios::fixed) << frame_rate << "]";
@@ -357,33 +386,35 @@ void Area776::draw_fps() {
 void Area776::draw_map() {
   SDL_Surface *pSurface = image_manager_.get(image::map);
   SDL_Rect dst = {0, 0};
-  SDL_BlitSurface(pSurface, NULL, screen_, &dst);
+  SDL_BlitSurface(pSurface, nullptr, screen_, &dst);
 }
 
 void Area776::draw_translucence() {
-  Uint32 rmask, gmask, bmask;
+  Uint32 rmask, gmask, bmask, amask;
   Uint8 alpha = 128;
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
   rmask = 0xff000000;
   gmask = 0x00ff0000;
   bmask = 0x0000ff00;
+  amask = 0x000000ff;
 #else
   rmask = 0x000000ff;
   gmask = 0x0000ff00;
   bmask = 0x00ff0000;
+  amask = 0xff000000;
 #endif
-  SDL_Rect dst_back;
-  dst_back.x = 0;
-  dst_back.y = 0;
 
   SDL_Surface *trans_surface = SDL_CreateRGBSurface(
-      SDL_SWSURFACE, screen::width, screen::height, 32, rmask, gmask, bmask, 0);
-  if (trans_surface == NULL) {
+      SDL_SWSURFACE, screen::width, screen::height, 32, rmask, gmask, bmask, amask);
+  if (trans_surface == nullptr) {
     std::cerr << "CreateRGBSurface failed: " << SDL_GetError() << '\n';
     exit(EXIT_FAILURE);
   }
   SDL_SetAlpha(trans_surface, SDL_SRCALPHA, alpha);
-  SDL_BlitSurface(trans_surface, NULL, screen_, &dst_back);
+  SDL_Rect dst_back;
+  dst_back.x = 0;
+  dst_back.y = 0;
+  SDL_BlitSurface(trans_surface, nullptr, screen_, &dst_back);
   if (blink_count_ < 30) {
     draw_text(font_size::x36, rgb::white, Point{220, 180}, "P a u s e");
     ++blink_count_;

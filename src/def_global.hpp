@@ -20,6 +20,11 @@ enum {
 
 }  // namespace screen
 
+enum class enemy_type {
+  enemy,
+  boss,
+};
+
 const int FIGHTER_SHOT_MAX = 32;
 const int ENEMY_MAX = 16;
 const int ENEMY_SHOT_MAX = 128;
