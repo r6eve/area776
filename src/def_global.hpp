@@ -47,7 +47,6 @@ struct Shot_data {
 GLOBAL int Enemy_life;
 GLOBAL int Boss_life;
 GLOBAL int Chara_life;
-GLOBAL int Game_count;
 GLOBAL int Game_level;
 GLOBAL int Enemy_select;
 GLOBAL Fighter_data Fighter;

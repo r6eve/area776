@@ -66,6 +66,7 @@ class Area776 {
 
   SDL_Surface *screen_;
   game_state game_state_;
+  int game_count_;
 
   Wipe wipe_;
   FontManager font_manager_;
@@ -101,7 +102,9 @@ class Area776 {
 
  public:
   Area776(const bool debug_mode) noexcept
-      : game_state_(game_state::title), debug_mode_(debug_mode) {}
+      : debug_mode_(debug_mode),
+        game_state_(game_state::title),
+        game_count_(0) {}
 
   bool init();
   bool init_sdl();

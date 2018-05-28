@@ -26,7 +26,6 @@ bool Area776::init() {
   if (!init_sdl()) {
     return false;
   }
-  Game_count = 0;
   Blink_count = 0;
 
   return true;
@@ -100,16 +99,16 @@ void Area776::game_title() {
   const Point message_pos = Point{210, 300};
   const char *title_str = "A  r  e  a  7  7  6";
   const char *message_str = "P r e s s  S p a c e  K e y";
-  switch (Game_count) {
+  switch (game_count_) {
     case 0:
       wipe_.set_wipe_in();
-      ++Game_count;
+      ++game_count_;
       break;
     case 1:
       draw_text(font_size::x36, rgb::dark_red, title_pos, title_str);
       wipe_.draw(screen_);
       if (wipe_.update()) {
-        ++Game_count;
+        ++game_count_;
       }
       break;
     case 2:
@@ -127,7 +126,7 @@ void Area776::game_title() {
       }
       if (input_manager_.press_key_p(input_device::space)) {
         wipe_.set_wipe_out();
-        ++Game_count;
+        ++game_count_;
       }
       break;
     case 3:
@@ -141,7 +140,7 @@ void Area776::game_title() {
         init_effect();
         init_bg();
         init_boss();
-        Game_count = 0;
+        game_count_ = 0;
         game_state_ = game_state::start;
         Game_level = 1;
         Enemy_select = ENEMY_1;
@@ -161,29 +160,29 @@ void Area776::game_start() {
   draw_fighter(screen_, image_manager_);
   draw_fighter_shot(screen_, image_manager_);
 
-  if (Game_count == 0) {
+  if (game_count_ == 0) {
     wipe_.set_wipe_in();
     wipe_.draw(screen_);
-    ++Game_count;
-  } else if (Game_count == 1) {
+    ++game_count_;
+  } else if (game_count_ == 1) {
     wipe_.draw(screen_);
     if (wipe_.update()) {
-      ++Game_count;
+      ++game_count_;
     }
   } else {
-    ++Game_count;
+    ++game_count_;
   }
 
-  if (Game_count < 130) {
+  if (game_count_ < 130) {
     std::stringstream ss;
     ss << "S t a g e " << Game_level;
     draw_text(font_size::x36, rgb::red, Point{210, 180}, ss.str().c_str());
-  } else if (Game_count < 200) {
+  } else if (game_count_ < 200) {
     draw_text(font_size::x36, rgb::red, Point{220, 180}, "S t a r t");
   }
 
-  if (Game_count > 220) {
-    Game_count = 0;
+  if (game_count_ > 220) {
+    game_count_ = 0;
     game_state_ = game_state::playing;
   }
 }
@@ -208,22 +207,22 @@ void Area776::play_game() {
     draw_enemy(screen_, image_manager_);
     draw_enemy_shot(screen_, image_manager_);
   } else if (Enemy_select == BOSS_1) {
-    if ((Game_count < 130) && (Blink_count < 20)) {
+    if ((game_count_ < 130) && (Blink_count < 20)) {
       std::stringstream ss;
       ss << "B O O S  " << Game_level;
       draw_text(font_size::x36, rgb::red, Point{210, 180}, ss.str().c_str());
-      ++Game_count;
+      ++game_count_;
       ++Blink_count;
       if (Blink_count >= 20) {
         if (Blink_count >= 40) {
           Blink_count = 0;
         }
       }
-    } else if ((Game_count < 130) && (Blink_count >= 20)) {
+    } else if ((game_count_ < 130) && (Blink_count >= 20)) {
       if (Blink_count >= 40) {
         Blink_count = 0;
       }
-      ++Game_count;
+      ++game_count_;
       ++Blink_count;
     } else {
       move_boss(mixer_manager_);
@@ -231,7 +230,7 @@ void Area776::play_game() {
 
       if (check_myshots_hit_boss()) {
         game_state_ = game_state::clear;
-        Game_count = 0;
+        game_count_ = 0;
       }
 
       draw_boss(screen_, image_manager_);
@@ -252,11 +251,11 @@ void Area776::game_clear() {
   draw_fighter_shot(screen_, image_manager_);
   draw_life();
 
-  if (Game_count == 0) {
+  if (game_count_ == 0) {
     wipe_.set_wipe_out();
     wipe_.draw(screen_);
-    ++Game_count;
-  } else if (Game_count >= 1) {
+    ++game_count_;
+  } else if (game_count_ >= 1) {
     wipe_.draw(screen_);
     if (wipe_.update()) {
       if (Game_level == 1) {
@@ -265,11 +264,11 @@ void Area776::game_clear() {
         SDL_FillRect(screen_, &dst_back, col);
         draw_text(font_size::x36, rgb::red, Point{200, 180},
                   "G A M E  C L E A R");
-        ++Game_count;
-        if (Game_count > 200) {
+        ++game_count_;
+        if (game_count_ > 200) {
           wipe_.draw(screen_);
           if (wipe_.update()) {
-            Game_count = 0;
+            game_count_ = 0;
             game_state_ = game_state::title;
             Mix_HaltMusic();
           }
@@ -280,7 +279,7 @@ void Area776::game_clear() {
         init_boss();
         init_effect();
         init_bg();
-        Game_count = 0;
+        game_count_ = 0;
         game_state_ = game_state::start;
         ++Game_level;
         Enemy_life = 0;
@@ -292,11 +291,11 @@ void Area776::game_clear() {
 
 void Area776::game_over() {
   draw_text(font_size::x36, rgb::red, Point{200, 180}, "G a m e O v e r");
-  ++Game_count;
-  if (Game_count > 200) {
+  ++game_count_;
+  if (game_count_ > 200) {
     wipe_.draw(screen_);
     if (wipe_.update()) {
-      Game_count = 0;
+      game_count_ = 0;
       game_state_ = game_state::title;
       Mix_HaltMusic();
     }
