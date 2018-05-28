@@ -165,6 +165,10 @@ void Area776::game_start() {
 }
 
 void Area776::play_game() {
+  if (input_manager_.edge_key_p(input_device::space)) {
+    game_state_ = game_state::pause;
+  }
+
   move_fighter(input_manager_, mixer_manager_);
   move_fighter_shot();
   if (check_enemyshots_hit_mychara()) {
