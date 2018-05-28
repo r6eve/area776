@@ -65,9 +65,9 @@ class Area776 {
   const bool debug_mode_;
 
   SDL_Surface *screen_;
-  game_state game_state_;
   int blink_count_;
   int game_count_;
+  game_state game_state_;
   int game_level_;
 
   Wipe wipe_;
