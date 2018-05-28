@@ -4,21 +4,13 @@
 #include "mixer_manager.hpp"
 #include "util.hpp"
 
-enum BOSS_STATE {
-  BOSS_STATE_AUTOMOVE = 0,
-  BOSS_STATE_ATTACK_00,
-  BOSS_STATE_ATTACK_01,
-  BOSS_STATE_ATTACK_02,
-  NUM_BOSS_STATE
-};
-
 void init_boss() {
-  Boss.state = BOSS_STATE_AUTOMOVE;
+  Boss.state = boss_state::automove;
   Boss.x = (screen::width - 418) / 2;
   Boss.y = -240;
   Boss.move = 0;
-  for (int i = 0; i < BOSS_SHOT_MAX; ++i) {
-    Boss_shot[i].view = false;
+  for (auto &shot : Boss_shot) {
+    shot.view = false;
   }
 }
 
@@ -34,36 +26,36 @@ void move_boss(MixerManager &mixer_manager) {
   }
 
   switch (Boss.state) {
-    case BOSS_STATE_AUTOMOVE: {
+    case boss_state::automove: {
       if (Boss.y < 10) {
         Boss.y += 4;
       } else {
         Boss.shot_count = 0;
         Boss.shot_rot = 0;
-        Boss.state = BOSS_STATE_ATTACK_00;
+        Boss.state = boss_state::attack00;
         Boss.move = -2;
       }
       break;
     }
-    case BOSS_STATE_ATTACK_00: {
+    case boss_state::attack00: {
       if (!(Boss.shot_count % 2)) {
         int Pos[2][2] = {{88, 120}, {418 - 88, 120}};
         for (int n = 0; n < 2; ++n) {
-          for (int i = 0; i < BOSS_SHOT_MAX; ++i) {
-            if (Boss_shot[i].view) {
+          for (auto &shot : Boss_shot) {
+            if (shot.view) {
               continue;
             }
-            Boss_shot[i].pos.x = Boss.x + Pos[n][0];
-            Boss_shot[i].pos.y = Boss.y + Pos[n][1];
+            shot.pos.x = Boss.x + Pos[n][0];
+            shot.pos.y = Boss.y + Pos[n][1];
             double r = M_PI * Boss.shot_rot / 10;
             if (n == 1) {
               r = -r;
             }
             Vector vec = {0, 4};
-            rot_vec(Boss_shot[i].move, vec, r);
-            Boss_shot[i].view = true;
-            Boss_shot[i].count = 0;
-            Boss_shot[i].rot = 0;
+            rot_vec(shot.move, vec, r);
+            shot.view = true;
+            shot.count = 0;
+            shot.rot = 0;
             break;
           }
         }
@@ -71,21 +63,16 @@ void move_boss(MixerManager &mixer_manager) {
       }
       ++Boss.shot_count;
       if (Boss.shot_count == 240) {
-        Boss.state = BOSS_STATE_ATTACK_01;
+        Boss.state = boss_state::attack01;
       }
       break;
     }
-    case BOSS_STATE_ATTACK_01:
-    case BOSS_STATE_ATTACK_02: {
-      int view = false;
-      for (int i = 0; i < BOSS_SHOT_MAX; ++i) {
-        if (Boss_shot[i].view) {
-          view = true;
-          break;
+    case boss_state::attack01:
+    case boss_state::attack02: {
+      for (auto &shot : Boss_shot) {
+        if (shot.view) {
+          return;
         }
-      }
-      if (view) {
-        break;
       }
       for (int i = 0; i < 48; ++i) {
         Boss_shot[i].pos.x = Boss.x + 418 / 2;
@@ -100,10 +87,10 @@ void move_boss(MixerManager &mixer_manager) {
       Mix_PlayChannel(-1, mixer_manager.get_se(se_type::enemy_shoot), 0);
       Boss.shot_count = 0;
       Boss.shot_rot = 0;
-      if (Boss.state == BOSS_STATE_ATTACK_01) {
-        Boss.state = BOSS_STATE_ATTACK_02;
+      if (Boss.state == boss_state::attack01) {
+        Boss.state = boss_state::attack02;
       } else {
-        Boss.state = BOSS_STATE_ATTACK_00;
+        Boss.state = boss_state::attack00;
       }
       break;
     }
@@ -111,52 +98,54 @@ void move_boss(MixerManager &mixer_manager) {
 }
 
 void move_boss_shot() {
-  for (int i = 0; i < BOSS_SHOT_MAX; ++i) {
-    if (!Boss_shot[i].view) {
+  for (auto &shot : Boss_shot) {
+    if (!shot.view) {
       continue;
     }
-    add_vec(Boss_shot[i].pos, Boss_shot[i].move);
-    if (Boss_shot[i].pos.x < -16) {
-      Boss_shot[i].view = false;
+    add_vec(shot.pos, shot.move);
+    if (shot.pos.x < -16) {
+      shot.view = false;
     }
-    if (Boss_shot[i].pos.y < -16) {
-      Boss_shot[i].view = false;
+    if (shot.pos.y < -16) {
+      shot.view = false;
     }
-    if (Boss_shot[i].pos.x > screen::width) {
-      Boss_shot[i].view = false;
+    if (shot.pos.x > screen::width) {
+      shot.view = false;
     }
-    if (Boss_shot[i].pos.y > screen::height) {
-      Boss_shot[i].view = false;
+    if (shot.pos.y > screen::height) {
+      shot.view = false;
     }
-    ++Boss_shot[i].count;
-    Boss_shot[i].count %= 2;
-    if (Boss_shot[i].count == 0) {
-      ++Boss_shot[i].rot;
-      Boss_shot[i].rot %= 16;
+    ++shot.count;
+    shot.count %= 2;
+    if (shot.count == 0) {
+      ++shot.rot;
+      shot.rot %= 16;
     }
   }
 }
 
 bool check_myshots_hit_boss() {
-  for (int i = 0; i < FIGHTER_SHOT_MAX; ++i) {
-    if (!Fighter_shot[i].view) {
+  for (auto &shot : Fighter_shot) {
+    if (!shot.view) {
       continue;
     }
-    SDL_Rect r1 = {Fighter_shot[i].pos.x, Fighter_shot[i].pos.y, 10, 24};
-    SDL_Rect r2 = {Boss.x + 171, Boss.y + 95, 57, 57};
+    SDL_Rect r1 = {static_cast<Sint16>(shot.pos.x),
+                   static_cast<Sint16>(shot.pos.y), 10, 24};
+    SDL_Rect r2 = {static_cast<Sint16>(Boss.x + 171),
+                   static_cast<Sint16>(Boss.y + 95), 57, 57};
     if (!check_hit_rect(&r1, &r2)) {
       continue;
     }
     ++Boss_life;
-    Fighter_shot[i].view = false;
-    for (int j = 0; j < EFFECT_MAX; ++j) {
-      if (Effect[j].view) {
+    shot.view = false;
+    for (auto &effect : Effect) {
+      if (effect.view) {
         continue;
       }
-      Effect[j].view = true;
-      Effect[j].pos.x = -80 + Fighter_shot[i].pos.x + r1.w / 2;
-      Effect[j].pos.y = -80 + Fighter_shot[i].pos.y + r1.h / 2;
-      Effect[j].count = 0;
+      effect.view = true;
+      effect.pos.x = -80 + shot.pos.x + r1.w / 2;
+      effect.pos.y = -80 + shot.pos.y + r1.h / 2;
+      effect.count = 0;
       break;
     }
     if (Boss_life > 99) {
@@ -169,17 +158,19 @@ bool check_myshots_hit_boss() {
 
 void draw_boss(SDL_Surface *screen, ImageManager &image_manager) {
   SDL_Surface *p_surface = image_manager.get(image::boss);
-  SDL_Rect dst = {Boss.x, Boss.y};
-  SDL_BlitSurface(p_surface, NULL, screen, &dst);
+  SDL_Rect dst = {static_cast<Sint16>(Boss.x), static_cast<Sint16>(Boss.y), 400,
+                  224};
+  SDL_BlitSurface(p_surface, nullptr, screen, &dst);
 }
 
 void draw_boss_shot(SDL_Surface *screen, ImageManager &image_manager) {
-  for (int i = 0; i < BOSS_SHOT_MAX; ++i) {
-    if (!Boss_shot[i].view) {
+  for (auto &shot : Boss_shot) {
+    if (!shot.view) {
       continue;
     }
     SDL_Surface *p_surface = image_manager.get(image::bm01);
-    SDL_Rect dst = {Boss_shot[i].pos.x, Boss_shot[i].pos.y};
-    SDL_BlitSurface(p_surface, NULL, screen, &dst);
+    SDL_Rect dst = {static_cast<Sint16>(shot.pos.x),
+                    static_cast<Sint16>(shot.pos.y), 16, 16};
+    SDL_BlitSurface(p_surface, nullptr, screen, &dst);
   }
 }

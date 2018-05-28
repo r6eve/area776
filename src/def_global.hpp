@@ -3,7 +3,6 @@
 
 #include <SDL/SDL.h>
 #include <math.h>
-#include "boss.hpp"
 #include "effect.hpp"
 #include "enemy.hpp"
 #include "fighter.hpp"
@@ -35,6 +34,30 @@ enum {
   ENEMY_1 = 0,
   BOSS_1,
   NUM_ENEMY_TYPE,
+};
+
+enum class boss_state {
+  automove,
+  attack00,
+  attack01,
+  attack02,
+};
+
+struct Boss_data {
+  boss_state state;
+  int x;
+  int y;
+  int move;
+  int shot_rot;
+  int shot_count;
+};
+
+struct Boss_shot_data {
+  bool view;
+  int rot;
+  int count;
+  Vector pos;
+  Vector move;
 };
 
 struct Shot_data {
