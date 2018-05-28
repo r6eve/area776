@@ -142,7 +142,7 @@ void Area776::game_title() {
         init_boss();
         game_count_ = 0;
         game_state_ = game_state::start;
-        Game_level = 1;
+        game_level_ = 1;
         Enemy_select = ENEMY_1;
         Chara_life = 20;
         Enemy_life = 0;
@@ -175,7 +175,7 @@ void Area776::game_start() {
 
   if (game_count_ < 130) {
     std::stringstream ss;
-    ss << "S t a g e " << Game_level;
+    ss << "S t a g e " << game_level_;
     draw_text(font_size::x36, rgb::red, Point{210, 180}, ss.str().c_str());
   } else if (game_count_ < 200) {
     draw_text(font_size::x36, rgb::red, Point{220, 180}, "S t a r t");
@@ -209,7 +209,7 @@ void Area776::play_game() {
   } else if (Enemy_select == BOSS_1) {
     if ((game_count_ < 130) && (Blink_count < 20)) {
       std::stringstream ss;
-      ss << "B O O S  " << Game_level;
+      ss << "B O O S  " << game_level_;
       draw_text(font_size::x36, rgb::red, Point{210, 180}, ss.str().c_str());
       ++game_count_;
       ++Blink_count;
@@ -258,7 +258,7 @@ void Area776::game_clear() {
   } else if (game_count_ >= 1) {
     wipe_.draw(screen_);
     if (wipe_.update()) {
-      if (Game_level == 1) {
+      if (game_level_ == 1) {
         SDL_Rect dst_back = {0, 0, screen::width, screen::height};
         Uint32 col = 0xffffffff;
         SDL_FillRect(screen_, &dst_back, col);
@@ -281,7 +281,7 @@ void Area776::game_clear() {
         init_bg();
         game_count_ = 0;
         game_state_ = game_state::start;
-        ++Game_level;
+        ++game_level_;
         Enemy_life = 0;
         Boss_life = 0;
       }

@@ -67,6 +67,7 @@ class Area776 {
   SDL_Surface *screen_;
   game_state game_state_;
   int game_count_;
+  int game_level_;
 
   Wipe wipe_;
   FontManager font_manager_;
