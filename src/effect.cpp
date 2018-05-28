@@ -1,5 +1,6 @@
 #include "def_global.hpp"
 #include "image_manager.hpp"
+#include "point.hpp"
 
 void init_effect() {
   for (auto &effect : Effect) {

@@ -15,7 +15,7 @@
 #include "image_manager.hpp"
 #include "input_manager.hpp"
 #include "snow.hpp"
-#include "vector.hpp"
+#include "point.hpp"
 #include "wipe.hpp"
 
 void Area776::run() {
@@ -323,9 +323,7 @@ void Area776::draw_life() {
   std::stringstream ss;
   ss << "LIFE:  " << Chara_life;
   draw_text(font_size::x16, rgb::white,
-            Point{static_cast<int>(Fighter.pos.x),
-                  static_cast<int>(Fighter.pos.y + 55)},
-            ss.str().c_str());
+            Point{Fighter.pos.x, Fighter.pos.y + 55}, ss.str().c_str());
 }
 
 bool Area776::poll_event() {

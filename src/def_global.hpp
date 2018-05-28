@@ -6,7 +6,7 @@
 #include "effect.hpp"
 #include "enemy.hpp"
 #include "fighter.hpp"
-#include "vector.hpp"
+#include "point.hpp"
 
 namespace screen {
 
@@ -56,14 +56,14 @@ struct Boss_shot_data {
   bool view;
   int rot;
   int count;
-  Vector pos;
-  Vector move;
+  Point pos;
+  Point move;
 };
 
 struct Shot_data {
   bool view;
-  Vector pos;
-  Vector move;
+  Point pos;
+  Point move;
 };
 
 #ifdef MAIN

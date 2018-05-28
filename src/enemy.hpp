@@ -1,13 +1,14 @@
 #ifndef ENEMY_H
 #define ENEMY_H
 
-#include "vector.hpp"
+#include "def_global.hpp"
 #include "mixer_manager.hpp"
+#include "point.hpp"
 
 struct Enemy_data {
   bool view;
-  Vector pos;
-  Vector move;
+  Point pos;
+  Point move;
   int shot_timer;
 };
 

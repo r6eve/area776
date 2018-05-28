@@ -1,12 +1,13 @@
 #ifndef FIGHTER_H
 #define FIGHTER_H
 
+#include "def_global.hpp"
 #include "input_manager.hpp"
 #include "mixer_manager.hpp"
-#include "vector.hpp"
+#include "point.hpp"
 
 struct Fighter_data {
-  Vector pos;
+  Point pos;
   int shot_timer;
 };
 

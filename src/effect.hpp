@@ -1,12 +1,13 @@
 #ifndef EFFECT_H
 #define EFFECT_H
 
-#include "vector.hpp"
+#include "def_global.hpp"
 #include "image_manager.hpp"
+#include "point.hpp"
 
 struct Effect_data {
   bool view;
-  Vector pos;
+  Point pos;
   int count;
 };
 

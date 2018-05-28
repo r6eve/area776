@@ -4,7 +4,6 @@
 #include "def_global.hpp"
 #include "image_manager.hpp"
 #include "mixer_manager.hpp"
-#include "vector.hpp"
 
 void init_boss();
 void move_boss(MixerManager &mixer_manager);

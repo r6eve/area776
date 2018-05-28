@@ -51,8 +51,8 @@ void move_boss(MixerManager &mixer_manager) {
             if (n == 1) {
               r = -r;
             }
-            Vector vec = {0, 4};
-            shot.move.rot(vec, r);
+            Point p = {0, 4};
+            shot.move.rot(p, r);
             shot.view = true;
             shot.count = 0;
             shot.rot = 0;
@@ -78,8 +78,8 @@ void move_boss(MixerManager &mixer_manager) {
         Boss_shot[i].pos.x = Boss.x + 418 / 2;
         Boss_shot[i].pos.y = Boss.y + 105;
         double r = M_PI * i / 24;
-        Vector vec = {0, 3};
-        Boss_shot[i].move.rot(vec, r);
+        Point p = {0, 3};
+        Boss_shot[i].move.rot(p, r);
         Boss_shot[i].view = true;
         Boss_shot[i].count = 0;
         Boss_shot[i].rot = 0;

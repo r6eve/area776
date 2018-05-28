@@ -4,6 +4,7 @@
 #include "input_manager.hpp"
 #include "mixer_manager.hpp"
 #include "util.hpp"
+#include "point.hpp"
 
 void init_fighter() {
   Fighter.pos.x = 280;
@@ -53,7 +54,7 @@ void move_fighter(InputManager &input_manager, MixerManager &mixer_manager) {
   }
 
   double shot_speed = 16;
-  Vector pos = {25, 10};
+  Point pos = {25, 10};
   for (auto &shot : Fighter_shot) {
     if (shot.view) {
       continue;

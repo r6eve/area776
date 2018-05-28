@@ -2,6 +2,7 @@
 #include "def_global.hpp"
 #include "image_manager.hpp"
 #include "mixer_manager.hpp"
+#include "point.hpp"
 #include "util.hpp"
 
 void init_enemy() {
@@ -62,15 +63,15 @@ void move_enemy(MixerManager &mixer_manager) {
       continue;
     }
 
-    Vector enemy_center = {enemy.pos.x + 32, enemy.pos.y + 32};
-    Vector fighter_center = {Fighter.pos.x + 32, Fighter.pos.y + 32};
-    Vector vec;
-    vec.sub(fighter_center, enemy_center);
-    vec.norm();
-    vec.mul(speed);
+    Point enemy_center = {enemy.pos.x + 32, enemy.pos.y + 32};
+    Point fighter_center = {Fighter.pos.x + 32, Fighter.pos.y + 32};
+    Point p;
+    p.sub(fighter_center, enemy_center);
+    p.norm();
+    p.mul(speed);
     /* 時計回りに(shot_pitch * 2)度回転させておく */
     const double rot_angle = -(shot_pitch * 2) * M_PI / 180;
-    vec.rot(rot_angle);
+    p.rot(rot_angle);
     for (int _ = 0; _ < 5; ++_) {
       for (auto &shot : Enemy_shot) {
         if (shot.view) {
@@ -79,11 +80,11 @@ void move_enemy(MixerManager &mixer_manager) {
 
         shot.view = true;
         shot.pos.copy(enemy_center);
-        shot.move.copy(vec);
+        shot.move.copy(p);
         break;
       }
       const double rot_angle = shot_pitch * M_PI / 180;
-      vec.rot(rot_angle);
+      p.rot(rot_angle);
       Mix_PlayChannel(-1, mixer_manager.get_se(se_type::enemy_shoot), 0);
     }
   }
