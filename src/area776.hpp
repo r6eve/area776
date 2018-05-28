@@ -53,9 +53,19 @@ const RGB white = RGB{0xff, 0xff, 0xff};
 }  // namespace rgb
 
 class Area776 {
+  enum class game_state {
+    title,
+    start,
+    clear,
+    playing,
+    gameover,
+    pause,
+  };
+
   const bool debug_mode_;
 
   SDL_Surface *screen_;
+  game_state game_state_;
 
   Wipe wipe_;
   FontManager font_manager_;
@@ -90,7 +100,9 @@ class Area776 {
   }
 
  public:
-  Area776(const bool debug_mode) noexcept : debug_mode_(debug_mode) {}
+  Area776(const bool debug_mode) noexcept
+      : game_state_(game_state::title), debug_mode_(debug_mode) {}
+
   bool init();
   bool init_sdl();
   void main_loop();

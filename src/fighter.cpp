@@ -80,7 +80,7 @@ void move_fighter_shot() {
   }
 }
 
-void check_enemyshots_hit_mychara() {
+bool check_enemyshots_hit_mychara() {
   SDL_Rect r1 = {Fighter.pos.x + 20, Fighter.pos.y + 16, 20, 22};
 
   if (Enemy_select == ENEMY_1) {
@@ -128,9 +128,7 @@ void check_enemyshots_hit_mychara() {
       }
     }
   }
-  if (Chara_life <= 0) {
-    Game_state = GAME_STATE_OVER;
-  }
+  return Chara_life <= 0;
 }
 
 void draw_fighter(SDL_Surface *screen, ImageManager &image_manager) {

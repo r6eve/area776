@@ -20,7 +20,6 @@ enum {
 
 }  // namespace screen
 
-const int NUM_SNOW = 256;
 const int FIGHTER_SHOT_MAX = 32;
 const int ENEMY_MAX = 16;
 const int ENEMY_SHOT_MAX = 128;
@@ -28,27 +27,9 @@ const int EFFECT_MAX = 64;
 const int BOSS_SHOT_MAX = 256;
 
 enum {
-  GAME_STATE_TITLE = 0,
-  GAME_STATE_START,
-  GAME_STATE_CLEAR,
-  GAME_STATE_GAME,
-  GAME_STATE_OVER,
-  GAME_STATE_PAUSE,
-  NUM_GAME_STATE,
-};
-
-enum {
   ENEMY_1 = 0,
   BOSS_1,
   NUM_ENEMY_TYPE,
-};
-
-enum BOSS_STATE {
-  BOSS_STATE_AUTOMOVE = 0,
-  BOSS_STATE_ATTACK_00,
-  BOSS_STATE_ATTACK_01,
-  BOSS_STATE_ATTACK_02,
-  NUM_BOSS_STATE
 };
 
 struct Shot_data {
@@ -68,7 +49,6 @@ GLOBAL int Boss_life;
 GLOBAL int Chara_life;
 GLOBAL int Game_count;
 GLOBAL int Game_level;
-GLOBAL int Game_state;
 GLOBAL int Enemy_select;
 GLOBAL Fighter_data Fighter;
 GLOBAL Enemy_data Enemy[ENEMY_MAX];

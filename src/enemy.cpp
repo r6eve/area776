@@ -105,7 +105,7 @@ void move_enemy_shot() {
   }
 }
 
-void check_myshots_hit_enemy() {
+bool check_myshots_hit_enemy() {
   for (int i = 0; i < ENEMY_MAX; ++i) {
     if (!Enemy[i].view) continue;
     for (int j = 0; j < FIGHTER_SHOT_MAX; ++j) {
@@ -130,10 +130,13 @@ void check_myshots_hit_enemy() {
         Effect[k].count = 0;
         break;
       }
-      if (Enemy_life > 29) Enemy_select = BOSS_1;
+      if (Enemy_life > 29) {
+        return true;
+      }
       break;
     }
   }
+  return false;
 }
 
 void draw_enemy(SDL_Surface *screen, ImageManager &image_manager) {

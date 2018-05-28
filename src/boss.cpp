@@ -4,6 +4,14 @@
 #include "mixer_manager.hpp"
 #include "util.hpp"
 
+enum BOSS_STATE {
+  BOSS_STATE_AUTOMOVE = 0,
+  BOSS_STATE_ATTACK_00,
+  BOSS_STATE_ATTACK_01,
+  BOSS_STATE_ATTACK_02,
+  NUM_BOSS_STATE
+};
+
 void init_boss() {
   Boss.state = BOSS_STATE_AUTOMOVE;
   Boss.x = (screen::width - 418) / 2;
@@ -129,7 +137,7 @@ void move_boss_shot() {
   }
 }
 
-void check_myshots_hit_boss() {
+bool check_myshots_hit_boss() {
   for (int i = 0; i < FIGHTER_SHOT_MAX; ++i) {
     if (!Fighter_shot[i].view) {
       continue;
@@ -152,11 +160,11 @@ void check_myshots_hit_boss() {
       break;
     }
     if (Boss_life > 99) {
-      Game_state = GAME_STATE_CLEAR;
-      Game_count = 0;
+      return true;
     }
     break;
   }
+  return false;
 }
 
 void draw_boss(SDL_Surface *screen, ImageManager &image_manager) {

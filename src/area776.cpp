@@ -27,7 +27,6 @@ bool Area776::init() {
     return false;
   }
   Game_count = 0;
-  Game_state = GAME_STATE_TITLE;
   Blink_count = 0;
 
   return true;
@@ -59,24 +58,27 @@ bool Area776::init_sdl() {
 void Area776::main_loop() {
   for (;;) {
     input_manager_.update();
-    switch (Game_state) {
-      case GAME_STATE_TITLE:
+    switch (game_state_) {
+      case game_state::title:
         game_title();
         break;
-      case GAME_STATE_START:
+      case game_state::start:
         game_start();
         break;
-      case GAME_STATE_GAME:
+      case game_state::playing:
         play_game();
         break;
-      case GAME_STATE_CLEAR:
+      case game_state::clear:
         game_clear();
         break;
-      case GAME_STATE_OVER:
+      case game_state::gameover:
         game_over();
         break;
-      case GAME_STATE_PAUSE:
+      case game_state::pause:
         game_pause();
+        break;
+      default:
+        // NOTREACHED
         break;
     }
     if (!poll_event()) {
@@ -140,7 +142,7 @@ void Area776::game_title() {
         init_bg();
         init_boss();
         Game_count = 0;
-        Game_state = GAME_STATE_START;
+        game_state_ = game_state::start;
         Game_level = 1;
         Enemy_select = ENEMY_1;
         Chara_life = 20;
@@ -182,21 +184,25 @@ void Area776::game_start() {
 
   if (Game_count > 220) {
     Game_count = 0;
-    Game_state = GAME_STATE_GAME;
+    game_state_ = game_state::playing;
   }
 }
 
 void Area776::play_game() {
   move_fighter(input_manager_, mixer_manager_);
   move_fighter_shot();
-  check_enemyshots_hit_mychara(); /* do GameSelect = GAME_STATE_OVER;  */
+  if (check_enemyshots_hit_mychara()) {
+    game_state_ = game_state::gameover;
+  }
   update_effect();
   draw_map();
   if (Enemy_select == ENEMY_1) {
     appear_enemy();
     move_enemy(mixer_manager_);
     move_enemy_shot();
-    check_myshots_hit_enemy(); /* do Enemy_select = BOSS_1; */
+    if (check_myshots_hit_enemy()) {
+      Enemy_select = BOSS_1;
+    }
     update_bg();
     draw_bg(screen_, image_manager_);
     draw_enemy(screen_, image_manager_);
@@ -223,8 +229,10 @@ void Area776::play_game() {
       move_boss(mixer_manager_);
       move_boss_shot();
 
-      /* In this function, Game_state = GAME_STATE_CLEAR; Game_count = 0 */
-      check_myshots_hit_boss();
+      if (check_myshots_hit_boss()) {
+        game_state_ = game_state::clear;
+        Game_count = 0;
+      }
 
       draw_boss(screen_, image_manager_);
       draw_boss_shot(screen_, image_manager_);
@@ -262,7 +270,7 @@ void Area776::game_clear() {
           wipe_.draw(screen_);
           if (wipe_.update()) {
             Game_count = 0;
-            Game_state = GAME_STATE_TITLE;
+            game_state_ = game_state::title;
             Mix_HaltMusic();
           }
         }
@@ -273,7 +281,7 @@ void Area776::game_clear() {
         init_effect();
         init_bg();
         Game_count = 0;
-        Game_state = GAME_STATE_START;
+        game_state_ = game_state::start;
         ++Game_level;
         Enemy_life = 0;
         Boss_life = 0;
@@ -289,7 +297,7 @@ void Area776::game_over() {
     wipe_.draw(screen_);
     if (wipe_.update()) {
       Game_count = 0;
-      Game_state = GAME_STATE_TITLE;
+      game_state_ = game_state::title;
       Mix_HaltMusic();
     }
   }
@@ -311,7 +319,7 @@ void Area776::game_pause() {
   draw_life();
   draw_translucence();
   if (input_manager_.edge_key_p(input_device::space)) {
-    Game_state = GAME_STATE_GAME;
+    game_state_ = game_state::playing;
   }
 }
 

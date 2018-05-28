@@ -2,7 +2,9 @@
 #include "image_manager.hpp"
 #include "bg.hpp"
 
-static Snow_data Snow[NUM_SNOW];
+const int NUM_SNOW = 256;
+
+Snow_data Snow[NUM_SNOW];
 
 void init_bg() {
   for (int i = 0; i < NUM_SNOW; ++i) {
