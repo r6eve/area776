@@ -51,7 +51,7 @@ class InputManager {
           SDL_JoystickGetAxis(joystick_, 0) > 256;
     }
 
-    Uint8 *keys = SDL_GetKeyState(NULL);
+    Uint8 *keys = SDL_GetKeyState(nullptr);
     new_press_key[input_device::up] =
         (keys[SDLK_UP] == SDL_PRESSED) || (keys['k'] == SDL_PRESSED);
     new_press_key[input_device::down] =

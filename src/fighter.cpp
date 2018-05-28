@@ -8,14 +8,14 @@
 void init_fighter() {
   Fighter.pos.x = 280;
   Fighter.pos.y = 400;
-  Fighter.shot_timer = 0; /* 0: can shot */
-  for (int i = 0; i < FIGHTER_SHOT_MAX; ++i) {
-    Fighter_shot[i].view = false;
+  Fighter.shot_timer = 0;
+  for (auto &shot : Fighter_shot) {
+    shot.view = false;
   }
 }
 
 void move_fighter(InputManager &input_manager, MixerManager &mixer_manager) {
-  double move_speed = 4.0;
+  const double move_speed = 4.0;
 
   if (input_manager.press_key_p(input_device::up)) {
     Fighter.pos.y -= move_speed;
@@ -43,108 +43,122 @@ void move_fighter(InputManager &input_manager, MixerManager &mixer_manager) {
     Fighter.pos.y = screen::height - 70;
   }
 
-  if (Fighter.shot_timer == 0) {
-    if (input_manager.press_key_p(input_device::f)) {
-      double shot_speed = 16;
-      Vector pos = {25, 10};
-      for (int i = 0; i < FIGHTER_SHOT_MAX; ++i) {
-        if (Fighter_shot[i].view) {
-          continue;
-        }
-        Fighter_shot[i].view = true;
-        add_vec(Fighter_shot[i].pos, Fighter.pos, pos);
-        Fighter_shot[i].move.x = 0;
-        Fighter_shot[i].move.y = -shot_speed;
-        Mix_PlayChannel(-1, mixer_manager.get_se(se_type::fighter_shoot), 0);
-        break;
-      }
-      Fighter.shot_timer = 8;
-    }
-  } else {
+  if (Fighter.shot_timer != 0) {
     --Fighter.shot_timer;
-    if (!input_manager.press_key_p(input_device::f)) {
-      Fighter.shot_timer = 0;
-    }
+    return;
   }
+
+  if (!input_manager.press_key_p(input_device::f)) {
+    return;
+  }
+
+  double shot_speed = 16;
+  Vector pos = {25, 10};
+  for (auto &shot : Fighter_shot) {
+    if (shot.view) {
+      continue;
+    }
+
+    shot.view = true;
+    add_vec(shot.pos, Fighter.pos, pos);
+    shot.move.x = 0;
+    shot.move.y = -shot_speed;
+    Mix_PlayChannel(-1, mixer_manager.get_se(se_type::fighter_shoot), 0);
+    break;
+  }
+  Fighter.shot_timer = 8;
 }
 
 void move_fighter_shot() {
-  for (int i = 0; i < FIGHTER_SHOT_MAX; ++i) {
-    if (!Fighter_shot[i].view) {
+  for (auto &shot : Fighter_shot) {
+    if (!shot.view) {
       continue;
     }
-    add_vec(Fighter_shot[i].pos, Fighter_shot[i].move);
-    if (Fighter_shot[i].pos.y < -16) {
-      Fighter_shot[i].view = false;
+
+    add_vec(shot.pos, shot.move);
+    if (shot.pos.y < -16) {
+      shot.view = false;
     }
   }
 }
 
 bool check_enemyshots_hit_mychara() {
-  SDL_Rect r1 = {Fighter.pos.x + 20, Fighter.pos.y + 16, 20, 22};
+  SDL_Rect r1 = {static_cast<Sint16>(Fighter.pos.x + 20),
+                 static_cast<Sint16>(Fighter.pos.y + 16), 20, 22};
 
   if (Enemy_select == ENEMY_1) {
-    for (int i = 0; i < ENEMY_SHOT_MAX; ++i) {
-      if (!Enemy_shot[i].view) {
+    for (auto &shot : Enemy_shot) {
+      if (!shot.view) {
         continue;
       }
-      SDL_Rect r2 = {Enemy_shot[i].pos.x + 6, Enemy_shot[i].pos.y + 6, 4, 4};
+
+      SDL_Rect r2 = {static_cast<Sint16>(shot.pos.x + 6),
+                     static_cast<Sint16>(shot.pos.y + 6), 4, 4};
       if (!check_hit_rect(&r1, &r2)) {
         continue;
       }
+
       --Chara_life;
-      Enemy_shot[i].view = false;
-      for (int j = 0; j < EFFECT_MAX; ++j) {
-        if (Effect[j].view) {
+      shot.view = false;
+      for (auto &effect : Effect) {
+        if (effect.view) {
           continue;
         }
-        Effect[j].view = true;
-        Effect[j].pos.x = -80 + Fighter.pos.x + 30;
-        Effect[j].pos.y = -80 + Fighter.pos.y + 30;
-        Effect[j].count = 0;
+
+        effect.view = true;
+        effect.pos.x = -80 + Fighter.pos.x + 30;
+        effect.pos.y = -80 + Fighter.pos.y + 30;
+        effect.count = 0;
         break;
       }
     }
   } else if (Enemy_select == BOSS_1) {
-    for (int i = 0; i < BOSS_SHOT_MAX; ++i) {
-      if (!Boss_shot[i].view) {
+    for (auto &shot : Boss_shot) {
+      if (!shot.view) {
         continue;
       }
-      SDL_Rect r2 = {Boss_shot[i].pos.x + 3, Boss_shot[i].pos.y + 3, 10, 10};
+
+      SDL_Rect r2 = {static_cast<Sint16>(shot.pos.x + 3),
+                     static_cast<Sint16>(shot.pos.y + 3), 10, 10};
       if (!check_hit_rect(&r1, &r2)) {
         continue;
       }
+
       --Chara_life;
-      Boss_shot[i].view = false;
-      for (int j = 0; j < EFFECT_MAX; ++j) {
-        if (Effect[j].view) {
+      shot.view = false;
+      for (auto &effect : Effect) {
+        if (effect.view) {
           continue;
         }
-        Effect[j].view = true;
-        Effect[j].pos.x = -80 + Fighter.pos.x + 30;
-        Effect[j].pos.y = -80 + Fighter.pos.y + 30;
-        Effect[j].count = 0;
+
+        effect.view = true;
+        effect.pos.x = -80 + Fighter.pos.x + 30;
+        effect.pos.y = -80 + Fighter.pos.y + 30;
+        effect.count = 0;
         break;
       }
     }
   }
+
   return Chara_life <= 0;
 }
 
 void draw_fighter(SDL_Surface *screen, ImageManager &image_manager) {
   SDL_Surface *p_surface = image_manager.get(image::fighter);
-  SDL_Rect dst = {Fighter.pos.x, Fighter.pos.y};
-  SDL_BlitSurface(p_surface, NULL, screen, &dst);
+  SDL_Rect dst = {static_cast<Sint16>(Fighter.pos.x),
+                  static_cast<Sint16>(Fighter.pos.y), 60, 60};
+  SDL_BlitSurface(p_surface, nullptr, screen, &dst);
 }
 
 void draw_fighter_shot(SDL_Surface *screen, ImageManager &image_manager) {
   SDL_Surface *p_surface = image_manager.get(image::oval_re);
-
-  for (int i = 0; i < FIGHTER_SHOT_MAX; ++i) {
-    if (!Fighter_shot[i].view) {
+  for (auto &shot : Fighter_shot) {
+    if (!shot.view) {
       continue;
     }
-    SDL_Rect dst = {Fighter_shot[i].pos.x, Fighter_shot[i].pos.y};
-    SDL_BlitSurface(p_surface, NULL, screen, &dst);
+
+    SDL_Rect dst = {static_cast<Sint16>(shot.pos.x),
+                    static_cast<Sint16>(shot.pos.y), 10, 24};
+    SDL_BlitSurface(p_surface, nullptr, screen, &dst);
   }
 }

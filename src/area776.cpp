@@ -388,7 +388,7 @@ void Area776::draw_fps() {
 
 void Area776::draw_map() {
   SDL_Surface *pSurface = image_manager_.get(image::map);
-  SDL_Rect dst = {0, 0};
+  SDL_Rect dst = {0, 0, screen::width, screen::height};
   SDL_BlitSurface(pSurface, nullptr, screen_, &dst);
 }
 

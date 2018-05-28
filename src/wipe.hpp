@@ -4,9 +4,6 @@
 #include "def_global.hpp"
 
 class Wipe {
-  const int SCREEN_WIDTH = 640;
-  const int SCREEN_HEIGHT = 480;
-
   enum class wipe_type { in, out };
 
   wipe_type wipe_variation_;
@@ -21,7 +18,7 @@ class Wipe {
    */
   inline void set_wipe_in() noexcept {
     wipe_variation_ = wipe_type::in;
-    wipe_count_ = SCREEN_HEIGHT / 10;
+    wipe_count_ = screen::height / 10;
     wipe_count_reach_ = 0;
   }
 
@@ -31,7 +28,7 @@ class Wipe {
   inline void set_wipe_out() noexcept {
     wipe_variation_ = wipe_type::out;
     wipe_count_ = 0;
-    wipe_count_reach_ = SCREEN_HEIGHT / 10;
+    wipe_count_reach_ = screen::height / 10;
   }
 
   /**
@@ -39,10 +36,10 @@ class Wipe {
    * set_wipe_out().
    */
   inline void draw(SDL_Surface *screen) const noexcept {
-    SDL_Rect dst = {0, 0, SCREEN_WIDTH, static_cast<Uint16>(wipe_count_)};
-    const unsigned int dy = SCREEN_HEIGHT / 10;
+    SDL_Rect dst = {0, 0, screen::width, static_cast<Uint16>(wipe_count_)};
+    const unsigned int dy = screen::height / 10;
     Uint32 black = 0x00000000;
-    for (dst.y = 0; dst.y < SCREEN_HEIGHT; dst.y += dy) {
+    for (dst.y = 0; dst.y < screen::height; dst.y += dy) {
       SDL_FillRect(screen, &dst, black);
     }
   }

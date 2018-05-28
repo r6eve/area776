@@ -90,22 +90,23 @@ void move_enemy(MixerManager &mixer_manager) {
 }
 
 void move_enemy_shot() {
-  for (int i = 0; i < ENEMY_SHOT_MAX; ++i) {
-    if (!Enemy_shot[i].view) {
+  for (auto &shot : Enemy_shot) {
+    if (!shot.view) {
       continue;
     }
-    add_vec(Enemy_shot[i].pos, Enemy_shot[i].move);
-    if (Enemy_shot[i].pos.x < -16) {
-      Enemy_shot[i].view = false;
+
+    add_vec(shot.pos, shot.move);
+    if (shot.pos.x < -16) {
+      shot.view = false;
     }
-    if (Enemy_shot[i].pos.y < -16) {
-      Enemy_shot[i].view = false;
+    if (shot.pos.y < -16) {
+      shot.view = false;
     }
-    if (Enemy_shot[i].pos.x > screen::width) {
-      Enemy_shot[i].view = false;
+    if (shot.pos.x > screen::width) {
+      shot.view = false;
     }
-    if (Enemy_shot[i].pos.y > screen::height) {
-      Enemy_shot[i].view = false;
+    if (shot.pos.y > screen::height) {
+      shot.view = false;
     }
   }
 }

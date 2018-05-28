@@ -115,7 +115,7 @@ class Area776 {
       exit(EXIT_FAILURE);
     }
 
-    SDL_WM_SetCaption("SDL_SHOOTING", NULL);
+    SDL_WM_SetCaption("SDL_SHOOTING", nullptr);
     if (debug_mode_) {
       screen_ = SDL_SetVideoMode(screen::width, screen::height, screen::bpp,
                                  SDL_HWSURFACE | SDL_DOUBLEBUF);
