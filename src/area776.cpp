@@ -188,21 +188,20 @@ void Area776::play_game() {
     draw_enemy(screen_, image_manager_);
     draw_enemy_shot(screen_, image_manager_);
   } else if (Enemy_select == BOSS_1) {
-    if ((game_count_ < 130) && (blink_count_ < 20)) {
-      std::stringstream ss;
-      ss << "B O O S  " << game_level_;
-      draw_text(font_size::x36, rgb::red, Point{210, 180}, ss.str().c_str());
-      ++game_count_;
-      ++blink_count_;
-      if (blink_count_ >= 40) {
-        blink_count_ = 0;
+    if (game_count_ < 130) {
+      if (blink_count_ < 20) {
+        std::stringstream ss;
+        ss << "B O O S  " << game_level_;
+        draw_text(font_size::x36, rgb::red, Point{210, 180}, ss.str().c_str());
+        ++game_count_;
+        ++blink_count_;
+      } else {
+        if (blink_count_ >= 40) {
+          blink_count_ = 0;
+        }
+        ++game_count_;
+        ++blink_count_;
       }
-    } else if ((game_count_ < 130) && (blink_count_ >= 20)) {
-      if (blink_count_ >= 40) {
-        blink_count_ = 0;
-      }
-      ++game_count_;
-      ++blink_count_;
     } else {
       move_boss(mixer_manager_);
       move_boss_shot();
