@@ -1,4 +1,4 @@
-#include "bg.hpp"
+#include "snow.hpp"
 #include "def_global.hpp"
 #include "image_manager.hpp"
 

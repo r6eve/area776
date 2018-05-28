@@ -6,8 +6,8 @@
 #include "image_manager.hpp"
 #include "input_manager.hpp"
 #include "mixer_manager.hpp"
+#include "snow.hpp"
 #include "wipe.hpp"
-#include "bg.hpp"
 
 struct Point {
   int x;
@@ -110,7 +110,6 @@ class Area776 {
         blink_count_(0),
         game_count_(0),
         game_state_(game_state::title) {
-
     if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
       std::cerr << "error: " << SDL_GetError() << '\n';
       exit(EXIT_FAILURE);

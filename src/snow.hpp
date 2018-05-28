@@ -1,5 +1,5 @@
-#ifndef BG_H
-#define BG_H
+#ifndef SNOW_H
+#define SNOW_H
 
 #include "def_global.hpp"
 #include "image_manager.hpp"

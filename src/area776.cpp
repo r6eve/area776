@@ -8,13 +8,13 @@
 #include "image_manager.hpp"
 
 #include <time.h>
-#include "bg.hpp"
 #include "boss.hpp"
 #include "effect.hpp"
 #include "enemy.hpp"
 #include "fighter.hpp"
 #include "image_manager.hpp"
 #include "input_manager.hpp"
+#include "snow.hpp"
 #include "vector.hpp"
 #include "wipe.hpp"
 
@@ -407,8 +407,9 @@ void Area776::draw_translucence() {
   amask = 0xff000000;
 #endif
 
-  SDL_Surface *trans_surface = SDL_CreateRGBSurface(
-      SDL_SWSURFACE, screen::width, screen::height, 32, rmask, gmask, bmask, amask);
+  SDL_Surface *trans_surface =
+      SDL_CreateRGBSurface(SDL_SWSURFACE, screen::width, screen::height, 32,
+                           rmask, gmask, bmask, amask);
   if (trans_surface == nullptr) {
     std::cerr << "CreateRGBSurface failed: " << SDL_GetError() << '\n';
     exit(EXIT_FAILURE);
