@@ -59,9 +59,6 @@ Options:
 int main(int argc, char **argv) {
   const bool debug_mode = parse_options(argc, argv);
   Area776 game(debug_mode);
-  if (!game.init()) {
-    exit(EXIT_FAILURE);
-  }
-  game.main_loop();
+  game.run();
   exit(EXIT_SUCCESS);
 }

@@ -7,8 +7,6 @@
 #include "def_global.hpp"
 #include "image_manager.hpp"
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <time.h>
 #include "bg.hpp"
 #include "boss.hpp"
@@ -20,41 +18,7 @@
 #include "vector.hpp"
 #include "wipe.hpp"
 
-static int Blink_count;
-
-bool Area776::init() {
-  if (!init_sdl()) {
-    return false;
-  }
-  Blink_count = 0;
-
-  return true;
-}
-
-bool Area776::init_sdl() {
-  if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
-    fprintf(stderr, "Can't initialize sdl. : %s\n", SDL_GetError());
-    return false;
-  }
-  SDL_WM_SetCaption("SDL_SHOOTING", NULL);
-  if (debug_mode_) {
-    screen_ = SDL_SetVideoMode(screen::width, screen::height, screen::bpp,
-                               SDL_HWSURFACE | SDL_DOUBLEBUF);
-  } else {
-    screen_ = SDL_SetVideoMode(screen::width, screen::height, screen::bpp,
-                               SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_FULLSCREEN);
-  }
-  if (!screen_) {
-    fprintf(stderr, "Can't initialize screen. : %s\n", SDL_GetError());
-    SDL_Quit();
-    return false;
-  }
-  SDL_ShowCursor(SDL_DISABLE);
-
-  return true;
-}
-
-void Area776::main_loop() {
+void Area776::run() {
   for (;;) {
     input_manager_.update();
     switch (game_state_) {
@@ -114,14 +78,14 @@ void Area776::game_title() {
     case 2:
       draw_text(font_size::x36, rgb::dark_red, title_pos, title_str);
       draw_text(font_size::x16, rgb::black, message_pos, message_str);
-      ++Blink_count;
-      if (Blink_count >= 30) {
+      ++blink_count_;
+      if (blink_count_ >= 30) {
         SDL_Rect dst_back = {static_cast<Sint16>(message_pos.x),
                              static_cast<Sint16>(message_pos.y),
                              screen::width - 240, screen::height - 300};
         SDL_FillRect(screen_, &dst_back, bg_col);
-        if (Blink_count >= 60) {
-          Blink_count = 0;
+        if (blink_count_ >= 60) {
+          blink_count_ = 0;
         }
       }
       if (input_manager_.press_key_p(input_device::space)) {
@@ -207,23 +171,23 @@ void Area776::play_game() {
     draw_enemy(screen_, image_manager_);
     draw_enemy_shot(screen_, image_manager_);
   } else if (Enemy_select == BOSS_1) {
-    if ((game_count_ < 130) && (Blink_count < 20)) {
+    if ((game_count_ < 130) && (blink_count_ < 20)) {
       std::stringstream ss;
       ss << "B O O S  " << game_level_;
       draw_text(font_size::x36, rgb::red, Point{210, 180}, ss.str().c_str());
       ++game_count_;
-      ++Blink_count;
-      if (Blink_count >= 20) {
-        if (Blink_count >= 40) {
-          Blink_count = 0;
+      ++blink_count_;
+      if (blink_count_ >= 20) {
+        if (blink_count_ >= 40) {
+          blink_count_ = 0;
         }
       }
-    } else if ((game_count_ < 130) && (Blink_count >= 20)) {
-      if (Blink_count >= 40) {
-        Blink_count = 0;
+    } else if ((game_count_ < 130) && (blink_count_ >= 20)) {
+      if (blink_count_ >= 40) {
+        blink_count_ = 0;
       }
       ++game_count_;
-      ++Blink_count;
+      ++blink_count_;
     } else {
       move_boss(mixer_manager_);
       move_boss_shot();
@@ -415,17 +379,17 @@ void Area776::draw_translucence() {
   SDL_Surface *trans_surface = SDL_CreateRGBSurface(
       SDL_SWSURFACE, screen::width, screen::height, 32, rmask, gmask, bmask, 0);
   if (trans_surface == NULL) {
-    fprintf(stderr, "CreateRGBSurface failed: %s\n", SDL_GetError());
+    std::cerr << "CreateRGBSurface failed: " << SDL_GetError() << '\n';
     exit(EXIT_FAILURE);
   }
   SDL_SetAlpha(trans_surface, SDL_SRCALPHA, alpha);
   SDL_BlitSurface(trans_surface, NULL, screen_, &dst_back);
-  if (Blink_count < 30) {
+  if (blink_count_ < 30) {
     draw_text(font_size::x36, rgb::white, Point{220, 180}, "P a u s e");
-    ++Blink_count;
-  } else if (Blink_count < 60) {
-    ++Blink_count;
+    ++blink_count_;
+  } else if (blink_count_ < 60) {
+    ++blink_count_;
   } else {
-    Blink_count = 0;
+    blink_count_ = 0;
   }
 }

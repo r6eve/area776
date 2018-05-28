@@ -66,6 +66,7 @@ class Area776 {
 
   SDL_Surface *screen_;
   game_state game_state_;
+  int blink_count_;
   int game_count_;
   int game_level_;
 
@@ -104,12 +105,33 @@ class Area776 {
  public:
   Area776(const bool debug_mode) noexcept
       : debug_mode_(debug_mode),
-        game_state_(game_state::title),
-        game_count_(0) {}
+        blink_count_(0),
+        game_count_(0),
+        game_state_(game_state::title) {
 
-  bool init();
-  bool init_sdl();
-  void main_loop();
+    if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
+      std::cerr << "error: " << SDL_GetError() << '\n';
+      exit(EXIT_FAILURE);
+    }
+
+    SDL_WM_SetCaption("SDL_SHOOTING", NULL);
+    if (debug_mode_) {
+      screen_ = SDL_SetVideoMode(screen::width, screen::height, screen::bpp,
+                                 SDL_HWSURFACE | SDL_DOUBLEBUF);
+    } else {
+      screen_ =
+          SDL_SetVideoMode(screen::width, screen::height, screen::bpp,
+                           SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_FULLSCREEN);
+    }
+    if (!screen_) {
+      std::cerr << "error: " << SDL_GetError() << '\n';
+      exit(EXIT_FAILURE);
+    }
+
+    SDL_ShowCursor(SDL_DISABLE);
+  }
+
+  void run();
   void game_title();
   void game_start();
   void play_game();
