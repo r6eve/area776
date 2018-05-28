@@ -60,7 +60,7 @@ void move_fighter(InputManager &input_manager, MixerManager &mixer_manager) {
     }
 
     shot.view = true;
-    add_vec(shot.pos, Fighter.pos, pos);
+    shot.pos.add(Fighter.pos, pos);
     shot.move.x = 0;
     shot.move.y = -shot_speed;
     Mix_PlayChannel(-1, mixer_manager.get_se(se_type::fighter_shoot), 0);
@@ -75,7 +75,7 @@ void move_fighter_shot() {
       continue;
     }
 
-    add_vec(shot.pos, shot.move);
+    shot.pos.add(shot.move);
     if (shot.pos.y < -16) {
       shot.view = false;
     }

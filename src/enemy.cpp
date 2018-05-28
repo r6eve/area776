@@ -27,9 +27,9 @@ void appear_enemy() {
     enemy.pos.x = rand() % (screen::width - 64);
     enemy.pos.y = -64;
     enemy.shot_timer = rand() % 15 + 15;
-    sub_vec(enemy.move, Fighter.pos, enemy.pos);
-    normalize_vec(enemy.move);
-    mul_vec(enemy.move, speed);
+    enemy.move.sub(Fighter.pos, enemy.pos);
+    enemy.move.norm();
+    enemy.move.mul(speed);
     break;
   }
 }
@@ -43,7 +43,7 @@ void move_enemy(MixerManager &mixer_manager) {
       continue;
     }
 
-    add_vec(enemy.pos, enemy.move);
+    enemy.pos.add(enemy.move);
     if (enemy.pos.x < -35) {
       enemy.view = false;
       continue;
@@ -65,12 +65,12 @@ void move_enemy(MixerManager &mixer_manager) {
     Vector enemy_center = {enemy.pos.x + 32, enemy.pos.y + 32};
     Vector fighter_center = {Fighter.pos.x + 32, Fighter.pos.y + 32};
     Vector vec;
-    sub_vec(vec, fighter_center, enemy_center);
-    normalize_vec(vec);
-    mul_vec(vec, speed);
+    vec.sub(fighter_center, enemy_center);
+    vec.norm();
+    vec.mul(speed);
     /* 時計回りに(shot_pitch * 2)度回転させておく */
     const double rot_angle = -(shot_pitch * 2) * M_PI / 180;
-    rot_vec(vec, rot_angle);
+    vec.rot(rot_angle);
     for (int _ = 0; _ < 5; ++_) {
       for (auto &shot : Enemy_shot) {
         if (shot.view) {
@@ -78,12 +78,12 @@ void move_enemy(MixerManager &mixer_manager) {
         }
 
         shot.view = true;
-        cp_vec(shot.pos, enemy_center);
-        cp_vec(shot.move, vec);
+        shot.pos.copy(enemy_center);
+        shot.move.copy(vec);
         break;
       }
       const double rot_angle = shot_pitch * M_PI / 180;
-      rot_vec(vec, rot_angle);
+      vec.rot(rot_angle);
       Mix_PlayChannel(-1, mixer_manager.get_se(se_type::enemy_shoot), 0);
     }
   }
@@ -95,7 +95,7 @@ void move_enemy_shot() {
       continue;
     }
 
-    add_vec(shot.pos, shot.move);
+    shot.pos.add(shot.move);
     if (shot.pos.x < -16) {
       shot.view = false;
     }
