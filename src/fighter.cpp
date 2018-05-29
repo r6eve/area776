@@ -2,11 +2,11 @@
 #include <SDL/SDL_mixer.h>
 #include "boss.hpp"
 #include "def_global.hpp"
+#include "effect.hpp"
 #include "enemy.hpp"
 #include "image_manager.hpp"
 #include "input_manager.hpp"
 #include "mixer_manager.hpp"
-#include "point.hpp"
 #include "util.hpp"
 
 void Fighter::init() {
@@ -86,7 +86,8 @@ void Fighter::update_shot() {
   }
 }
 
-bool Fighter::check_enemyshots_hit_mychara(Enemy &enemy, Boss &boss) {
+bool Fighter::check_enemyshots_hit_mychara(Enemy &enemy, Boss &boss,
+                                           Effect &effect) {
   SDL_Rect r1 = {static_cast<Sint16>(pos.x + 20),
                  static_cast<Sint16>(pos.y + 16), 20, 22};
 
@@ -104,7 +105,7 @@ bool Fighter::check_enemyshots_hit_mychara(Enemy &enemy, Boss &boss) {
 
       --life;
       bullet.view = false;
-      for (auto &effect : Effect) {
+      for (auto &effect : effect.effects) {
         if (effect.view) {
           continue;
         }
@@ -130,7 +131,7 @@ bool Fighter::check_enemyshots_hit_mychara(Enemy &enemy, Boss &boss) {
 
       --life;
       bullet.view = false;
-      for (auto &effect : Effect) {
+      for (auto &effect : effect.effects) {
         if (effect.view) {
           continue;
         }

@@ -2,6 +2,7 @@
 #define BOSS_H
 
 #include "def_global.hpp"
+#include "effect.hpp"
 #include "image_manager.hpp"
 #include "mixer_manager.hpp"
 
@@ -41,7 +42,7 @@ struct Boss {
   /**
    * Return true if boss life is 0.
    */
-  bool check_myshots_hit_boss(Fighter &fighter);
+  bool check_myshots_hit_boss(Fighter &fighter, Effect &effect);
 
   void draw(SDL_Surface *screen, ImageManager &image_manager);
   void draw_shot(SDL_Surface *screen, ImageManager &image_manager);

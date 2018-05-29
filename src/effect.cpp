@@ -2,14 +2,14 @@
 #include "effect.hpp"
 #include "image_manager.hpp"
 
-void EffectClass::init() {
-  for (auto &effect : Effect) {
+void Effect::init() {
+  for (auto &effect : effects) {
     effect.view = false;
   }
 }
 
-void EffectClass::update() {
-  for (auto &effect : Effect) {
+void Effect::update() {
+  for (auto &effect : effects) {
     if (!effect.view) {
       continue;
     }
@@ -20,8 +20,8 @@ void EffectClass::update() {
   }
 }
 
-void EffectClass::draw(SDL_Surface *screen, ImageManager &image_manager) {
-  for (auto &effect : Effect) {
+void Effect::draw(SDL_Surface *screen, ImageManager &image_manager) {
+  for (auto &effect : effects) {
     if (!effect.view) {
       continue;
     }

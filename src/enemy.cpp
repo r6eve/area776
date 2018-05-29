@@ -1,10 +1,10 @@
 #include "enemy.hpp"
+#include "effect.hpp"
 #include <SDL/SDL_mixer.h>
 #include "def_global.hpp"
 #include "fighter.hpp"
 #include "image_manager.hpp"
 #include "mixer_manager.hpp"
-#include "point.hpp"
 #include "util.hpp"
 
 void Enemy::init() {
@@ -114,7 +114,7 @@ void Enemy::update_shot() {
   }
 }
 
-bool Enemy::check_myshots_hit_enemy(Fighter &fighter) {
+bool Enemy::check_myshots_hit_enemy(Fighter &fighter, Effect &effect) {
   for (auto &enemy : enemies) {
     if (!enemy.view) {
       continue;
@@ -136,7 +136,7 @@ bool Enemy::check_myshots_hit_enemy(Fighter &fighter) {
       ++life;
       enemy.view = false;
       bullet.view = false;
-      for (auto &effect : Effect) {
+      for (auto &effect : effect.effects) {
         if (effect.view) {
           continue;
         }

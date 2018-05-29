@@ -126,7 +126,7 @@ void Boss::update_shot() {
   }
 }
 
-bool Boss::check_myshots_hit_boss(Fighter &fighter) {
+bool Boss::check_myshots_hit_boss(Fighter &fighter, Effect &effect) {
   for (auto &bullet : fighter.bullets) {
     if (!bullet.view) {
       continue;
@@ -140,7 +140,7 @@ bool Boss::check_myshots_hit_boss(Fighter &fighter) {
     }
     ++life;
     bullet.view = false;
-    for (auto &effect : Effect) {
+    for (auto &effect : effect.effects) {
       if (effect.view) {
         continue;
       }

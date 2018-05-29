@@ -3,10 +3,10 @@
 
 #include "boss.hpp"
 #include "def_global.hpp"
+#include "effect.hpp"
 #include "image_manager.hpp"
 #include "input_manager.hpp"
 #include "mixer_manager.hpp"
-#include "point.hpp"
 
 struct Enemy;
 
@@ -31,7 +31,7 @@ struct Fighter {
   /**
    * Return true if player life is 0.
    */
-  bool check_enemyshots_hit_mychara(Enemy &enemy, Boss &boss);
+  bool check_enemyshots_hit_mychara(Enemy &enemy, Boss &boss, Effect &effect);
 
   void draw(SDL_Surface *screen, ImageManager &image_manager);
   void draw_shot(SDL_Surface *screen, ImageManager &image_manager);

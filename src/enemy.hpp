@@ -3,9 +3,9 @@
 
 #include "def_global.hpp"
 #include "fighter.hpp"
+#include "effect.hpp"
 #include "image_manager.hpp"
 #include "mixer_manager.hpp"
-#include "point.hpp"
 
 struct Enemy {
   struct EnemyData {
@@ -35,7 +35,7 @@ struct Enemy {
   /**
    * Return true if enemy life is 0.
    */
-  bool check_myshots_hit_enemy(Fighter &fighter);
+  bool check_myshots_hit_enemy(Fighter &fighter, Effect &effect);
 
   void draw(SDL_Surface *screen, ImageManager &image_manager);
   void draw_shot(SDL_Surface *screen, ImageManager &image_manager);

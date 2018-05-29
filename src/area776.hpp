@@ -10,7 +10,6 @@
 #include "image_manager.hpp"
 #include "input_manager.hpp"
 #include "mixer_manager.hpp"
-#include "point.hpp"
 #include "snow.hpp"
 #include "wipe.hpp"
 
@@ -51,7 +50,7 @@ class Area776 {
   Fighter fighter_;
   Enemy enemy_;
   Boss boss_;
-  EffectClass effect_;
+  Effect effect_;
 
   Wipe wipe_;
   Snow snow_;
