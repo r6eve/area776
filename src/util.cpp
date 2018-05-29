@@ -26,7 +26,7 @@ bool check_enemyshots_hit_fighter(enemy_type enemy_select, Fighter &fighter,
 
         SDL_Rect r2 = {static_cast<Sint16>(bullet.pos.x + 6),
                        static_cast<Sint16>(bullet.pos.y + 6), 4, 4};
-        if (!util::check_hit_rect(&r1, &r2)) {
+        if (!check_hit_rect(&r1, &r2)) {
           continue;
         }
 
@@ -54,7 +54,7 @@ bool check_enemyshots_hit_fighter(enemy_type enemy_select, Fighter &fighter,
 
         SDL_Rect r2 = {static_cast<Sint16>(bullet.pos.x + 3),
                        static_cast<Sint16>(bullet.pos.y + 3), 10, 10};
-        if (!util::check_hit_rect(&r1, &r2)) {
+        if (!check_hit_rect(&r1, &r2)) {
           continue;
         }
 
@@ -98,7 +98,7 @@ bool check_fightershots_hit_enemy(Fighter &fighter, Enemy &enemy,
                      35, 35};
       SDL_Rect r2 = {static_cast<Sint16>(bullet.pos.x),
                      static_cast<Sint16>(bullet.pos.y), 10, 24};
-      if (!util::check_hit_rect(&r1, &r2)) {
+      if (!check_hit_rect(&r1, &r2)) {
         continue;
       }
 
@@ -135,7 +135,7 @@ bool check_fightershots_hit_boss(Fighter &fighter, Boss &boss, Effect &effect) {
                    static_cast<Sint16>(bullet.pos.y), 10, 24};
     SDL_Rect r2 = {static_cast<Sint16>(boss.x + 171),
                    static_cast<Sint16>(boss.y + 95), 57, 57};
-    if (!util::check_hit_rect(&r1, &r2)) {
+    if (!check_hit_rect(&r1, &r2)) {
       continue;
     }
     ++boss.life;

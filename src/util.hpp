@@ -9,8 +9,6 @@
 
 namespace util {
 
-bool check_hit_rect(SDL_Rect *a, SDL_Rect *b);
-
 /**
  * Return true if player life is 0.
  */
