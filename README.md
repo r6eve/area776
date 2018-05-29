@@ -1,9 +1,15 @@
 area776
 =======
+[![Build Status on Travis CI][]][Travis CI Results]
+[![Build Status on AppVeyor][]][AppVeyor Results]
 
 *TODO PROJECT*
 
 `area776` is a shooting game written in C++ with SDL1.2.
+
+## Demo Video
+
+*TODO*
 
 ## Installation
 
@@ -22,7 +28,7 @@ area776
 
 # If you use others, install those from package manager or source.
 
-> git clone git@github.com:r6eve/area776.git  # Or download ZIP archive and extract pacman-sdl.
+> git clone git@github.com:r6eve/area776.git  # Or download ZIP archive and extract area776.
 > cd area776
 > make
 ```
@@ -65,6 +71,10 @@ Options:
 * Support SDL2.0
 * Record Score
 
+[Build Status on Travis CI]: https://travis-ci.org/r6eve/area776.svg?branch=master
+[Travis CI Results]: https://travis-ci.org/r6eve/area776
+[Build Status on AppVeyor]: https://ci.appveyor.com/api/projects/status/saw2lu2yrqn0omgs?svg=true
+[AppVeyor Results]: https://ci.appveyor.com/project/r6eve/area776
 [SDL 1.2]: http://www.libsdl.org/
 [SDL_image 1.2]: https://www.libsdl.org/projects/SDL_image/release-1.2.html
 [SDL_mixer 1.2]: https://www.libsdl.org/projects/SDL_mixer/release-1.2.html
