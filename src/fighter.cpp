@@ -8,7 +8,8 @@
 #include "input_manager.hpp"
 #include "mixer_manager.hpp"
 
-void Fighter::update(InputManager &input_manager, MixerManager &mixer_manager) {
+void Fighter::update(InputManager &input_manager,
+                     MixerManager &mixer_manager) noexcept {
   const double move_speed = 4.0;
 
   if (input_manager.press_key_p(input_device::up)) {

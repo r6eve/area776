@@ -7,13 +7,14 @@
 
 namespace util {
 
-inline bool check_hit_rect(SDL_Rect *a, SDL_Rect *b) {
+inline bool check_hit_rect(SDL_Rect *a, SDL_Rect *b) noexcept {
   return ((a->x) < (b->x + b->w)) && ((b->x) < (a->x + a->w)) &&
          ((a->y) < (b->y + b->h)) && ((b->y) < (a->y + a->h));
 }
 
 bool check_enemyshots_hit_fighter(enemy_type enemy_select, Fighter &fighter,
-                                  Enemy &enemy, Boss &boss, Effect &effect) {
+                                  Enemy &enemy, Boss &boss,
+                                  Effect &effect) noexcept {
   SDL_Rect r1 = {static_cast<Sint16>(fighter.pos.x + 20),
                  static_cast<Sint16>(fighter.pos.y + 16), 20, 22};
 
@@ -83,7 +84,7 @@ bool check_enemyshots_hit_fighter(enemy_type enemy_select, Fighter &fighter,
 }
 
 bool check_fightershots_hit_enemy(Fighter &fighter, Enemy &enemy,
-                                  Effect &effect) {
+                                  Effect &effect) noexcept {
   for (auto &e : enemy.enemies) {
     if (!e.view) {
       continue;
@@ -126,7 +127,8 @@ bool check_fightershots_hit_enemy(Fighter &fighter, Enemy &enemy,
   return false;
 }
 
-bool check_fightershots_hit_boss(Fighter &fighter, Boss &boss, Effect &effect) {
+bool check_fightershots_hit_boss(Fighter &fighter, Boss &boss,
+                                 Effect &effect) noexcept {
   for (auto &bullet : fighter.bullets) {
     if (!bullet.view) {
       continue;

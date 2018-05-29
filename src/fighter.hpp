@@ -20,9 +20,9 @@ struct Fighter {
   int life;
   Bullet bullets[FIGHTER_SHOT_MAX];
 
-  Fighter() {}
+  Fighter() noexcept {}
 
-  inline void init() {
+  inline void init() noexcept {
     pos.x = 280;
     pos.y = 400;
     shot_timer = 0;
@@ -31,9 +31,10 @@ struct Fighter {
     }
   }
 
-  void update(InputManager &input_manager, MixerManager &mixer_manager);
+  void update(InputManager &input_manager,
+              MixerManager &mixer_manager) noexcept;
 
-  inline void update_shot() {
+  inline void update_shot() noexcept {
     for (auto &bullet : bullets) {
       if (!bullet.view) {
         continue;
@@ -46,14 +47,15 @@ struct Fighter {
     }
   }
 
-  inline void draw(SDL_Surface *screen, ImageManager &image_manager) {
+  inline void draw(SDL_Surface *screen, ImageManager &image_manager) noexcept {
     SDL_Surface *p_surface = image_manager.get(image::fighter);
     SDL_Rect dst = {static_cast<Sint16>(pos.x), static_cast<Sint16>(pos.y), 60,
                     60};
     SDL_BlitSurface(p_surface, nullptr, screen, &dst);
   }
 
-  inline void draw_shot(SDL_Surface *screen, ImageManager &image_manager) {
+  inline void draw_shot(SDL_Surface *screen,
+                        ImageManager &image_manager) noexcept {
     SDL_Surface *p_surface = image_manager.get(image::oval_re);
     for (auto &bullet : bullets) {
       if (!bullet.view) {
@@ -66,7 +68,7 @@ struct Fighter {
     }
   }
 
-  ~Fighter() {}
+  ~Fighter() noexcept {}
 };
 
 #endif

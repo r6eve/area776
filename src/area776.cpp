@@ -15,7 +15,7 @@
 #include "util.hpp"
 #include "wipe.hpp"
 
-void Area776::run() {
+void Area776::run() noexcept {
   for (;;) {
     input_manager_.update();
     switch (game_state_) {
@@ -52,7 +52,7 @@ void Area776::run() {
   }
 }
 
-void Area776::game_title() {
+void Area776::game_title() noexcept {
   SDL_Rect dst = {0, 0, screen::width, screen::height};
   const Uint32 bg_col = 0x45402b;
   SDL_FillRect(screen_, &dst, bg_col);
@@ -121,7 +121,7 @@ void Area776::game_title() {
   }
 }
 
-void Area776::game_start() {
+void Area776::game_start() noexcept {
   fighter_.update(input_manager_, mixer_manager_);
   fighter_.update_shot();
   draw_map();
@@ -161,7 +161,7 @@ void Area776::game_start() {
   }
 }
 
-void Area776::play_game() {
+void Area776::play_game() noexcept {
   if (input_manager_.edge_key_p(input_device::space)) {
     game_state_ = game_state::pause;
   }
@@ -230,7 +230,7 @@ void Area776::play_game() {
   draw_life();
 }
 
-void Area776::game_clear() {
+void Area776::game_clear() noexcept {
   fighter_.update(input_manager_, mixer_manager_);
   fighter_.update_shot();
   draw_map();
@@ -278,7 +278,7 @@ void Area776::game_clear() {
   boss_.life = 0;
 }
 
-void Area776::game_over() {
+void Area776::game_over() noexcept {
   draw_text(font_size::x36, rgb::red, Point{200, 180}, "G a m e O v e r");
   ++game_count_;
   if (game_count_ <= 200) {
@@ -295,7 +295,7 @@ void Area776::game_over() {
   Mix_HaltMusic();
 }
 
-void Area776::game_pause() {
+void Area776::game_pause() noexcept {
   draw_map();
 
   switch (enemy_select_) {

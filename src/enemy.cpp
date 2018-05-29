@@ -6,7 +6,7 @@
 #include "image_manager.hpp"
 #include "mixer_manager.hpp"
 
-void Enemy::update(MixerManager &mixer_manager, Fighter &fighter) {
+void Enemy::update(MixerManager &mixer_manager, Fighter &fighter) noexcept {
   const double speed = 6;
   const double shot_pitch = 20;
 

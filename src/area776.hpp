@@ -62,12 +62,12 @@ class Area776 {
   InputManager input_manager_;
   MixerManager mixer_manager_;
 
-  void game_title();
-  void game_start();
-  void play_game();
-  void game_clear();
-  void game_over();
-  void game_pause();
+  void game_title() noexcept;
+  void game_start() noexcept;
+  void play_game() noexcept;
+  void game_clear() noexcept;
+  void game_over() noexcept;
+  void game_pause() noexcept;
 
   inline void draw_text(const unsigned char font_size, const RGB &rgb,
                         const Point &p, const char *str) const noexcept {
@@ -95,7 +95,7 @@ class Area776 {
     draw_text(font_size, rgb, p, str);
   }
 
-  inline void draw_life() {
+  inline void draw_life() noexcept {
     switch (enemy_select_) {
       case enemy_type::enemy: {
         std::stringstream ss;
@@ -120,7 +120,7 @@ class Area776 {
               Point{fighter_.pos.x, fighter_.pos.y + 55}, ss.str().c_str());
   }
 
-  inline bool poll_event() {
+  inline bool poll_event() noexcept {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
       switch (event.type) {
@@ -139,7 +139,7 @@ class Area776 {
     return true;
   }
 
-  inline void wait_game() {
+  inline void wait_game() noexcept {
     static Uint32 pre_count;
     const double wait_time = 1000.0 / screen::max_fps;
     const Uint32 wait_count = (wait_time + 0.5);
@@ -154,7 +154,7 @@ class Area776 {
     pre_count = SDL_GetTicks();
   }
 
-  inline void draw_fps() {
+  inline void draw_fps() noexcept {
     static Uint32 pre_count;
     const Uint32 now_count = SDL_GetTicks();
     if (pre_count) {
@@ -178,13 +178,13 @@ class Area776 {
     pre_count = now_count;
   }
 
-  inline void draw_map() {
+  inline void draw_map() noexcept {
     SDL_Surface *pSurface = image_manager_.get(image::map);
     SDL_Rect dst = {0, 0, screen::width, screen::height};
     SDL_BlitSurface(pSurface, nullptr, screen_, &dst);
   }
 
-  inline void draw_translucence() {
+  inline void draw_translucence() noexcept {
     Uint32 rmask, gmask, bmask, amask;
     Uint8 alpha = 128;
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
@@ -249,7 +249,7 @@ class Area776 {
     SDL_ShowCursor(SDL_DISABLE);
   }
 
-  void run();
+  void run() noexcept;
 
   ~Area776() noexcept { atexit(SDL_Quit); }
 };

@@ -13,13 +13,15 @@ struct Effect {
 
   EffectData effects[EFFECT_MAX];
 
-  inline void init() {
+  Effect() noexcept {}
+
+  inline void init() noexcept {
     for (auto &effect : effects) {
       effect.view = false;
     }
   }
 
-  inline void update() {
+  inline void update() noexcept {
     for (auto &effect : effects) {
       if (!effect.view) {
         continue;
@@ -31,7 +33,7 @@ struct Effect {
     }
   }
 
-  inline void draw(SDL_Surface *screen, ImageManager &image_manager) {
+  inline void draw(SDL_Surface *screen, ImageManager &image_manager) noexcept {
     for (auto &effect : effects) {
       if (!effect.view) {
         continue;
@@ -45,6 +47,8 @@ struct Effect {
       SDL_BlitSurface(p_surface, &src, screen, &dst);
     }
   }
+
+  ~Effect() {}
 };
 
 #endif

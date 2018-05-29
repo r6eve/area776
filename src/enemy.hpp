@@ -25,9 +25,9 @@ struct Enemy {
   EnemyData enemies[ENEMY_MAX];
   Bullet bullets[ENEMY_SHOT_MAX];
 
-  Enemy() {}
+  Enemy() noexcept {}
 
-  inline void init() {
+  inline void init() noexcept {
     for (auto &enemy : enemies) {
       enemy.view = false;
     }
@@ -36,7 +36,7 @@ struct Enemy {
     }
   }
 
-  inline void appear(Fighter &fighter) {
+  inline void appear(Fighter &fighter) noexcept {
     const double speed = 8;
     if (rand() % 45 != 0) {
       return;
@@ -57,9 +57,9 @@ struct Enemy {
     }
   }
 
-  void update(MixerManager &mixer_manager, Fighter &fighter);
+  void update(MixerManager &mixer_manager, Fighter &fighter) noexcept;
 
-  inline void update_shot() {
+  inline void update_shot() noexcept {
     for (auto &bullet : bullets) {
       if (!bullet.view) {
         continue;
@@ -81,7 +81,7 @@ struct Enemy {
     }
   }
 
-  inline void draw(SDL_Surface *screen, ImageManager &image_manager) {
+  inline void draw(SDL_Surface *screen, ImageManager &image_manager) noexcept {
     for (auto &enemy : enemies) {
       if (!enemy.view) {
         continue;
@@ -94,7 +94,8 @@ struct Enemy {
     }
   }
 
-  inline void draw_shot(SDL_Surface *screen, ImageManager &image_manager) {
+  inline void draw_shot(SDL_Surface *screen,
+                        ImageManager &image_manager) noexcept {
     for (auto &bullet : bullets) {
       if (!bullet.view) {
         continue;
@@ -107,7 +108,7 @@ struct Enemy {
     }
   }
 
-  ~Enemy() {}
+  ~Enemy() noexcept {}
 };
 
 #endif

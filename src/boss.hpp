@@ -31,9 +31,9 @@ struct Boss {
   int life;
   Bullet bullets[BOSS_SHOT_MAX];
 
-  Boss() {}
+  Boss() noexcept {}
 
-  inline void init() {
+  inline void init() noexcept {
     state = boss_state::automove;
     x = (screen::width - 418) / 2;
     y = -240;
@@ -43,9 +43,9 @@ struct Boss {
     }
   }
 
-  void update(MixerManager &mixer_manager);
+  void update(MixerManager &mixer_manager) noexcept;
 
-  inline void update_shot() {
+  inline void update_shot() noexcept {
     for (auto &bullet : bullets) {
       if (!bullet.view) {
         continue;
@@ -72,13 +72,14 @@ struct Boss {
     }
   }
 
-  inline void draw(SDL_Surface *screen, ImageManager &image_manager) {
+  inline void draw(SDL_Surface *screen, ImageManager &image_manager) noexcept {
     SDL_Surface *p_surface = image_manager.get(image::boss);
     SDL_Rect dst = {static_cast<Sint16>(x), static_cast<Sint16>(y), 400, 224};
     SDL_BlitSurface(p_surface, nullptr, screen, &dst);
   }
 
-  inline void draw_shot(SDL_Surface *screen, ImageManager &image_manager) {
+  inline void draw_shot(SDL_Surface *screen,
+                        ImageManager &image_manager) noexcept {
     for (auto &bullet : bullets) {
       if (!bullet.view) {
         continue;
@@ -90,7 +91,7 @@ struct Boss {
     }
   }
 
-  ~Boss() {}
+  ~Boss() noexcept {}
 };
 
 #endif

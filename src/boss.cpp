@@ -5,7 +5,7 @@
 #include "image_manager.hpp"
 #include "mixer_manager.hpp"
 
-void Boss::update(MixerManager &mixer_manager) {
+void Boss::update(MixerManager &mixer_manager) noexcept {
   x += move;
   if (x < 0) {
     x = 0;

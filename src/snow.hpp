@@ -17,7 +17,7 @@ class Snow {
   Snow_data snows_[snow_count];
 
  public:
-  Snow() {}
+  Snow() noexcept {}
 
   inline void init() noexcept {
     for (auto &snow : snows_) {
@@ -63,7 +63,7 @@ class Snow {
     }
   }
 
-  ~Snow() {}
+  ~Snow() noexcept {}
 };
 
 #endif
