@@ -41,6 +41,7 @@ struct Boss {
     for (auto &bullet : bullets) {
       bullet.view = false;
     }
+    life = 100;
   }
 
   void update(MixerManager &mixer_manager) noexcept;

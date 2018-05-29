@@ -34,6 +34,7 @@ struct Enemy {
     for (auto &bullet : bullets) {
       bullet.view = false;
     }
+    life = 30;
   }
 
   inline void appear(Fighter &fighter) noexcept {
