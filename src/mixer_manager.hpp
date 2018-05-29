@@ -41,7 +41,7 @@ class MixerManager {
       exit(EXIT_FAILURE);
     }
     try {
-      load_music("./data/batof2s.mp3");
+      load_music("./data/tw012.mp3");
       load_se("./data/tm2_wood001.wav", se_type::fighter_shoot);
       load_se("./data/tm2_shoot003.wav", se_type::enemy_shoot);
     } catch (const char &e) {
