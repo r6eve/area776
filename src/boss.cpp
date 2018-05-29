@@ -4,7 +4,6 @@
 #include "fighter.hpp"
 #include "image_manager.hpp"
 #include "mixer_manager.hpp"
-#include "util.hpp"
 
 void Boss::init() {
   state = boss_state::automove;

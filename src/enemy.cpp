@@ -5,7 +5,6 @@
 #include "fighter.hpp"
 #include "image_manager.hpp"
 #include "mixer_manager.hpp"
-#include "util.hpp"
 
 void Enemy::init() {
   for (auto &enemy : enemies) {
