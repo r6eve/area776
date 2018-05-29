@@ -5,11 +5,11 @@ area776
 
 *TODO PROJECT*
 
-`area776` is a shooting game written in C++ with SDL1.2.
+`area776` is a mini shooting game written in C++ with SDL1.2.
 
 ## Demo Video
 
-*TODO*
+[![Demo Image][]][Demo Video]
 
 ## Installation
 
@@ -49,7 +49,7 @@ Options:
 
 ### Key Config
 
-* Shoot: Z Key, UP: Up Arrow, LEFT: Left Arrow, DOWN: Down Arrow, RIGHT: Right Arrow
+* Shoot: F Key, UP: Up Arrow, LEFT: Left Arrow, DOWN: Down Arrow, RIGHT: Right Arrow
 
 ## Requirement
 
@@ -68,7 +68,6 @@ Options:
 
 ## TODO
 
-* Do Refactoring
 * Support SDL2.0
 * Record Score
 
@@ -76,6 +75,8 @@ Options:
 [Travis CI Results]: https://travis-ci.org/r6eve/area776
 [Build Status on AppVeyor]: https://ci.appveyor.com/api/projects/status/saw2lu2yrqn0omgs?svg=true
 [AppVeyor Results]: https://ci.appveyor.com/project/r6eve/area776
+[Demo Image]: http://img.youtube.com/vi/dYCtreFwPDk/0.jpg
+[Demo Video]: https://youtu.be/dYCtreFwPDk
 [SDL 1.2]: http://www.libsdl.org/
 [SDL_image 1.2]: https://www.libsdl.org/projects/SDL_image/release-1.2.html
 [SDL_mixer 1.2]: https://www.libsdl.org/projects/SDL_mixer/release-1.2.html
