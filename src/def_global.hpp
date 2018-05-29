@@ -27,13 +27,6 @@ const int ENEMY_SHOT_MAX = 128;
 const int EFFECT_MAX = 64;
 const int BOSS_SHOT_MAX = 256;
 
-enum class boss_state {
-  automove,
-  attack00,
-  attack01,
-  attack02,
-};
-
 struct EffectData {
   bool view;
   Point pos;

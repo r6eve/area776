@@ -8,6 +8,13 @@
 struct Fighter;
 
 struct Boss {
+  enum class boss_state {
+    automove,
+    attack00,
+    attack01,
+    attack02,
+  };
+
   struct Bullet {
     bool view;
     int rot;
