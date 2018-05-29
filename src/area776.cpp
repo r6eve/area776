@@ -242,7 +242,7 @@ void Area776::game_clear() {
   if (game_level_ == 1) {
     SDL_Rect dst = {0, 0, screen::width, screen::height};
     SDL_FillRect(screen_, &dst, 0xffffffff);
-    draw_text(font_size::x36, rgb::red, Point{200, 180}, "G A M E  C L E A R");
+    draw_text(font_size::x36, rgb::red, Point{150, 180}, "G A M E  C L E A R");
     ++game_count_;
     if (game_count_ > 200) {
       wipe_.draw(screen_);
