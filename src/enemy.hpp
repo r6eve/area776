@@ -82,8 +82,9 @@ struct Enemy {
     }
   }
 
-  inline void draw(SDL_Surface *screen, ImageManager &image_manager) noexcept {
-    for (auto &enemy : enemies) {
+  inline void draw(SDL_Surface *screen, ImageManager &image_manager) const
+      noexcept {
+    for (const auto &enemy : enemies) {
       if (!enemy.view) {
         continue;
       }
@@ -99,9 +100,9 @@ struct Enemy {
   ~Enemy() noexcept {}
 
  private:
-  inline void draw_shot(SDL_Surface *screen,
-                        ImageManager &image_manager) noexcept {
-    for (auto &bullet : bullets) {
+  inline void draw_shot(SDL_Surface *screen, ImageManager &image_manager) const
+      noexcept {
+    for (const auto &bullet : bullets) {
       if (!bullet.view) {
         continue;
       }

@@ -34,10 +34,9 @@ void Enemy::update(MixerManager &mixer_manager, Fighter &fighter) noexcept {
       continue;
     }
 
-    Point enemy_center = {enemy.pos.x + 32, enemy.pos.y + 32};
-    Point fighter_center = {fighter.pos.x + 32, fighter.pos.y + 32};
-    Point p;
-    p = fighter_center - enemy_center;
+    const Point enemy_center = enemy.pos + Point{32, 32};
+    const Point fighter_center = fighter.pos + Point{32, 32};
+    Point p = fighter_center - enemy_center;
     p.norm();
     p *= speed;
     /* 時計回りに(shot_pitch * 2)度回転させておく */
