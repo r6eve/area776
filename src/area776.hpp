@@ -227,12 +227,12 @@ class Area776 {
         blink_count_(0),
         game_count_(0),
         game_state_(game_state::title) {
-    if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
+    if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
       std::cerr << "error: " << SDL_GetError() << '\n';
       exit(EXIT_FAILURE);
     }
 
-    SDL_WM_SetCaption("SDL_SHOOTING", nullptr);
+    SDL_WM_SetCaption("Area776", nullptr);
     if (debug_mode_) {
       screen_ = SDL_SetVideoMode(screen::width, screen::height, screen::bpp,
                                  SDL_HWSURFACE | SDL_DOUBLEBUF);
