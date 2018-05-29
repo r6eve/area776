@@ -40,7 +40,7 @@ struct Fighter {
         continue;
       }
 
-      bullet.pos.add(bullet.move);
+      bullet.pos += bullet.move;
       if (bullet.pos.y < -16) {
         bullet.view = false;
       }

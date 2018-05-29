@@ -51,7 +51,7 @@ struct Boss {
       if (!bullet.view) {
         continue;
       }
-      bullet.pos.add(bullet.move);
+      bullet.pos += bullet.move;
       if (bullet.pos.x < -16) {
         bullet.view = false;
       }

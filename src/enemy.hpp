@@ -27,14 +27,14 @@ struct Enemy {
 
   Enemy() noexcept {}
 
-  inline void init() noexcept {
+  inline void init(const bool debug_mode) noexcept {
     for (auto &enemy : enemies) {
       enemy.view = false;
     }
     for (auto &bullet : bullets) {
       bullet.view = false;
     }
-    life = 30;
+    life = debug_mode ? 10 : 30;
   }
 
   inline void appear(Fighter &fighter) noexcept {
@@ -51,9 +51,9 @@ struct Enemy {
       enemy.pos.x = rand() % (screen::width - 64);
       enemy.pos.y = -64;
       enemy.shot_timer = rand() % 15 + 15;
-      enemy.move.sub(fighter.pos, enemy.pos);
+      enemy.move = fighter.pos - enemy.pos;
       enemy.move.norm();
-      enemy.move.mul(speed);
+      enemy.move *= speed;
       break;
     }
   }
@@ -66,7 +66,7 @@ struct Enemy {
         continue;
       }
 
-      bullet.pos.add(bullet.move);
+      bullet.pos += bullet.move;
       if (bullet.pos.x < -16) {
         bullet.view = false;
       }

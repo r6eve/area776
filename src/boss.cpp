@@ -30,20 +30,19 @@ void Boss::update(MixerManager &mixer_manager) noexcept {
     }
     case boss_state::attack00: {
       if (!(shot_count % 2)) {
-        int Pos[2][2] = {{88, 120}, {418 - 88, 120}};
+        const Point p[2] = {{88, 120}, {418 - 88, 120}};
         for (int n = 0; n < 2; ++n) {
           for (auto &bullet : bullets) {
             if (bullet.view) {
               continue;
             }
-            bullet.pos.x = x + Pos[n][0];
-            bullet.pos.y = y + Pos[n][1];
+            bullet.pos.x = x + p[n].x;
+            bullet.pos.y = y + p[n].y;
             double r = PI * shot_rot / 10;
             if (n == 1) {
               r = -r;
             }
-            Point p = {0, 4};
-            bullet.move.rot(p, r);
+            bullet.move.rot(Point{0, 4}, r);
             bullet.view = true;
             bullet.count = 0;
             bullet.rot = 0;

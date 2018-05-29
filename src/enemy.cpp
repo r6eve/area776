@@ -15,7 +15,7 @@ void Enemy::update(MixerManager &mixer_manager, Fighter &fighter) noexcept {
       continue;
     }
 
-    enemy.pos.add(enemy.move);
+    enemy.pos += enemy.move;
     if (enemy.pos.x < -35) {
       enemy.view = false;
       continue;
@@ -37,9 +37,9 @@ void Enemy::update(MixerManager &mixer_manager, Fighter &fighter) noexcept {
     Point enemy_center = {enemy.pos.x + 32, enemy.pos.y + 32};
     Point fighter_center = {fighter.pos.x + 32, fighter.pos.y + 32};
     Point p;
-    p.sub(fighter_center, enemy_center);
+    p = fighter_center - enemy_center;
     p.norm();
-    p.mul(speed);
+    p *= speed;
     /* 時計回りに(shot_pitch * 2)度回転させておく */
     const double rot_angle = -(shot_pitch * 2) * PI / 180;
     p.rot(rot_angle);
@@ -50,8 +50,8 @@ void Enemy::update(MixerManager &mixer_manager, Fighter &fighter) noexcept {
         }
 
         bullet.view = true;
-        bullet.pos.copy(enemy_center);
-        bullet.move.copy(p);
+        bullet.pos = enemy_center;
+        bullet.move = p;
         break;
       }
       const double rot_angle = shot_pitch * PI / 180;

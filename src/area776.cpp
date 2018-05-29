@@ -98,7 +98,7 @@ void Area776::game_title() noexcept {
       if (wipe_.update()) {
         Mix_PlayMusic(mixer_manager_.get_music(), -1);
         fighter_.init();
-        enemy_.init();
+        enemy_.init(debug_mode_);
         effect_.init();
         snow_.init();
         boss_.init();
@@ -258,7 +258,7 @@ void Area776::game_clear() noexcept {
   }
 
   fighter_.init();
-  enemy_.init();
+  enemy_.init(debug_mode_);
   boss_.init();
   effect_.init();
   snow_.init();
