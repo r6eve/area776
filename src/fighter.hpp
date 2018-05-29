@@ -1,6 +1,7 @@
 #ifndef FIGHTER_H
 #define FIGHTER_H
 
+#include "boss.hpp"
 #include "def_global.hpp"
 #include "image_manager.hpp"
 #include "input_manager.hpp"
@@ -16,7 +17,7 @@ class FighterClass {
   /**
    * Return true if player life is 0.
    */
-  bool check_enemyshots_hit_mychara();
+  bool check_enemyshots_hit_mychara(Boss &boss);
 
   void draw(SDL_Surface *screen, ImageManager &image_manager);
   void draw_shot(SDL_Surface *screen, ImageManager &image_manager);

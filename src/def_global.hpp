@@ -72,25 +72,6 @@ struct EffectData {
   int count;
 };
 
-struct BossData {
-  struct Bullet {
-    bool view;
-    int rot;
-    int count;
-    Point pos;
-    Point move;
-  };
-
-  boss_state state;
-  int x;
-  int y;
-  int move;
-  int shot_rot;
-  int shot_count;
-  int life;
-  Bullet bullets[BOSS_SHOT_MAX];
-};
-
 #ifdef MAIN
 #define GLOBAL
 #else
@@ -101,6 +82,5 @@ GLOBAL enemy_type Enemy_select;
 GLOBAL FighterData Fighter;
 GLOBAL EnemiesData Enemy;
 GLOBAL EffectData Effect[EFFECT_MAX];
-GLOBAL BossData Boss;
 
 #endif

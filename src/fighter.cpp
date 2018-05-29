@@ -1,5 +1,6 @@
 #include "fighter.hpp"
 #include <SDL/SDL_mixer.h>
+#include "boss.hpp"
 #include "def_global.hpp"
 #include "image_manager.hpp"
 #include "input_manager.hpp"
@@ -85,7 +86,7 @@ void FighterClass::move_shot() {
   }
 }
 
-bool FighterClass::check_enemyshots_hit_mychara() {
+bool FighterClass::check_enemyshots_hit_mychara(Boss &boss) {
   SDL_Rect r1 = {static_cast<Sint16>(Fighter.pos.x + 20),
                  static_cast<Sint16>(Fighter.pos.y + 16), 20, 22};
 
@@ -116,7 +117,7 @@ bool FighterClass::check_enemyshots_hit_mychara() {
       }
     }
   } else if (Enemy_select == enemy_type::boss) {
-    for (auto &bullet : Boss.bullets) {
+    for (auto &bullet : boss.bullets) {
       if (!bullet.view) {
         continue;
       }

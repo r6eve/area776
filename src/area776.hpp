@@ -50,7 +50,7 @@ class Area776 {
 
   FighterClass fighter_;
   EnemyClass enemy_;
-  BossClass boss_;
+  Boss boss_;
   EffectClass effect_;
 
   Wipe wipe_;

@@ -111,7 +111,7 @@ void Area776::game_title() {
         Enemy_select = enemy_type::enemy;
         Fighter.life = 20;
         Enemy.life = 0;
-        Boss.life = 0;
+        boss_.life = 0;
         srand((unsigned int)time(nullptr));
       }
       break;
@@ -169,7 +169,7 @@ void Area776::play_game() {
 
   fighter_.move(input_manager_, mixer_manager_);
   fighter_.move_shot();
-  if (fighter_.check_enemyshots_hit_mychara()) {
+  if (fighter_.check_enemyshots_hit_mychara(boss_)) {
     game_state_ = game_state::gameover;
   }
   effect_.update();
@@ -201,8 +201,8 @@ void Area776::play_game() {
         ++blink_count_;
       }
     } else {
-      boss_.move(mixer_manager_);
-      boss_.move_shot();
+      boss_.update(mixer_manager_);
+      boss_.update_shot();
 
       if (boss_.check_myshots_hit_boss()) {
         game_state_ = game_state::clear;
@@ -264,7 +264,7 @@ void Area776::game_clear() {
   game_state_ = game_state::start;
   ++game_level_;
   Enemy.life = 0;
-  Boss.life = 0;
+  boss_.life = 0;
 }
 
 void Area776::game_over() {
@@ -313,7 +313,7 @@ void Area776::draw_life() {
     draw_text(font_size::x16, rgb::white, Point{32, 24}, ss.str().c_str());
   } else if (Enemy_select == enemy_type::boss) {
     std::stringstream ss;
-    ss << "BOSS LIFE:  " << 100 - Boss.life;
+    ss << "BOSS LIFE:  " << 100 - boss_.life;
     draw_text(font_size::x16, rgb::white, Point{32, 24}, ss.str().c_str());
   } else {
     // NOTREACHED
