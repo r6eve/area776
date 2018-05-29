@@ -56,7 +56,7 @@ Options:
 ## Used Resources
 
 * [源暎ゴシックP][]
-* [無料音楽素材 煉獄庭園][]
+* [フリーBGM・音楽素材][]
 * [ザ・マッチメイカァズ][]
 
 ## TODO
@@ -70,5 +70,5 @@ Options:
 [SDL_mixer 1.2]: https://www.libsdl.org/projects/SDL_mixer/release-1.2.html
 [SDL_ttf for SDL 1.2]: https://www.libsdl.org/projects/SDL_ttf/release-1.2.html
 [源暎ゴシックP]: https://okoneya.jp/font/genei-antique.html
-[無料音楽素材 煉獄庭園]: http://www.rengoku-teien.com/
+[フリーBGM・音楽素材 MusMus]: http://musmus.main.jp/
 [ザ・マッチメイカァズ]: http://osabisi.sakura.ne.jp/m2/tm4/se_001.html
