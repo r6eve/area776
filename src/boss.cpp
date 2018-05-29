@@ -6,20 +6,20 @@
 #include "mixer_manager.hpp"
 
 void Boss::update(MixerManager &mixer_manager) noexcept {
-  x += move;
-  if (x < 0) {
-    x = 0;
+  pos.x += move;
+  if (pos.x < 0) {
+    pos.x = 0;
     move = 2;
   }
-  if ((x + 400) >= screen::width) {
-    x = screen::width - 400;
+  if ((pos.x + 400) >= screen::width) {
+    pos.x = screen::width - 400;
     move = -2;
   }
 
   switch (state) {
     case boss_state::automove: {
-      if (y < 10) {
-        y += 4;
+      if (pos.y < 10) {
+        pos.y += 4;
       } else {
         shot_count = 0;
         shot_rot = 0;
@@ -36,8 +36,7 @@ void Boss::update(MixerManager &mixer_manager) noexcept {
             if (bullet.view) {
               continue;
             }
-            bullet.pos.x = x + p[n].x;
-            bullet.pos.y = y + p[n].y;
+            bullet.pos = pos + p[n];
             double r = PI * shot_rot / 10;
             if (n == 1) {
               r = -r;
@@ -65,11 +64,9 @@ void Boss::update(MixerManager &mixer_manager) noexcept {
         }
       }
       for (int i = 0; i < 48; ++i) {
-        bullets[i].pos.x = x + 418 / 2;
-        bullets[i].pos.y = y + 105;
+        bullets[i].pos = pos + Point{418 / 2, 105};
         double r = PI * i / 24;
-        Point p = {0, 3};
-        bullets[i].move.rot(p, r);
+        bullets[i].move.rot(Point{0, 3}, r);
         bullets[i].view = true;
         bullets[i].count = 0;
         bullets[i].rot = 0;

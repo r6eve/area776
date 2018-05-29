@@ -23,8 +23,7 @@ struct Boss {
   };
 
   boss_state state;
-  int x;
-  int y;
+  Point pos;
   int move;
   int shot_rot;
   int shot_count;
@@ -35,8 +34,7 @@ struct Boss {
 
   inline void init() noexcept {
     state = boss_state::automove;
-    x = (screen::width - 418) / 2;
-    y = -240;
+    pos = Point{(screen::width - 418) / 2, -240};
     move = 0;
     for (auto &bullet : bullets) {
       bullet.view = false;
@@ -73,9 +71,11 @@ struct Boss {
     }
   }
 
-  inline void draw(SDL_Surface *screen, ImageManager &image_manager) noexcept {
+  inline void draw(SDL_Surface *screen, ImageManager &image_manager) const
+      noexcept {
     SDL_Surface *p_surface = image_manager.get(image::boss);
-    SDL_Rect dst = {static_cast<Sint16>(x), static_cast<Sint16>(y), 400, 224};
+    SDL_Rect dst = {static_cast<Sint16>(pos.x), static_cast<Sint16>(pos.y), 400,
+                    224};
     SDL_BlitSurface(p_surface, nullptr, screen, &dst);
     draw_shot(screen, image_manager);
   }
@@ -83,9 +83,9 @@ struct Boss {
   ~Boss() noexcept {}
 
  private:
-  inline void draw_shot(SDL_Surface *screen,
-                        ImageManager &image_manager) noexcept {
-    for (auto &bullet : bullets) {
+  inline void draw_shot(SDL_Surface *screen, ImageManager &image_manager) const
+      noexcept {
+    for (const auto &bullet : bullets) {
       if (!bullet.view) {
         continue;
       }
