@@ -2,53 +2,53 @@
 #include <SDL/SDL_mixer.h>
 #include "boss.hpp"
 #include "def_global.hpp"
+#include "enemy.hpp"
 #include "image_manager.hpp"
 #include "input_manager.hpp"
 #include "mixer_manager.hpp"
 #include "point.hpp"
 #include "util.hpp"
 
-void FighterClass::init() {
-  Fighter.pos.x = 280;
-  Fighter.pos.y = 400;
-  Fighter.shot_timer = 0;
-  for (auto &bullet : Fighter.bullets) {
+void Fighter::init() {
+  pos.x = 280;
+  pos.y = 400;
+  shot_timer = 0;
+  for (auto &bullet : bullets) {
     bullet.view = false;
   }
 }
 
-void FighterClass::move(InputManager &input_manager,
-                        MixerManager &mixer_manager) {
+void Fighter::update(InputManager &input_manager, MixerManager &mixer_manager) {
   const double move_speed = 4.0;
 
   if (input_manager.press_key_p(input_device::up)) {
-    Fighter.pos.y -= move_speed;
+    pos.y -= move_speed;
   }
   if (input_manager.press_key_p(input_device::down)) {
-    Fighter.pos.y += move_speed;
+    pos.y += move_speed;
   }
   if (input_manager.press_key_p(input_device::left)) {
-    Fighter.pos.x -= move_speed;
+    pos.x -= move_speed;
   }
   if (input_manager.press_key_p(input_device::right)) {
-    Fighter.pos.x += move_speed;
+    pos.x += move_speed;
   }
 
-  if (Fighter.pos.x < 0) {
-    Fighter.pos.x = 0;
+  if (pos.x < 0) {
+    pos.x = 0;
   }
-  if (Fighter.pos.y < 0) {
-    Fighter.pos.y = 0;
+  if (pos.y < 0) {
+    pos.y = 0;
   }
-  if (Fighter.pos.x > (screen::width - 60)) {
-    Fighter.pos.x = screen::width - 60;
+  if (pos.x > (screen::width - 60)) {
+    pos.x = screen::width - 60;
   }
-  if (Fighter.pos.y > (screen::height - 70)) {
-    Fighter.pos.y = screen::height - 70;
+  if (pos.y > (screen::height - 70)) {
+    pos.y = screen::height - 70;
   }
 
-  if (Fighter.shot_timer != 0) {
-    --Fighter.shot_timer;
+  if (shot_timer != 0) {
+    --shot_timer;
     return;
   }
 
@@ -57,24 +57,24 @@ void FighterClass::move(InputManager &input_manager,
   }
 
   double shot_speed = 16;
-  Point pos = {25, 10};
-  for (auto &bullet : Fighter.bullets) {
+  Point p = {25, 10};
+  for (auto &bullet : bullets) {
     if (bullet.view) {
       continue;
     }
 
     bullet.view = true;
-    bullet.pos.add(Fighter.pos, pos);
+    bullet.pos.add(pos, p);
     bullet.move.x = 0;
     bullet.move.y = -shot_speed;
     Mix_PlayChannel(-1, mixer_manager.get_se(se_type::fighter_shoot), 0);
     break;
   }
-  Fighter.shot_timer = 8;
+  shot_timer = 8;
 }
 
-void FighterClass::move_shot() {
-  for (auto &bullet : Fighter.bullets) {
+void Fighter::update_shot() {
+  for (auto &bullet : bullets) {
     if (!bullet.view) {
       continue;
     }
@@ -86,12 +86,12 @@ void FighterClass::move_shot() {
   }
 }
 
-bool FighterClass::check_enemyshots_hit_mychara(Boss &boss) {
-  SDL_Rect r1 = {static_cast<Sint16>(Fighter.pos.x + 20),
-                 static_cast<Sint16>(Fighter.pos.y + 16), 20, 22};
+bool Fighter::check_enemyshots_hit_mychara(Enemy &enemy, Boss &boss) {
+  SDL_Rect r1 = {static_cast<Sint16>(pos.x + 20),
+                 static_cast<Sint16>(pos.y + 16), 20, 22};
 
   if (Enemy_select == enemy_type::enemy) {
-    for (auto &bullet : Enemy.bullets) {
+    for (auto &bullet : enemy.bullets) {
       if (!bullet.view) {
         continue;
       }
@@ -102,7 +102,7 @@ bool FighterClass::check_enemyshots_hit_mychara(Boss &boss) {
         continue;
       }
 
-      --Fighter.life;
+      --life;
       bullet.view = false;
       for (auto &effect : Effect) {
         if (effect.view) {
@@ -110,8 +110,8 @@ bool FighterClass::check_enemyshots_hit_mychara(Boss &boss) {
         }
 
         effect.view = true;
-        effect.pos.x = -80 + Fighter.pos.x + 30;
-        effect.pos.y = -80 + Fighter.pos.y + 30;
+        effect.pos.x = -80 + pos.x + 30;
+        effect.pos.y = -80 + pos.y + 30;
         effect.count = 0;
         break;
       }
@@ -128,7 +128,7 @@ bool FighterClass::check_enemyshots_hit_mychara(Boss &boss) {
         continue;
       }
 
-      --Fighter.life;
+      --life;
       bullet.view = false;
       for (auto &effect : Effect) {
         if (effect.view) {
@@ -136,27 +136,27 @@ bool FighterClass::check_enemyshots_hit_mychara(Boss &boss) {
         }
 
         effect.view = true;
-        effect.pos.x = -80 + Fighter.pos.x + 30;
-        effect.pos.y = -80 + Fighter.pos.y + 30;
+        effect.pos.x = -80 + pos.x + 30;
+        effect.pos.y = -80 + pos.y + 30;
         effect.count = 0;
         break;
       }
     }
   }
 
-  return Fighter.life <= 0;
+  return life <= 0;
 }
 
-void FighterClass::draw(SDL_Surface *screen, ImageManager &image_manager) {
+void Fighter::draw(SDL_Surface *screen, ImageManager &image_manager) {
   SDL_Surface *p_surface = image_manager.get(image::fighter);
-  SDL_Rect dst = {static_cast<Sint16>(Fighter.pos.x),
-                  static_cast<Sint16>(Fighter.pos.y), 60, 60};
+  SDL_Rect dst = {static_cast<Sint16>(pos.x), static_cast<Sint16>(pos.y), 60,
+                  60};
   SDL_BlitSurface(p_surface, nullptr, screen, &dst);
 }
 
-void FighterClass::draw_shot(SDL_Surface *screen, ImageManager &image_manager) {
+void Fighter::draw_shot(SDL_Surface *screen, ImageManager &image_manager) {
   SDL_Surface *p_surface = image_manager.get(image::oval_re);
-  for (auto &bullet : Fighter.bullets) {
+  for (auto &bullet : bullets) {
     if (!bullet.view) {
       continue;
     }

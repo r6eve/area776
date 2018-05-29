@@ -1,27 +1,28 @@
 #include "enemy.hpp"
 #include <SDL/SDL_mixer.h>
 #include "def_global.hpp"
+#include "fighter.hpp"
 #include "image_manager.hpp"
 #include "mixer_manager.hpp"
 #include "point.hpp"
 #include "util.hpp"
 
-void EnemyClass::init() {
-  for (auto &enemy : Enemy.enemies) {
+void Enemy::init() {
+  for (auto &enemy : enemies) {
     enemy.view = false;
   }
-  for (auto &bullet : Enemy.bullets) {
+  for (auto &bullet : bullets) {
     bullet.view = false;
   }
 }
 
-void EnemyClass::appear() {
+void Enemy::appear(Fighter &fighter) {
   const double speed = 8;
   if (rand() % 45 != 0) {
     return;
   }
 
-  for (auto &enemy : Enemy.enemies) {
+  for (auto &enemy : enemies) {
     if (enemy.view) {
       continue;
     }
@@ -29,18 +30,18 @@ void EnemyClass::appear() {
     enemy.pos.x = rand() % (screen::width - 64);
     enemy.pos.y = -64;
     enemy.shot_timer = rand() % 15 + 15;
-    enemy.move.sub(Fighter.pos, enemy.pos);
+    enemy.move.sub(fighter.pos, enemy.pos);
     enemy.move.norm();
     enemy.move.mul(speed);
     break;
   }
 }
 
-void EnemyClass::move(MixerManager &mixer_manager) {
+void Enemy::update(MixerManager &mixer_manager, Fighter &fighter) {
   const double speed = 6;
   const double shot_pitch = 20;
 
-  for (auto &enemy : Enemy.enemies) {
+  for (auto &enemy : enemies) {
     if (!enemy.view) {
       continue;
     }
@@ -65,7 +66,7 @@ void EnemyClass::move(MixerManager &mixer_manager) {
     }
 
     Point enemy_center = {enemy.pos.x + 32, enemy.pos.y + 32};
-    Point fighter_center = {Fighter.pos.x + 32, Fighter.pos.y + 32};
+    Point fighter_center = {fighter.pos.x + 32, fighter.pos.y + 32};
     Point p;
     p.sub(fighter_center, enemy_center);
     p.norm();
@@ -74,7 +75,7 @@ void EnemyClass::move(MixerManager &mixer_manager) {
     const double rot_angle = -(shot_pitch * 2) * M_PI / 180;
     p.rot(rot_angle);
     for (int _ = 0; _ < 5; ++_) {
-      for (auto &bullet : Enemy.bullets) {
+      for (auto &bullet : bullets) {
         if (bullet.view) {
           continue;
         }
@@ -91,8 +92,8 @@ void EnemyClass::move(MixerManager &mixer_manager) {
   }
 }
 
-void EnemyClass::move_shot() {
-  for (auto &bullet : Enemy.bullets) {
+void Enemy::update_shot() {
+  for (auto &bullet : bullets) {
     if (!bullet.view) {
       continue;
     }
@@ -113,13 +114,13 @@ void EnemyClass::move_shot() {
   }
 }
 
-bool EnemyClass::check_myshots_hit_enemy() {
-  for (auto &enemy : Enemy.enemies) {
+bool Enemy::check_myshots_hit_enemy(Fighter &fighter) {
+  for (auto &enemy : enemies) {
     if (!enemy.view) {
       continue;
     }
 
-    for (auto &bullet : Fighter.bullets) {
+    for (auto &bullet : fighter.bullets) {
       if (!bullet.view) {
         continue;
       }
@@ -132,7 +133,7 @@ bool EnemyClass::check_myshots_hit_enemy() {
         continue;
       }
 
-      ++Enemy.life;
+      ++life;
       enemy.view = false;
       bullet.view = false;
       for (auto &effect : Effect) {
@@ -146,7 +147,7 @@ bool EnemyClass::check_myshots_hit_enemy() {
         effect.count = 0;
         break;
       }
-      if (Enemy.life > 29) {
+      if (life > 29) {
         return true;
       }
 
@@ -156,8 +157,8 @@ bool EnemyClass::check_myshots_hit_enemy() {
   return false;
 }
 
-void EnemyClass::draw(SDL_Surface *screen, ImageManager &image_manager) {
-  for (auto &enemy : Enemy.enemies) {
+void Enemy::draw(SDL_Surface *screen, ImageManager &image_manager) {
+  for (auto &enemy : enemies) {
     if (!enemy.view) {
       continue;
     }
@@ -169,8 +170,8 @@ void EnemyClass::draw(SDL_Surface *screen, ImageManager &image_manager) {
   }
 }
 
-void EnemyClass::draw_shot(SDL_Surface *screen, ImageManager &image_manager) {
-  for (auto &bullet : Enemy.bullets) {
+void Enemy::draw_shot(SDL_Surface *screen, ImageManager &image_manager) {
+  for (auto &bullet : bullets) {
     if (!bullet.view) {
       continue;
     }

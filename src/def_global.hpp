@@ -34,38 +34,6 @@ enum class boss_state {
   attack02,
 };
 
-struct FighterData {
-  struct Bullet {
-    bool view;
-    Point pos;
-    Point move;
-  };
-
-  Point pos;
-  int shot_timer;
-  int life;
-  Bullet bullets[FIGHTER_SHOT_MAX];
-};
-
-struct EnemiesData {
-  struct EnemyData {
-    bool view;
-    Point pos;
-    Point move;
-    int shot_timer;
-  };
-
-  struct Bullet {
-    bool view;
-    Point pos;
-    Point move;
-  };
-
-  int life;
-  EnemyData enemies[ENEMY_MAX];
-  Bullet bullets[ENEMY_SHOT_MAX];
-};
-
 struct EffectData {
   bool view;
   Point pos;
@@ -79,8 +47,6 @@ struct EffectData {
 #endif
 
 GLOBAL enemy_type Enemy_select;
-GLOBAL FighterData Fighter;
-GLOBAL EnemiesData Enemy;
 GLOBAL EffectData Effect[EFFECT_MAX];
 
 #endif

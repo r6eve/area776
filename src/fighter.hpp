@@ -8,19 +8,35 @@
 #include "mixer_manager.hpp"
 #include "point.hpp"
 
-class FighterClass {
- public:
+struct Enemy;
+
+struct Fighter {
+  struct Bullet {
+    bool view;
+    Point pos;
+    Point move;
+  };
+
+  Point pos;
+  int shot_timer;
+  int life;
+  Bullet bullets[FIGHTER_SHOT_MAX];
+
+  Fighter() {}
+
   void init();
-  void move(InputManager &input_manager, MixerManager &mixer_manager);
-  void move_shot();
+  void update(InputManager &input_manager, MixerManager &mixer_manager);
+  void update_shot();
 
   /**
    * Return true if player life is 0.
    */
-  bool check_enemyshots_hit_mychara(Boss &boss);
+  bool check_enemyshots_hit_mychara(Enemy &enemy, Boss &boss);
 
   void draw(SDL_Surface *screen, ImageManager &image_manager);
   void draw_shot(SDL_Surface *screen, ImageManager &image_manager);
+
+  ~Fighter() {}
 };
 
 #endif

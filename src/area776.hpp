@@ -48,8 +48,8 @@ class Area776 {
   game_state game_state_;
   int game_level_;
 
-  FighterClass fighter_;
-  EnemyClass enemy_;
+  Fighter fighter_;
+  Enemy enemy_;
   Boss boss_;
   EffectClass effect_;
 

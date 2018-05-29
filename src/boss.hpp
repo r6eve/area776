@@ -5,6 +5,8 @@
 #include "image_manager.hpp"
 #include "mixer_manager.hpp"
 
+struct Fighter;
+
 struct Boss {
   struct Bullet {
     bool view;
@@ -32,7 +34,7 @@ struct Boss {
   /**
    * Return true if boss life is 0.
    */
-  bool check_myshots_hit_boss();
+  bool check_myshots_hit_boss(Fighter &fighter);
 
   void draw(SDL_Surface *screen, ImageManager &image_manager);
   void draw_shot(SDL_Surface *screen, ImageManager &image_manager);
