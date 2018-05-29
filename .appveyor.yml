@@ -38,7 +38,7 @@ install:
 
 build_script:
   - cd %APPVEYOR_BUILD_FOLDER%
-  - c:\cygwin\bin\sh -lc ("cd /cygdrive/c/projects/area776/; make LDFLAGS='-I/cygdrive/c/mylibs/include -Dmain=SDL_main -L/cygdrive/c/mylibs/lib -lpthread -mwindows -lSDLmain -lSDL -lSDL_image -lSDL_mixer -lSDL_ttf -lm'")
+  - c:\cygwin\bin\sh -lc ("cd /cygdrive/c/projects/area776/; make LDFLAGS='-I/cygdrive/c/mylibs/include -D_GNU_SOURCE=1 -D_REENTRANT -L/cygdrive/c/mylibs/lib -lSDL -lpthread -lSDL_image -lSDL_mixer -lSDL_ttf -lm'")
 
 test: off
 deploy: off
