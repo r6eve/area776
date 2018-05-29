@@ -62,7 +62,7 @@ Options:
 ## Used Resources
 
 * [源暎ゴシックP][]
-* [フリーBGM・音楽素材][]
+* [フリーBGM・音楽素材 MusMus][]
 * [ザ・マッチメイカァズ][]
 
 ## TODO
