@@ -62,6 +62,13 @@ class Area776 {
   InputManager input_manager_;
   MixerManager mixer_manager_;
 
+  void game_title();
+  void game_start();
+  void play_game();
+  void game_clear();
+  void game_over();
+  void game_pause();
+
   inline void draw_text(const unsigned char font_size, const RGB &rgb,
                         const Point &p, const char *str) const noexcept {
     const SDL_Color color = {rgb.r, rgb.g, rgb.b, 255};
@@ -87,42 +94,6 @@ class Area776 {
                         const Point &&p, const char *str) const noexcept {
     draw_text(font_size, rgb, p, str);
   }
-
- public:
-  Area776(const bool debug_mode) noexcept
-      : debug_mode_(debug_mode),
-        blink_count_(0),
-        game_count_(0),
-        game_state_(game_state::title) {
-    if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
-      std::cerr << "error: " << SDL_GetError() << '\n';
-      exit(EXIT_FAILURE);
-    }
-
-    SDL_WM_SetCaption("SDL_SHOOTING", nullptr);
-    if (debug_mode_) {
-      screen_ = SDL_SetVideoMode(screen::width, screen::height, screen::bpp,
-                                 SDL_HWSURFACE | SDL_DOUBLEBUF);
-    } else {
-      screen_ =
-          SDL_SetVideoMode(screen::width, screen::height, screen::bpp,
-                           SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_FULLSCREEN);
-    }
-    if (!screen_) {
-      std::cerr << "error: " << SDL_GetError() << '\n';
-      exit(EXIT_FAILURE);
-    }
-
-    SDL_ShowCursor(SDL_DISABLE);
-  }
-
-  void run();
-  void game_title();
-  void game_start();
-  void play_game();
-  void game_clear();
-  void game_over();
-  void game_pause();
 
   inline void draw_life() {
     switch (enemy_select_) {
@@ -249,6 +220,36 @@ class Area776 {
       blink_count_ = 0;
     }
   }
+
+ public:
+  Area776(const bool debug_mode) noexcept
+      : debug_mode_(debug_mode),
+        blink_count_(0),
+        game_count_(0),
+        game_state_(game_state::title) {
+    if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
+      std::cerr << "error: " << SDL_GetError() << '\n';
+      exit(EXIT_FAILURE);
+    }
+
+    SDL_WM_SetCaption("SDL_SHOOTING", nullptr);
+    if (debug_mode_) {
+      screen_ = SDL_SetVideoMode(screen::width, screen::height, screen::bpp,
+                                 SDL_HWSURFACE | SDL_DOUBLEBUF);
+    } else {
+      screen_ =
+          SDL_SetVideoMode(screen::width, screen::height, screen::bpp,
+                           SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_FULLSCREEN);
+    }
+    if (!screen_) {
+      std::cerr << "error: " << SDL_GetError() << '\n';
+      exit(EXIT_FAILURE);
+    }
+
+    SDL_ShowCursor(SDL_DISABLE);
+  }
+
+  void run();
 
   ~Area776() noexcept { atexit(SDL_Quit); }
 };
