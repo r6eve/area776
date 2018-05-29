@@ -3,8 +3,6 @@ area776
 [![Build Status on Travis CI][]][Travis CI Results]
 [![Build Status on AppVeyor][]][AppVeyor Results]
 
-*TODO PROJECT*
-
 `area776` is a mini shooting game written in C++ with SDL1.2.
 
 ## Demo Video
