@@ -86,63 +86,72 @@ void Fighter::update_shot() {
   }
 }
 
-bool Fighter::check_enemyshots_hit_mychara(Enemy &enemy, Boss &boss,
+bool Fighter::check_enemyshots_hit_mychara(enemy_type enemy_select,
+                                           Enemy &enemy, Boss &boss,
                                            Effect &effect) {
   SDL_Rect r1 = {static_cast<Sint16>(pos.x + 20),
                  static_cast<Sint16>(pos.y + 16), 20, 22};
 
-  if (Enemy_select == enemy_type::enemy) {
-    for (auto &bullet : enemy.bullets) {
-      if (!bullet.view) {
-        continue;
-      }
-
-      SDL_Rect r2 = {static_cast<Sint16>(bullet.pos.x + 6),
-                     static_cast<Sint16>(bullet.pos.y + 6), 4, 4};
-      if (!check_hit_rect(&r1, &r2)) {
-        continue;
-      }
-
-      --life;
-      bullet.view = false;
-      for (auto &effect : effect.effects) {
-        if (effect.view) {
+  switch (enemy_select) {
+    case enemy_type::enemy: {
+      for (auto &bullet : enemy.bullets) {
+        if (!bullet.view) {
           continue;
         }
 
-        effect.view = true;
-        effect.pos.x = -80 + pos.x + 30;
-        effect.pos.y = -80 + pos.y + 30;
-        effect.count = 0;
-        break;
-      }
-    }
-  } else if (Enemy_select == enemy_type::boss) {
-    for (auto &bullet : boss.bullets) {
-      if (!bullet.view) {
-        continue;
-      }
-
-      SDL_Rect r2 = {static_cast<Sint16>(bullet.pos.x + 3),
-                     static_cast<Sint16>(bullet.pos.y + 3), 10, 10};
-      if (!check_hit_rect(&r1, &r2)) {
-        continue;
-      }
-
-      --life;
-      bullet.view = false;
-      for (auto &effect : effect.effects) {
-        if (effect.view) {
+        SDL_Rect r2 = {static_cast<Sint16>(bullet.pos.x + 6),
+                       static_cast<Sint16>(bullet.pos.y + 6), 4, 4};
+        if (!check_hit_rect(&r1, &r2)) {
           continue;
         }
 
-        effect.view = true;
-        effect.pos.x = -80 + pos.x + 30;
-        effect.pos.y = -80 + pos.y + 30;
-        effect.count = 0;
-        break;
+        --life;
+        bullet.view = false;
+        for (auto &effect : effect.effects) {
+          if (effect.view) {
+            continue;
+          }
+
+          effect.view = true;
+          effect.pos.x = -80 + pos.x + 30;
+          effect.pos.y = -80 + pos.y + 30;
+          effect.count = 0;
+          break;
+        }
       }
+      break;
     }
+    case enemy_type::boss: {
+      for (auto &bullet : boss.bullets) {
+        if (!bullet.view) {
+          continue;
+        }
+
+        SDL_Rect r2 = {static_cast<Sint16>(bullet.pos.x + 3),
+                       static_cast<Sint16>(bullet.pos.y + 3), 10, 10};
+        if (!check_hit_rect(&r1, &r2)) {
+          continue;
+        }
+
+        --life;
+        bullet.view = false;
+        for (auto &effect : effect.effects) {
+          if (effect.view) {
+            continue;
+          }
+
+          effect.view = true;
+          effect.pos.x = -80 + pos.x + 30;
+          effect.pos.y = -80 + pos.y + 30;
+          effect.count = 0;
+          break;
+        }
+      }
+      break;
+    }
+    default:
+      // NOTREACHED
+      break;
   }
 
   return life <= 0;

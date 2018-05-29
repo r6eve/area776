@@ -107,7 +107,7 @@ void Area776::game_title() {
         game_count_ = 0;
         game_state_ = game_state::start;
         game_level_ = 1;
-        Enemy_select = enemy_type::enemy;
+        enemy_select_ = enemy_type::enemy;
         fighter_.life = 20;
         enemy_.life = 0;
         boss_.life = 0;
@@ -168,50 +168,62 @@ void Area776::play_game() {
 
   fighter_.update(input_manager_, mixer_manager_);
   fighter_.update_shot();
-  if (fighter_.check_enemyshots_hit_mychara(enemy_, boss_, effect_)) {
+  if (fighter_.check_enemyshots_hit_mychara(enemy_select_, enemy_, boss_,
+                                            effect_)) {
     game_state_ = game_state::gameover;
   }
   effect_.update();
   draw_map();
-  if (Enemy_select == enemy_type::enemy) {
-    enemy_.appear(fighter_);
-    enemy_.update(mixer_manager_, fighter_);
-    enemy_.update_shot();
-    if (enemy_.check_myshots_hit_enemy(fighter_, effect_)) {
-      Enemy_select = enemy_type::boss;
+
+  switch (enemy_select_) {
+    case enemy_type::enemy: {
+      enemy_.appear(fighter_);
+      enemy_.update(mixer_manager_, fighter_);
+      enemy_.update_shot();
+      if (enemy_.check_myshots_hit_enemy(fighter_, effect_)) {
+        enemy_select_ = enemy_type::boss;
+      }
+      snow_.update();
+      snow_.draw(screen_, image_manager_);
+      enemy_.draw(screen_, image_manager_);
+      enemy_.draw_shot(screen_, image_manager_);
+      break;
     }
-    snow_.update();
-    snow_.draw(screen_, image_manager_);
-    enemy_.draw(screen_, image_manager_);
-    enemy_.draw_shot(screen_, image_manager_);
-  } else if (Enemy_select == enemy_type::boss) {
-    if (game_count_ < 130) {
-      if (blink_count_ < 20) {
-        std::stringstream ss;
-        ss << "B O O S  " << game_level_;
-        draw_text(font_size::x36, rgb::red, Point{210, 180}, ss.str().c_str());
-        ++game_count_;
-        ++blink_count_;
-      } else {
-        if (blink_count_ >= 40) {
-          blink_count_ = 0;
+    case enemy_type::boss: {
+      if (game_count_ < 130) {
+        if (blink_count_ < 20) {
+          std::stringstream ss;
+          ss << "B O O S  " << game_level_;
+          draw_text(font_size::x36, rgb::red, Point{210, 180},
+                    ss.str().c_str());
+          ++game_count_;
+          ++blink_count_;
+        } else {
+          if (blink_count_ >= 40) {
+            blink_count_ = 0;
+          }
+          ++game_count_;
+          ++blink_count_;
         }
-        ++game_count_;
-        ++blink_count_;
-      }
-    } else {
-      boss_.update(mixer_manager_);
-      boss_.update_shot();
+      } else {
+        boss_.update(mixer_manager_);
+        boss_.update_shot();
 
-      if (boss_.check_myshots_hit_boss(fighter_, effect_)) {
-        game_state_ = game_state::clear;
-        game_count_ = 0;
-      }
+        if (boss_.check_myshots_hit_boss(fighter_, effect_)) {
+          game_state_ = game_state::clear;
+          game_count_ = 0;
+        }
 
-      boss_.draw(screen_, image_manager_);
-      boss_.draw_shot(screen_, image_manager_);
+        boss_.draw(screen_, image_manager_);
+        boss_.draw_shot(screen_, image_manager_);
+      }
+      break;
     }
+    default:
+      // NOTREACHED
+      break;
   }
+
   fighter_.draw_shot(screen_, image_manager_);
   fighter_.draw(screen_, image_manager_);
   effect_.draw(screen_, image_manager_);
@@ -285,16 +297,24 @@ void Area776::game_over() {
 
 void Area776::game_pause() {
   draw_map();
-  if (Enemy_select == enemy_type::enemy) {
-    snow_.draw(screen_, image_manager_);
-    enemy_.draw(screen_, image_manager_);
-    enemy_.draw_shot(screen_, image_manager_);
-  } else if (Enemy_select == enemy_type::boss) {
-    boss_.draw(screen_, image_manager_);
-    boss_.draw_shot(screen_, image_manager_);
-  } else {
-    // NOTREACHED
+
+  switch (enemy_select_) {
+    case enemy_type::enemy: {
+      snow_.draw(screen_, image_manager_);
+      enemy_.draw(screen_, image_manager_);
+      enemy_.draw_shot(screen_, image_manager_);
+      break;
+    }
+    case enemy_type::boss: {
+      boss_.draw(screen_, image_manager_);
+      boss_.draw_shot(screen_, image_manager_);
+      break;
+    }
+    default:
+      // NOTREACHED
+      break;
   }
+
   fighter_.draw_shot(screen_, image_manager_);
   fighter_.draw(screen_, image_manager_);
   effect_.draw(screen_, image_manager_);
@@ -306,17 +326,24 @@ void Area776::game_pause() {
 }
 
 void Area776::draw_life() {
-  if (Enemy_select == enemy_type::enemy) {
-    std::stringstream ss;
-    ss << "ENEMY LIFE:  " << 30 - enemy_.life;
-    draw_text(font_size::x16, rgb::white, Point{32, 24}, ss.str().c_str());
-  } else if (Enemy_select == enemy_type::boss) {
-    std::stringstream ss;
-    ss << "BOSS LIFE:  " << 100 - boss_.life;
-    draw_text(font_size::x16, rgb::white, Point{32, 24}, ss.str().c_str());
-  } else {
-    // NOTREACHED
+  switch (enemy_select_) {
+    case enemy_type::enemy: {
+      std::stringstream ss;
+      ss << "ENEMY LIFE:  " << 30 - enemy_.life;
+      draw_text(font_size::x16, rgb::white, Point{32, 24}, ss.str().c_str());
+      break;
+    }
+    case enemy_type::boss: {
+      std::stringstream ss;
+      ss << "BOSS LIFE:  " << 100 - boss_.life;
+      draw_text(font_size::x16, rgb::white, Point{32, 24}, ss.str().c_str());
+      break;
+    }
+    default:
+      // NOTREACHED
+      break;
   }
+
   std::stringstream ss;
   ss << "LIFE:  " << fighter_.life;
   draw_text(font_size::x16, rgb::white,

@@ -101,12 +101,4 @@ struct Point {
   }
 };
 
-#ifdef MAIN
-#define GLOBAL
-#else
-#define GLOBAL extern
-#endif
-
-GLOBAL enemy_type Enemy_select;
-
 #endif

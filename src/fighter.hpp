@@ -31,7 +31,8 @@ struct Fighter {
   /**
    * Return true if player life is 0.
    */
-  bool check_enemyshots_hit_mychara(Enemy &enemy, Boss &boss, Effect &effect);
+  bool check_enemyshots_hit_mychara(enemy_type enemy_select, Enemy &enemy,
+                                    Boss &boss, Effect &effect);
 
   void draw(SDL_Surface *screen, ImageManager &image_manager);
   void draw_shot(SDL_Surface *screen, ImageManager &image_manager);

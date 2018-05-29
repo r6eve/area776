@@ -46,6 +46,7 @@ class Area776 {
   int game_count_;
   game_state game_state_;
   int game_level_;
+  enemy_type enemy_select_;
 
   Fighter fighter_;
   Enemy enemy_;
