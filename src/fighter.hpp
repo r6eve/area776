@@ -22,12 +22,49 @@ struct Fighter {
 
   Fighter() {}
 
-  void init();
-  void update(InputManager &input_manager, MixerManager &mixer_manager);
-  void update_shot();
+  inline void init() {
+    pos.x = 280;
+    pos.y = 400;
+    shot_timer = 0;
+    for (auto &bullet : bullets) {
+      bullet.view = false;
+    }
+  }
 
-  void draw(SDL_Surface *screen, ImageManager &image_manager);
-  void draw_shot(SDL_Surface *screen, ImageManager &image_manager);
+  void update(InputManager &input_manager, MixerManager &mixer_manager);
+
+  inline void update_shot() {
+    for (auto &bullet : bullets) {
+      if (!bullet.view) {
+        continue;
+      }
+
+      bullet.pos.add(bullet.move);
+      if (bullet.pos.y < -16) {
+        bullet.view = false;
+      }
+    }
+  }
+
+  inline void draw(SDL_Surface *screen, ImageManager &image_manager) {
+    SDL_Surface *p_surface = image_manager.get(image::fighter);
+    SDL_Rect dst = {static_cast<Sint16>(pos.x), static_cast<Sint16>(pos.y), 60,
+                    60};
+    SDL_BlitSurface(p_surface, nullptr, screen, &dst);
+  }
+
+  inline void draw_shot(SDL_Surface *screen, ImageManager &image_manager) {
+    SDL_Surface *p_surface = image_manager.get(image::oval_re);
+    for (auto &bullet : bullets) {
+      if (!bullet.view) {
+        continue;
+      }
+
+      SDL_Rect dst = {static_cast<Sint16>(bullet.pos.x),
+                      static_cast<Sint16>(bullet.pos.y), 10, 24};
+      SDL_BlitSurface(p_surface, nullptr, screen, &dst);
+    }
+  }
 
   ~Fighter() {}
 };

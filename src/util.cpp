@@ -7,7 +7,7 @@
 
 namespace util {
 
-bool check_hit_rect(SDL_Rect *a, SDL_Rect *b) {
+inline bool check_hit_rect(SDL_Rect *a, SDL_Rect *b) {
   return ((a->x) < (b->x + b->w)) && ((b->x) < (a->x + a->w)) &&
          ((a->y) < (b->y + b->h)) && ((b->y) < (a->y + a->h));
 }

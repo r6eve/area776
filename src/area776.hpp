@@ -1,6 +1,8 @@
 #ifndef AREA776_H
 #define AREA776_H
 
+#include <iomanip>
+#include <sstream>
 #include "boss.hpp"
 #include "def_global.hpp"
 #include "effect.hpp"
@@ -121,12 +123,133 @@ class Area776 {
   void game_clear();
   void game_over();
   void game_pause();
-  void draw_life();
-  bool poll_event();
-  void wait_game();
-  void draw_fps();
-  void draw_map();
-  void draw_translucence();
+
+  inline void draw_life() {
+    switch (enemy_select_) {
+      case enemy_type::enemy: {
+        std::stringstream ss;
+        ss << "ENEMY LIFE:  " << 30 - enemy_.life;
+        draw_text(font_size::x16, rgb::white, Point{32, 24}, ss.str().c_str());
+        break;
+      }
+      case enemy_type::boss: {
+        std::stringstream ss;
+        ss << "BOSS LIFE:  " << 100 - boss_.life;
+        draw_text(font_size::x16, rgb::white, Point{32, 24}, ss.str().c_str());
+        break;
+      }
+      default:
+        // NOTREACHED
+        break;
+    }
+
+    std::stringstream ss;
+    ss << "LIFE:  " << fighter_.life;
+    draw_text(font_size::x16, rgb::white,
+              Point{fighter_.pos.x, fighter_.pos.y + 55}, ss.str().c_str());
+  }
+
+  inline bool poll_event() {
+    SDL_Event event;
+    while (SDL_PollEvent(&event)) {
+      switch (event.type) {
+        case SDL_QUIT:
+          return false;
+        case SDL_KEYDOWN:
+          if (event.key.keysym.sym == SDLK_ESCAPE) {
+            return false;
+          }
+          break;
+        default:
+          // do nothing
+          break;
+      }
+    }
+    return true;
+  }
+
+  inline void wait_game() {
+    static Uint32 pre_count;
+    const double wait_time = 1000.0 / screen::max_fps;
+    const Uint32 wait_count = (wait_time + 0.5);
+    if (pre_count) {
+      const Uint32 now_count = SDL_GetTicks();
+      const Uint32 interval = now_count - pre_count;
+      if (interval < wait_count) {
+        const Uint32 delay_time = wait_count - interval;
+        SDL_Delay(delay_time);
+      }
+    }
+    pre_count = SDL_GetTicks();
+  }
+
+  inline void draw_fps() {
+    static Uint32 pre_count;
+    const Uint32 now_count = SDL_GetTicks();
+    if (pre_count) {
+      static double frame_rate;
+      Uint32 mut_interval = now_count - pre_count;
+      if (mut_interval < 1) {
+        mut_interval = 1;
+      }
+      const Uint32 interval = mut_interval;
+
+      if (!(pre_count % 30)) {
+        frame_rate = 1000.0 / interval;
+      }
+
+      std::stringstream ss;
+      ss << "FrameRate[" << std::setprecision(2)
+         << std::setiosflags(std::ios::fixed) << frame_rate << "]";
+      draw_text(font_size::x16, rgb::green, Point{screen::width - 140, 16},
+                ss.str().c_str());
+    }
+    pre_count = now_count;
+  }
+
+  inline void draw_map() {
+    SDL_Surface *pSurface = image_manager_.get(image::map);
+    SDL_Rect dst = {0, 0, screen::width, screen::height};
+    SDL_BlitSurface(pSurface, nullptr, screen_, &dst);
+  }
+
+  inline void draw_translucence() {
+    Uint32 rmask, gmask, bmask, amask;
+    Uint8 alpha = 128;
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+    rmask = 0xff000000;
+    gmask = 0x00ff0000;
+    bmask = 0x0000ff00;
+    amask = 0x000000ff;
+#else
+    rmask = 0x000000ff;
+    gmask = 0x0000ff00;
+    bmask = 0x00ff0000;
+    amask = 0xff000000;
+#endif
+
+    SDL_Surface *trans_surface =
+        SDL_CreateRGBSurface(SDL_SWSURFACE, screen::width, screen::height, 32,
+                             rmask, gmask, bmask, amask);
+    if (trans_surface == nullptr) {
+      std::cerr << "CreateRGBSurface failed: " << SDL_GetError() << '\n';
+      exit(EXIT_FAILURE);
+    }
+    SDL_SetAlpha(trans_surface, SDL_SRCALPHA, alpha);
+    SDL_Rect dst_back;
+    dst_back.x = 0;
+    dst_back.y = 0;
+    SDL_BlitSurface(trans_surface, nullptr, screen_, &dst_back);
+    if (blink_count_ < 30) {
+      draw_text(font_size::x36, rgb::white, Point{220, 180}, "P a u s e");
+      ++blink_count_;
+    } else if (blink_count_ < 60) {
+      ++blink_count_;
+    } else {
+      blink_count_ = 0;
+    }
+  }
+
   ~Area776() noexcept { atexit(SDL_Quit); }
 };
 

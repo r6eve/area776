@@ -8,15 +8,6 @@
 #include "input_manager.hpp"
 #include "mixer_manager.hpp"
 
-void Fighter::init() {
-  pos.x = 280;
-  pos.y = 400;
-  shot_timer = 0;
-  for (auto &bullet : bullets) {
-    bullet.view = false;
-  }
-}
-
 void Fighter::update(InputManager &input_manager, MixerManager &mixer_manager) {
   const double move_speed = 4.0;
 
@@ -70,37 +61,4 @@ void Fighter::update(InputManager &input_manager, MixerManager &mixer_manager) {
     break;
   }
   shot_timer = 8;
-}
-
-void Fighter::update_shot() {
-  for (auto &bullet : bullets) {
-    if (!bullet.view) {
-      continue;
-    }
-
-    bullet.pos.add(bullet.move);
-    if (bullet.pos.y < -16) {
-      bullet.view = false;
-    }
-  }
-}
-
-void Fighter::draw(SDL_Surface *screen, ImageManager &image_manager) {
-  SDL_Surface *p_surface = image_manager.get(image::fighter);
-  SDL_Rect dst = {static_cast<Sint16>(pos.x), static_cast<Sint16>(pos.y), 60,
-                  60};
-  SDL_BlitSurface(p_surface, nullptr, screen, &dst);
-}
-
-void Fighter::draw_shot(SDL_Surface *screen, ImageManager &image_manager) {
-  SDL_Surface *p_surface = image_manager.get(image::oval_re);
-  for (auto &bullet : bullets) {
-    if (!bullet.view) {
-      continue;
-    }
-
-    SDL_Rect dst = {static_cast<Sint16>(bullet.pos.x),
-                    static_cast<Sint16>(bullet.pos.y), 10, 24};
-    SDL_BlitSurface(p_surface, nullptr, screen, &dst);
-  }
 }
