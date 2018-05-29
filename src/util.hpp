@@ -6,6 +6,7 @@
 #include "effect.hpp"
 #include "enemy.hpp"
 #include "fighter.hpp"
+#include "mixer_manager.hpp"
 
 namespace util {
 
@@ -13,20 +14,21 @@ namespace util {
  * Return true if player life is 0.
  */
 bool check_enemyshots_hit_fighter(enemy_type enemy_select, Fighter &fighter,
-                                  Enemy &enemy, Boss &boss,
-                                  Effect &effect) noexcept;
+                                  Enemy &enemy, Boss &boss, Effect &effect,
+                                  const MixerManager &mixer_manager) noexcept;
 
 /**
  * Return true if enemy life is 0.
  */
 bool check_fightershots_hit_enemy(Fighter &fighter, Enemy &enemy,
-                                  Effect &effect) noexcept;
+                                  Effect &effect,
+                                  const MixerManager &mixer_manager) noexcept;
 
 /**
  * Return true if boss life is 0.
  */
-bool check_fightershots_hit_boss(Fighter &fighter, Boss &boss,
-                                 Effect &effect) noexcept;
+bool check_fightershots_hit_boss(Fighter &fighter, Boss &boss, Effect &effect,
+                                 const MixerManager &mixer_manager) noexcept;
 
 }  // namespace util
 

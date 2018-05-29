@@ -10,6 +10,10 @@ namespace se_type {
 enum {
   fighter_shoot = 0,
   enemy_shoot,
+  fighter_hit,
+  enemy_hit,
+  fighter_down,
+  boss_down,
   count,
 };
 
@@ -44,6 +48,10 @@ class MixerManager {
       load_music("./data/tw012.mp3");
       load_se("./data/tm2_wood001.wav", se_type::fighter_shoot);
       load_se("./data/tm2_shoot003.wav", se_type::enemy_shoot);
+      load_se("./data/tm2_hit003.wav", se_type::fighter_hit);
+      load_se("./data/tm2_fire000.wav", se_type::enemy_hit);
+      load_se("./data/glass-break1.wav", se_type::fighter_down);
+      load_se("./data/bowling-pin1.wav", se_type::boss_down);
     } catch (const char &e) {
       std::cerr << "error: " << e << '\n';
       exit(EXIT_FAILURE);

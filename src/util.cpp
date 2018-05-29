@@ -4,6 +4,7 @@
 #include "effect.hpp"
 #include "enemy.hpp"
 #include "fighter.hpp"
+#include "mixer_manager.hpp"
 
 namespace util {
 
@@ -14,7 +15,8 @@ inline bool check_hit_rect(const SDL_Rect *a, const SDL_Rect *b) noexcept {
 
 bool check_enemyshots_hit_fighter(const enemy_type enemy_select,
                                   Fighter &fighter, Enemy &enemy, Boss &boss,
-                                  Effect &effect) noexcept {
+                                  Effect &effect,
+                                  const MixerManager &mixer_manager) noexcept {
   SDL_Rect r1 = {static_cast<Sint16>(fighter.pos.x + 20),
                  static_cast<Sint16>(fighter.pos.y + 16), 20, 22};
 
@@ -32,6 +34,11 @@ bool check_enemyshots_hit_fighter(const enemy_type enemy_select,
         }
 
         --fighter.life;
+        if (fighter.life <= 0) {
+          Mix_PlayChannel(-1, mixer_manager.get_se(se_type::fighter_down), 0);
+        } else {
+          Mix_PlayChannel(-1, mixer_manager.get_se(se_type::fighter_hit), 0);
+        }
         bullet.view = false;
         for (auto &effect : effect.effects) {
           if (effect.view) {
@@ -59,6 +66,11 @@ bool check_enemyshots_hit_fighter(const enemy_type enemy_select,
         }
 
         --fighter.life;
+        if (fighter.life <= 0) {
+          Mix_PlayChannel(-1, mixer_manager.get_se(se_type::fighter_down), 0);
+        } else {
+          Mix_PlayChannel(-1, mixer_manager.get_se(se_type::fighter_hit), 0);
+        }
         bullet.view = false;
         for (auto &effect : effect.effects) {
           if (effect.view) {
@@ -82,7 +94,8 @@ bool check_enemyshots_hit_fighter(const enemy_type enemy_select,
 }
 
 bool check_fightershots_hit_enemy(Fighter &fighter, Enemy &enemy,
-                                  Effect &effect) noexcept {
+                                  Effect &effect,
+                                  const MixerManager &mixer_manager) noexcept {
   for (auto &e : enemy.enemies) {
     if (!e.view) {
       continue;
@@ -102,6 +115,7 @@ bool check_fightershots_hit_enemy(Fighter &fighter, Enemy &enemy,
       }
 
       --enemy.life;
+      Mix_PlayChannel(-1, mixer_manager.get_se(se_type::enemy_hit), 0);
       e.view = false;
       bullet.view = false;
       for (auto &effect : effect.effects) {
@@ -125,8 +139,8 @@ bool check_fightershots_hit_enemy(Fighter &fighter, Enemy &enemy,
   return false;
 }
 
-bool check_fightershots_hit_boss(Fighter &fighter, Boss &boss,
-                                 Effect &effect) noexcept {
+bool check_fightershots_hit_boss(Fighter &fighter, Boss &boss, Effect &effect,
+                                 const MixerManager &mixer_manager) noexcept {
   for (auto &bullet : fighter.bullets) {
     if (!bullet.view) {
       continue;
@@ -139,6 +153,11 @@ bool check_fightershots_hit_boss(Fighter &fighter, Boss &boss,
       continue;
     }
     --boss.life;
+    if (boss.life <= 0) {
+      Mix_PlayChannel(-1, mixer_manager.get_se(se_type::boss_down), 0);
+    } else {
+      Mix_PlayChannel(-1, mixer_manager.get_se(se_type::enemy_hit), 0);
+    }
     bullet.view = false;
     for (auto &effect : effect.effects) {
       if (effect.view) {

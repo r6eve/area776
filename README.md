@@ -64,6 +64,7 @@ Options:
 * [源暎ゴシックP][]
 * [フリーBGM・音楽素材 MusMus][]
 * [ザ・マッチメイカァズ][]
+* [効果音ラボ][]
 
 ## TODO
 
@@ -82,3 +83,4 @@ Options:
 [源暎ゴシックP]: https://okoneya.jp/font/genei-antique.html
 [フリーBGM・音楽素材 MusMus]: http://musmus.main.jp/
 [ザ・マッチメイカァズ]: http://osabisi.sakura.ne.jp/m2/tm4/se_001.html
+[効果音ラボ]: https://soundeffect-lab.info/
