@@ -13,6 +13,7 @@
 #include "image_manager.hpp"
 #include "input_manager.hpp"
 #include "snow.hpp"
+#include "util.hpp"
 #include "wipe.hpp"
 
 void Area776::run() {
@@ -168,8 +169,8 @@ void Area776::play_game() {
 
   fighter_.update(input_manager_, mixer_manager_);
   fighter_.update_shot();
-  if (fighter_.check_enemyshots_hit_mychara(enemy_select_, enemy_, boss_,
-                                            effect_)) {
+  if (util::check_enemyshots_hit_fighter(enemy_select_, fighter_, enemy_, boss_,
+                                         effect_)) {
     game_state_ = game_state::gameover;
   }
   effect_.update();
@@ -180,7 +181,7 @@ void Area776::play_game() {
       enemy_.appear(fighter_);
       enemy_.update(mixer_manager_, fighter_);
       enemy_.update_shot();
-      if (enemy_.check_myshots_hit_enemy(fighter_, effect_)) {
+      if (util::check_fightershots_hit_enemy(fighter_, enemy_, effect_)) {
         enemy_select_ = enemy_type::boss;
       }
       snow_.update();
@@ -209,7 +210,7 @@ void Area776::play_game() {
         boss_.update(mixer_manager_);
         boss_.update_shot();
 
-        if (boss_.check_myshots_hit_boss(fighter_, effect_)) {
+        if (util::check_fightershots_hit_boss(fighter_, boss_, effect_)) {
           game_state_ = game_state::clear;
           game_count_ = 0;
         }

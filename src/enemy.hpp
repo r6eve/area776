@@ -32,11 +32,6 @@ struct Enemy {
   void update(MixerManager &mixer_manager, Fighter &fighter);
   void update_shot();
 
-  /**
-   * Return true if enemy life is 0.
-   */
-  bool check_myshots_hit_enemy(Fighter &fighter, Effect &effect);
-
   void draw(SDL_Surface *screen, ImageManager &image_manager);
   void draw_shot(SDL_Surface *screen, ImageManager &image_manager);
 

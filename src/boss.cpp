@@ -126,38 +126,6 @@ void Boss::update_shot() {
   }
 }
 
-bool Boss::check_myshots_hit_boss(Fighter &fighter, Effect &effect) {
-  for (auto &bullet : fighter.bullets) {
-    if (!bullet.view) {
-      continue;
-    }
-    SDL_Rect r1 = {static_cast<Sint16>(bullet.pos.x),
-                   static_cast<Sint16>(bullet.pos.y), 10, 24};
-    SDL_Rect r2 = {static_cast<Sint16>(x + 171), static_cast<Sint16>(y + 95),
-                   57, 57};
-    if (!check_hit_rect(&r1, &r2)) {
-      continue;
-    }
-    ++life;
-    bullet.view = false;
-    for (auto &effect : effect.effects) {
-      if (effect.view) {
-        continue;
-      }
-      effect.view = true;
-      effect.pos.x = -80 + bullet.pos.x + r1.w / 2;
-      effect.pos.y = -80 + bullet.pos.y + r1.h / 2;
-      effect.count = 0;
-      break;
-    }
-    if (life > 99) {
-      return true;
-    }
-    break;
-  }
-  return false;
-}
-
 void Boss::draw(SDL_Surface *screen, ImageManager &image_manager) {
   SDL_Surface *p_surface = image_manager.get(image::boss);
   SDL_Rect dst = {static_cast<Sint16>(x), static_cast<Sint16>(y), 400, 224};

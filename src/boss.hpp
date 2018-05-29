@@ -6,8 +6,6 @@
 #include "image_manager.hpp"
 #include "mixer_manager.hpp"
 
-struct Fighter;
-
 struct Boss {
   enum class boss_state {
     automove,
@@ -38,12 +36,6 @@ struct Boss {
   void init();
   void update(MixerManager &mixer_manager);
   void update_shot();
-
-  /**
-   * Return true if boss life is 0.
-   */
-  bool check_myshots_hit_boss(Fighter &fighter, Effect &effect);
-
   void draw(SDL_Surface *screen, ImageManager &image_manager);
   void draw_shot(SDL_Surface *screen, ImageManager &image_manager);
 

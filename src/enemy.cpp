@@ -114,49 +114,6 @@ void Enemy::update_shot() {
   }
 }
 
-bool Enemy::check_myshots_hit_enemy(Fighter &fighter, Effect &effect) {
-  for (auto &enemy : enemies) {
-    if (!enemy.view) {
-      continue;
-    }
-
-    for (auto &bullet : fighter.bullets) {
-      if (!bullet.view) {
-        continue;
-      }
-
-      SDL_Rect r1 = {static_cast<Sint16>(enemy.pos.x),
-                     static_cast<Sint16>(enemy.pos.y), 35, 35};
-      SDL_Rect r2 = {static_cast<Sint16>(bullet.pos.x),
-                     static_cast<Sint16>(bullet.pos.y), 10, 24};
-      if (!check_hit_rect(&r1, &r2)) {
-        continue;
-      }
-
-      ++life;
-      enemy.view = false;
-      bullet.view = false;
-      for (auto &effect : effect.effects) {
-        if (effect.view) {
-          continue;
-        }
-
-        effect.view = true;
-        effect.pos.x = -80 + enemy.pos.x + r1.w / 2;
-        effect.pos.y = -80 + enemy.pos.y + r1.h / 2;
-        effect.count = 0;
-        break;
-      }
-      if (life > 29) {
-        return true;
-      }
-
-      break;
-    }
-  }
-  return false;
-}
-
 void Enemy::draw(SDL_Surface *screen, ImageManager &image_manager) {
   for (auto &enemy : enemies) {
     if (!enemy.view) {
