@@ -4,6 +4,8 @@
 #include <SDL/SDL.h>
 #include <cmath>
 
+const double PI = 4 * atan(1);
+
 namespace screen {
 
 enum {

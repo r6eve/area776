@@ -71,7 +71,7 @@ void Enemy::update(MixerManager &mixer_manager, Fighter &fighter) {
     p.norm();
     p.mul(speed);
     /* 時計回りに(shot_pitch * 2)度回転させておく */
-    const double rot_angle = -(shot_pitch * 2) * M_PI / 180;
+    const double rot_angle = -(shot_pitch * 2) * PI / 180;
     p.rot(rot_angle);
     for (int _ = 0; _ < 5; ++_) {
       for (auto &bullet : bullets) {
@@ -84,7 +84,7 @@ void Enemy::update(MixerManager &mixer_manager, Fighter &fighter) {
         bullet.move.copy(p);
         break;
       }
-      const double rot_angle = shot_pitch * M_PI / 180;
+      const double rot_angle = shot_pitch * PI / 180;
       p.rot(rot_angle);
       Mix_PlayChannel(-1, mixer_manager.get_se(se_type::enemy_shoot), 0);
     }

@@ -48,7 +48,7 @@ void Boss::update(MixerManager &mixer_manager) {
             }
             bullet.pos.x = x + Pos[n][0];
             bullet.pos.y = y + Pos[n][1];
-            double r = M_PI * shot_rot / 10;
+            double r = PI * shot_rot / 10;
             if (n == 1) {
               r = -r;
             }
@@ -78,7 +78,7 @@ void Boss::update(MixerManager &mixer_manager) {
       for (int i = 0; i < 48; ++i) {
         bullets[i].pos.x = x + 418 / 2;
         bullets[i].pos.y = y + 105;
-        double r = M_PI * i / 24;
+        double r = PI * i / 24;
         Point p = {0, 3};
         bullets[i].move.rot(p, r);
         bullets[i].view = true;
