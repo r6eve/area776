@@ -34,8 +34,8 @@ void Enemy::update(MixerManager &mixer_manager, Fighter &fighter) noexcept {
       continue;
     }
 
-    const Point enemy_center = enemy.pos + Point{32, 32};
-    const Point fighter_center = fighter.pos + Point{32, 32};
+    const Point enemy_center = enemy.pos + 32;
+    const Point fighter_center = fighter.pos + 32;
     Point p = fighter_center - enemy_center;
     p.norm();
     p *= speed;

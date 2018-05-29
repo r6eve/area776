@@ -39,8 +39,7 @@ bool check_enemyshots_hit_fighter(enemy_type enemy_select, Fighter &fighter,
           }
 
           effect.view = true;
-          effect.pos.x = -80 + fighter.pos.x + 30;
-          effect.pos.y = -80 + fighter.pos.y + 30;
+          effect.pos = fighter.pos - 50;
           effect.count = 0;
           break;
         }
@@ -67,8 +66,7 @@ bool check_enemyshots_hit_fighter(enemy_type enemy_select, Fighter &fighter,
           }
 
           effect.view = true;
-          effect.pos.x = -80 + fighter.pos.x + 30;
-          effect.pos.y = -80 + fighter.pos.y + 30;
+          effect.pos = fighter.pos - 50;
           effect.count = 0;
           break;
         }

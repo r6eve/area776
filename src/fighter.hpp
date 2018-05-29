@@ -23,8 +23,7 @@ struct Fighter {
   Fighter() noexcept {}
 
   inline void init() noexcept {
-    pos.x = 280;
-    pos.y = 400;
+    pos = Point{280, 400};
     shot_timer = 0;
     for (auto &bullet : bullets) {
       bullet.view = false;
@@ -47,7 +46,8 @@ struct Fighter {
     }
   }
 
-  inline void draw(SDL_Surface *screen, ImageManager &image_manager) noexcept {
+  inline void draw(SDL_Surface *screen, ImageManager &image_manager) const
+      noexcept {
     SDL_Surface *p_surface = image_manager.get(image::fighter);
     SDL_Rect dst = {static_cast<Sint16>(pos.x), static_cast<Sint16>(pos.y), 60,
                     60};
@@ -57,11 +57,11 @@ struct Fighter {
 
   ~Fighter() noexcept {}
 
-private:
-  inline void draw_shot(SDL_Surface *screen,
-                        ImageManager &image_manager) noexcept {
+ private:
+  inline void draw_shot(SDL_Surface *screen, ImageManager &image_manager) const
+      noexcept {
     SDL_Surface *p_surface = image_manager.get(image::oval_re);
-    for (auto &bullet : bullets) {
+    for (const auto &bullet : bullets) {
       if (!bullet.view) {
         continue;
       }

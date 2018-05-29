@@ -47,7 +47,7 @@ void Fighter::update(InputManager &input_manager,
     return;
   }
 
-  double shot_speed = 16;
+  const double shot_speed = 16;
   for (auto &bullet : bullets) {
     if (bullet.view) {
       continue;
@@ -55,8 +55,7 @@ void Fighter::update(InputManager &input_manager,
 
     bullet.view = true;
     bullet.pos = pos + Point{25, 10};
-    bullet.move.x = 0;
-    bullet.move.y = -shot_speed;
+    bullet.move = Point{0, -shot_speed};
     Mix_PlayChannel(-1, mixer_manager.get_se(se_type::fighter_shoot), 0);
     break;
   }

@@ -48,12 +48,21 @@ struct Point {
     return ((x != rhs.x) || (y != rhs.y));
   }
 
+  inline Point operator+(const double d) const noexcept {
+    return Point{x + d, y + d};
+  }
+
   inline Point operator+(const Point &rhs) const noexcept {
     return Point{x + rhs.x, y + rhs.y};
   }
 
   inline Point operator+(const Point &&rhs) const noexcept {
     return Point{x + rhs.x, y + rhs.y};
+  }
+
+  inline void operator+=(const double d) noexcept {
+    x += d;
+    y += d;
   }
 
   inline void operator+=(const Point &rhs) noexcept {
@@ -66,12 +75,21 @@ struct Point {
     y += rhs.y;
   }
 
+  inline Point operator-(const double d) const noexcept {
+    return Point{x - d, y - d};
+  }
+
   inline Point operator-(const Point &rhs) const noexcept {
     return Point{x - rhs.x, y - rhs.y};
   }
 
   inline Point operator-(const Point &&rhs) const noexcept {
     return Point{x - rhs.x, y - rhs.y};
+  }
+
+  inline void operator-=(const double d) noexcept {
+    x -= d;
+    y -= d;
   }
 
   inline void operator-=(const Point &rhs) noexcept {
