@@ -140,7 +140,7 @@ bool check_fightershots_hit_boss(Fighter &fighter, Boss &boss,
     if (!check_hit_rect(&r1, &r2)) {
       continue;
     }
-    ++boss.life;
+    --boss.life;
     bullet.view = false;
     for (auto &effect : effect.effects) {
       if (effect.view) {
@@ -152,7 +152,7 @@ bool check_fightershots_hit_boss(Fighter &fighter, Boss &boss,
       effect.count = 0;
       break;
     }
-    if (boss.life > 99) {
+    if (boss.life <= 0) {
       return true;
     }
     break;

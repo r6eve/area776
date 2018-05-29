@@ -108,7 +108,7 @@ void Area776::game_title() noexcept {
         enemy_select_ = enemy_type::enemy;
         fighter_.life = 20;
         enemy_.life = 30;
-        boss_.life = 0;
+        boss_.life = 100;
         srand((unsigned int)time(nullptr));
       }
       break;
@@ -268,7 +268,7 @@ void Area776::game_clear() noexcept {
   game_state_ = game_state::start;
   ++game_level_;
   enemy_.life = 30;
-  boss_.life = 0;
+  boss_.life = 100;
 }
 
 void Area776::game_over() noexcept {

@@ -105,7 +105,7 @@ class Area776 {
       }
       case enemy_type::boss: {
         std::stringstream ss;
-        ss << "BOSS LIFE:  " << 100 - boss_.life;
+        ss << "BOSS LIFE:  " << boss_.life;
         draw_text(font_size::x16, rgb::white, Point{32, 24}, ss.str().c_str());
         break;
       }
