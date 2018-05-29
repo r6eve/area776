@@ -1,5 +1,3 @@
-#define MAIN
-
 #include "area776.hpp"
 #include <SDL/SDL_mixer.h>
 #include <time.h>
