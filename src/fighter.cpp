@@ -101,7 +101,7 @@ bool FighterClass::check_enemyshots_hit_mychara() {
         continue;
       }
 
-      --Chara_life;
+      --Fighter.life;
       shot.view = false;
       for (auto &effect : Effect) {
         if (effect.view) {
@@ -127,7 +127,7 @@ bool FighterClass::check_enemyshots_hit_mychara() {
         continue;
       }
 
-      --Chara_life;
+      --Fighter.life;
       shot.view = false;
       for (auto &effect : Effect) {
         if (effect.view) {
@@ -143,7 +143,7 @@ bool FighterClass::check_enemyshots_hit_mychara() {
     }
   }
 
-  return Chara_life <= 0;
+  return Fighter.life <= 0;
 }
 
 void FighterClass::draw(SDL_Surface *screen, ImageManager &image_manager) {

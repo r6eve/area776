@@ -43,6 +43,7 @@ enum class boss_state {
 struct Fighter_data {
   Point pos;
   int shot_timer;
+  int life;
 };
 
 struct Enemy_data {
@@ -65,6 +66,7 @@ struct Boss_data {
   int move;
   int shot_rot;
   int shot_count;
+  int life;
 };
 
 struct Boss_shot_data {
@@ -88,8 +90,6 @@ struct Shot_data {
 #endif
 
 GLOBAL int Enemy_life;
-GLOBAL int Boss_life;
-GLOBAL int Chara_life;
 GLOBAL int Enemy_select;
 GLOBAL Fighter_data Fighter;
 GLOBAL Enemy_data Enemy[ENEMY_MAX];

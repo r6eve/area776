@@ -137,7 +137,7 @@ bool BossClass::check_myshots_hit_boss() {
     if (!check_hit_rect(&r1, &r2)) {
       continue;
     }
-    ++Boss_life;
+    ++Boss.life;
     shot.view = false;
     for (auto &effect : Effect) {
       if (effect.view) {
@@ -149,7 +149,7 @@ bool BossClass::check_myshots_hit_boss() {
       effect.count = 0;
       break;
     }
-    if (Boss_life > 99) {
+    if (Boss.life > 99) {
       return true;
     }
     break;

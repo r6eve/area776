@@ -109,9 +109,9 @@ void Area776::game_title() {
         game_state_ = game_state::start;
         game_level_ = 1;
         Enemy_select = ENEMY_1;
-        Chara_life = 20;
+        Fighter.life = 20;
         Enemy_life = 0;
-        Boss_life = 0;
+        Boss.life = 0;
         srand((unsigned int)time(nullptr));
       }
       break;
@@ -264,7 +264,7 @@ void Area776::game_clear() {
   game_state_ = game_state::start;
   ++game_level_;
   Enemy_life = 0;
-  Boss_life = 0;
+  Boss.life = 0;
 }
 
 void Area776::game_over() {
@@ -313,13 +313,13 @@ void Area776::draw_life() {
     draw_text(font_size::x16, rgb::white, Point{32, 24}, ss.str().c_str());
   } else if (Enemy_select == BOSS_1) {
     std::stringstream ss;
-    ss << "BOSS LIFE:  " << 100 - Boss_life;
+    ss << "BOSS LIFE:  " << 100 - Boss.life;
     draw_text(font_size::x16, rgb::white, Point{32, 24}, ss.str().c_str());
   } else {
     // NOTREACHED
   }
   std::stringstream ss;
-  ss << "LIFE:  " << Chara_life;
+  ss << "LIFE:  " << Fighter.life;
   draw_text(font_size::x16, rgb::white,
             Point{Fighter.pos.x, Fighter.pos.y + 55}, ss.str().c_str());
 }
