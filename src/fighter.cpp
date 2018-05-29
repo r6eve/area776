@@ -11,8 +11,8 @@ void FighterClass::init() {
   Fighter.pos.x = 280;
   Fighter.pos.y = 400;
   Fighter.shot_timer = 0;
-  for (auto &shot : Fighter_shot) {
-    shot.view = false;
+  for (auto &bullet : Fighter.bullets) {
+    bullet.view = false;
   }
 }
 
@@ -57,15 +57,15 @@ void FighterClass::move(InputManager &input_manager,
 
   double shot_speed = 16;
   Point pos = {25, 10};
-  for (auto &shot : Fighter_shot) {
-    if (shot.view) {
+  for (auto &bullet : Fighter.bullets) {
+    if (bullet.view) {
       continue;
     }
 
-    shot.view = true;
-    shot.pos.add(Fighter.pos, pos);
-    shot.move.x = 0;
-    shot.move.y = -shot_speed;
+    bullet.view = true;
+    bullet.pos.add(Fighter.pos, pos);
+    bullet.move.x = 0;
+    bullet.move.y = -shot_speed;
     Mix_PlayChannel(-1, mixer_manager.get_se(se_type::fighter_shoot), 0);
     break;
   }
@@ -73,14 +73,14 @@ void FighterClass::move(InputManager &input_manager,
 }
 
 void FighterClass::move_shot() {
-  for (auto &shot : Fighter_shot) {
-    if (!shot.view) {
+  for (auto &bullet : Fighter.bullets) {
+    if (!bullet.view) {
       continue;
     }
 
-    shot.pos.add(shot.move);
-    if (shot.pos.y < -16) {
-      shot.view = false;
+    bullet.pos.add(bullet.move);
+    if (bullet.pos.y < -16) {
+      bullet.view = false;
     }
   }
 }
@@ -89,20 +89,20 @@ bool FighterClass::check_enemyshots_hit_mychara() {
   SDL_Rect r1 = {static_cast<Sint16>(Fighter.pos.x + 20),
                  static_cast<Sint16>(Fighter.pos.y + 16), 20, 22};
 
-  if (Enemy_select == ENEMY_1) {
-    for (auto &shot : Enemy_shot) {
-      if (!shot.view) {
+  if (Enemy_select == enemy_type::enemy) {
+    for (auto &bullet : Enemy.bullets) {
+      if (!bullet.view) {
         continue;
       }
 
-      SDL_Rect r2 = {static_cast<Sint16>(shot.pos.x + 6),
-                     static_cast<Sint16>(shot.pos.y + 6), 4, 4};
+      SDL_Rect r2 = {static_cast<Sint16>(bullet.pos.x + 6),
+                     static_cast<Sint16>(bullet.pos.y + 6), 4, 4};
       if (!check_hit_rect(&r1, &r2)) {
         continue;
       }
 
       --Fighter.life;
-      shot.view = false;
+      bullet.view = false;
       for (auto &effect : Effect) {
         if (effect.view) {
           continue;
@@ -115,20 +115,20 @@ bool FighterClass::check_enemyshots_hit_mychara() {
         break;
       }
     }
-  } else if (Enemy_select == BOSS_1) {
-    for (auto &shot : Boss_shot) {
-      if (!shot.view) {
+  } else if (Enemy_select == enemy_type::boss) {
+    for (auto &bullet : Boss.bullets) {
+      if (!bullet.view) {
         continue;
       }
 
-      SDL_Rect r2 = {static_cast<Sint16>(shot.pos.x + 3),
-                     static_cast<Sint16>(shot.pos.y + 3), 10, 10};
+      SDL_Rect r2 = {static_cast<Sint16>(bullet.pos.x + 3),
+                     static_cast<Sint16>(bullet.pos.y + 3), 10, 10};
       if (!check_hit_rect(&r1, &r2)) {
         continue;
       }
 
       --Fighter.life;
-      shot.view = false;
+      bullet.view = false;
       for (auto &effect : Effect) {
         if (effect.view) {
           continue;
@@ -155,13 +155,13 @@ void FighterClass::draw(SDL_Surface *screen, ImageManager &image_manager) {
 
 void FighterClass::draw_shot(SDL_Surface *screen, ImageManager &image_manager) {
   SDL_Surface *p_surface = image_manager.get(image::oval_re);
-  for (auto &shot : Fighter_shot) {
-    if (!shot.view) {
+  for (auto &bullet : Fighter.bullets) {
+    if (!bullet.view) {
       continue;
     }
 
-    SDL_Rect dst = {static_cast<Sint16>(shot.pos.x),
-                    static_cast<Sint16>(shot.pos.y), 10, 24};
+    SDL_Rect dst = {static_cast<Sint16>(bullet.pos.x),
+                    static_cast<Sint16>(bullet.pos.y), 10, 24};
     SDL_BlitSurface(p_surface, nullptr, screen, &dst);
   }
 }

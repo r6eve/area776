@@ -108,9 +108,9 @@ void Area776::game_title() {
         game_count_ = 0;
         game_state_ = game_state::start;
         game_level_ = 1;
-        Enemy_select = ENEMY_1;
+        Enemy_select = enemy_type::enemy;
         Fighter.life = 20;
-        Enemy_life = 0;
+        Enemy.life = 0;
         Boss.life = 0;
         srand((unsigned int)time(nullptr));
       }
@@ -174,18 +174,18 @@ void Area776::play_game() {
   }
   effect_.update();
   draw_map();
-  if (Enemy_select == ENEMY_1) {
+  if (Enemy_select == enemy_type::enemy) {
     enemy_.appear();
     enemy_.move(mixer_manager_);
     enemy_.move_shot();
     if (enemy_.check_myshots_hit_enemy()) {
-      Enemy_select = BOSS_1;
+      Enemy_select = enemy_type::boss;
     }
     snow_.update();
     snow_.draw(screen_, image_manager_);
     enemy_.draw(screen_, image_manager_);
     enemy_.draw_shot(screen_, image_manager_);
-  } else if (Enemy_select == BOSS_1) {
+  } else if (Enemy_select == enemy_type::boss) {
     if (game_count_ < 130) {
       if (blink_count_ < 20) {
         std::stringstream ss;
@@ -263,7 +263,7 @@ void Area776::game_clear() {
   game_count_ = 0;
   game_state_ = game_state::start;
   ++game_level_;
-  Enemy_life = 0;
+  Enemy.life = 0;
   Boss.life = 0;
 }
 
@@ -286,11 +286,11 @@ void Area776::game_over() {
 
 void Area776::game_pause() {
   draw_map();
-  if (Enemy_select == ENEMY_1) {
+  if (Enemy_select == enemy_type::enemy) {
     snow_.draw(screen_, image_manager_);
     enemy_.draw(screen_, image_manager_);
     enemy_.draw_shot(screen_, image_manager_);
-  } else if (Enemy_select == BOSS_1) {
+  } else if (Enemy_select == enemy_type::boss) {
     boss_.draw(screen_, image_manager_);
     boss_.draw_shot(screen_, image_manager_);
   } else {
@@ -307,11 +307,11 @@ void Area776::game_pause() {
 }
 
 void Area776::draw_life() {
-  if (Enemy_select == ENEMY_1) {
+  if (Enemy_select == enemy_type::enemy) {
     std::stringstream ss;
-    ss << "ENEMY LIFE:  " << 30 - Enemy_life;
+    ss << "ENEMY LIFE:  " << 30 - Enemy.life;
     draw_text(font_size::x16, rgb::white, Point{32, 24}, ss.str().c_str());
-  } else if (Enemy_select == BOSS_1) {
+  } else if (Enemy_select == enemy_type::boss) {
     std::stringstream ss;
     ss << "BOSS LIFE:  " << 100 - Boss.life;
     draw_text(font_size::x16, rgb::white, Point{32, 24}, ss.str().c_str());

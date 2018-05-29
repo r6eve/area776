@@ -10,8 +10,8 @@ void BossClass::init() {
   Boss.x = (screen::width - 418) / 2;
   Boss.y = -240;
   Boss.move = 0;
-  for (auto &shot : Boss_shot) {
-    shot.view = false;
+  for (auto &bullet : Boss.bullets) {
+    bullet.view = false;
   }
 }
 
@@ -42,21 +42,21 @@ void BossClass::move(MixerManager &mixer_manager) {
       if (!(Boss.shot_count % 2)) {
         int Pos[2][2] = {{88, 120}, {418 - 88, 120}};
         for (int n = 0; n < 2; ++n) {
-          for (auto &shot : Boss_shot) {
-            if (shot.view) {
+          for (auto &bullet : Boss.bullets) {
+            if (bullet.view) {
               continue;
             }
-            shot.pos.x = Boss.x + Pos[n][0];
-            shot.pos.y = Boss.y + Pos[n][1];
+            bullet.pos.x = Boss.x + Pos[n][0];
+            bullet.pos.y = Boss.y + Pos[n][1];
             double r = M_PI * Boss.shot_rot / 10;
             if (n == 1) {
               r = -r;
             }
             Point p = {0, 4};
-            shot.move.rot(p, r);
-            shot.view = true;
-            shot.count = 0;
-            shot.rot = 0;
+            bullet.move.rot(p, r);
+            bullet.view = true;
+            bullet.count = 0;
+            bullet.rot = 0;
             break;
           }
         }
@@ -70,20 +70,20 @@ void BossClass::move(MixerManager &mixer_manager) {
     }
     case boss_state::attack01:
     case boss_state::attack02: {
-      for (auto &shot : Boss_shot) {
-        if (shot.view) {
+      for (auto &bullet : Boss.bullets) {
+        if (bullet.view) {
           return;
         }
       }
       for (int i = 0; i < 48; ++i) {
-        Boss_shot[i].pos.x = Boss.x + 418 / 2;
-        Boss_shot[i].pos.y = Boss.y + 105;
+        Boss.bullets[i].pos.x = Boss.x + 418 / 2;
+        Boss.bullets[i].pos.y = Boss.y + 105;
         double r = M_PI * i / 24;
         Point p = {0, 3};
-        Boss_shot[i].move.rot(p, r);
-        Boss_shot[i].view = true;
-        Boss_shot[i].count = 0;
-        Boss_shot[i].rot = 0;
+        Boss.bullets[i].move.rot(p, r);
+        Boss.bullets[i].view = true;
+        Boss.bullets[i].count = 0;
+        Boss.bullets[i].rot = 0;
       }
       Mix_PlayChannel(-1, mixer_manager.get_se(se_type::enemy_shoot), 0);
       Boss.shot_count = 0;
@@ -99,53 +99,53 @@ void BossClass::move(MixerManager &mixer_manager) {
 }
 
 void BossClass::move_shot() {
-  for (auto &shot : Boss_shot) {
-    if (!shot.view) {
+  for (auto &bullet : Boss.bullets) {
+    if (!bullet.view) {
       continue;
     }
-    shot.pos.add(shot.move);
-    if (shot.pos.x < -16) {
-      shot.view = false;
+    bullet.pos.add(bullet.move);
+    if (bullet.pos.x < -16) {
+      bullet.view = false;
     }
-    if (shot.pos.y < -16) {
-      shot.view = false;
+    if (bullet.pos.y < -16) {
+      bullet.view = false;
     }
-    if (shot.pos.x > screen::width) {
-      shot.view = false;
+    if (bullet.pos.x > screen::width) {
+      bullet.view = false;
     }
-    if (shot.pos.y > screen::height) {
-      shot.view = false;
+    if (bullet.pos.y > screen::height) {
+      bullet.view = false;
     }
-    ++shot.count;
-    shot.count %= 2;
-    if (shot.count == 0) {
-      ++shot.rot;
-      shot.rot %= 16;
+    ++bullet.count;
+    bullet.count %= 2;
+    if (bullet.count == 0) {
+      ++bullet.rot;
+      bullet.rot %= 16;
     }
   }
 }
 
 bool BossClass::check_myshots_hit_boss() {
-  for (auto &shot : Fighter_shot) {
-    if (!shot.view) {
+  for (auto &bullet : Fighter.bullets) {
+    if (!bullet.view) {
       continue;
     }
-    SDL_Rect r1 = {static_cast<Sint16>(shot.pos.x),
-                   static_cast<Sint16>(shot.pos.y), 10, 24};
+    SDL_Rect r1 = {static_cast<Sint16>(bullet.pos.x),
+                   static_cast<Sint16>(bullet.pos.y), 10, 24};
     SDL_Rect r2 = {static_cast<Sint16>(Boss.x + 171),
                    static_cast<Sint16>(Boss.y + 95), 57, 57};
     if (!check_hit_rect(&r1, &r2)) {
       continue;
     }
     ++Boss.life;
-    shot.view = false;
+    bullet.view = false;
     for (auto &effect : Effect) {
       if (effect.view) {
         continue;
       }
       effect.view = true;
-      effect.pos.x = -80 + shot.pos.x + r1.w / 2;
-      effect.pos.y = -80 + shot.pos.y + r1.h / 2;
+      effect.pos.x = -80 + bullet.pos.x + r1.w / 2;
+      effect.pos.y = -80 + bullet.pos.y + r1.h / 2;
       effect.count = 0;
       break;
     }
@@ -165,13 +165,13 @@ void BossClass::draw(SDL_Surface *screen, ImageManager &image_manager) {
 }
 
 void BossClass::draw_shot(SDL_Surface *screen, ImageManager &image_manager) {
-  for (auto &shot : Boss_shot) {
-    if (!shot.view) {
+  for (auto &bullet : Boss.bullets) {
+    if (!bullet.view) {
       continue;
     }
     SDL_Surface *p_surface = image_manager.get(image::bm01);
-    SDL_Rect dst = {static_cast<Sint16>(shot.pos.x),
-                    static_cast<Sint16>(shot.pos.y), 16, 16};
+    SDL_Rect dst = {static_cast<Sint16>(bullet.pos.x),
+                    static_cast<Sint16>(bullet.pos.y), 16, 16};
     SDL_BlitSurface(p_surface, nullptr, screen, &dst);
   }
 }

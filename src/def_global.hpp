@@ -27,12 +27,6 @@ const int ENEMY_SHOT_MAX = 128;
 const int EFFECT_MAX = 64;
 const int BOSS_SHOT_MAX = 256;
 
-enum {
-  ENEMY_1 = 0,
-  BOSS_1,
-  NUM_ENEMY_TYPE,
-};
-
 enum class boss_state {
   automove,
   attack00,
@@ -40,26 +34,53 @@ enum class boss_state {
   attack02,
 };
 
-struct Fighter_data {
+struct FighterData {
+  struct Bullet {
+    bool view;
+    Point pos;
+    Point move;
+  };
+
   Point pos;
   int shot_timer;
   int life;
+  Bullet bullets[FIGHTER_SHOT_MAX];
 };
 
-struct Enemy_data {
-  bool view;
-  Point pos;
-  Point move;
-  int shot_timer;
+struct EnemiesData {
+  struct EnemyData {
+    bool view;
+    Point pos;
+    Point move;
+    int shot_timer;
+  };
+
+  struct Bullet {
+    bool view;
+    Point pos;
+    Point move;
+  };
+
+  int life;
+  EnemyData enemies[ENEMY_MAX];
+  Bullet bullets[ENEMY_SHOT_MAX];
 };
 
-struct Effect_data {
+struct EffectData {
   bool view;
   Point pos;
   int count;
 };
 
-struct Boss_data {
+struct BossData {
+  struct Bullet {
+    bool view;
+    int rot;
+    int count;
+    Point pos;
+    Point move;
+  };
+
   boss_state state;
   int x;
   int y;
@@ -67,20 +88,7 @@ struct Boss_data {
   int shot_rot;
   int shot_count;
   int life;
-};
-
-struct Boss_shot_data {
-  bool view;
-  int rot;
-  int count;
-  Point pos;
-  Point move;
-};
-
-struct Shot_data {
-  bool view;
-  Point pos;
-  Point move;
+  Bullet bullets[BOSS_SHOT_MAX];
 };
 
 #ifdef MAIN
@@ -89,14 +97,10 @@ struct Shot_data {
 #define GLOBAL extern
 #endif
 
-GLOBAL int Enemy_life;
-GLOBAL int Enemy_select;
-GLOBAL Fighter_data Fighter;
-GLOBAL Enemy_data Enemy[ENEMY_MAX];
-GLOBAL Shot_data Fighter_shot[FIGHTER_SHOT_MAX];
-GLOBAL Shot_data Enemy_shot[ENEMY_SHOT_MAX];
-GLOBAL Effect_data Effect[EFFECT_MAX];
-GLOBAL Boss_data Boss;
-GLOBAL Boss_shot_data Boss_shot[BOSS_SHOT_MAX];
+GLOBAL enemy_type Enemy_select;
+GLOBAL FighterData Fighter;
+GLOBAL EnemiesData Enemy;
+GLOBAL EffectData Effect[EFFECT_MAX];
+GLOBAL BossData Boss;
 
 #endif
