@@ -2,7 +2,7 @@
 #define DEF_GLOBAL_H
 
 #include <SDL/SDL.h>
-#include <math.h>
+#include <cmath>
 
 namespace screen {
 
