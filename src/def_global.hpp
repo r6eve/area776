@@ -117,12 +117,12 @@ struct Point {
     y *= d;
   }
 
-  inline void rot(Point &src, double r) noexcept {
+  inline void rot(const Point &src, double r) noexcept {
     x = src.x * cos(r) + src.y * -sin(r);
     y = src.x * sin(r) + src.y * cos(r);
   }
 
-  inline void rot(Point &&src, double r) noexcept {
+  inline void rot(const Point &&src, double r) noexcept {
     x = src.x * cos(r) + src.y * -sin(r);
     y = src.x * sin(r) + src.y * cos(r);
   }

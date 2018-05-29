@@ -33,7 +33,7 @@ struct Effect {
     }
   }
 
-  inline void draw(SDL_Surface *screen, ImageManager &image_manager) const
+  inline void draw(SDL_Surface *screen, const ImageManager &image_manager) const
       noexcept {
     for (const auto &effect : effects) {
       if (!effect.view) {

@@ -30,8 +30,8 @@ struct Fighter {
     }
   }
 
-  void update(InputManager &input_manager,
-              MixerManager &mixer_manager) noexcept;
+  void update(const InputManager &input_manager,
+              const MixerManager &mixer_manager) noexcept;
 
   inline void update_shot() noexcept {
     for (auto &bullet : bullets) {
@@ -46,7 +46,7 @@ struct Fighter {
     }
   }
 
-  inline void draw(SDL_Surface *screen, ImageManager &image_manager) const
+  inline void draw(SDL_Surface *screen, const ImageManager &image_manager) const
       noexcept {
     SDL_Surface *p_surface = image_manager.get(image::fighter);
     SDL_Rect dst = {static_cast<Sint16>(pos.x), static_cast<Sint16>(pos.y), 60,
@@ -58,8 +58,8 @@ struct Fighter {
   ~Fighter() noexcept {}
 
  private:
-  inline void draw_shot(SDL_Surface *screen, ImageManager &image_manager) const
-      noexcept {
+  inline void draw_shot(SDL_Surface *screen,
+                        const ImageManager &image_manager) const noexcept {
     SDL_Surface *p_surface = image_manager.get(image::oval_re);
     for (const auto &bullet : bullets) {
       if (!bullet.view) {

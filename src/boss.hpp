@@ -42,7 +42,7 @@ struct Boss {
     life = 100;
   }
 
-  void update(MixerManager &mixer_manager) noexcept;
+  void update(const MixerManager &mixer_manager) noexcept;
 
   inline void update_shot() noexcept {
     for (auto &bullet : bullets) {
@@ -71,7 +71,7 @@ struct Boss {
     }
   }
 
-  inline void draw(SDL_Surface *screen, ImageManager &image_manager) const
+  inline void draw(SDL_Surface *screen, const ImageManager &image_manager) const
       noexcept {
     SDL_Surface *p_surface = image_manager.get(image::boss);
     SDL_Rect dst = {static_cast<Sint16>(pos.x), static_cast<Sint16>(pos.y), 400,
@@ -83,7 +83,7 @@ struct Boss {
   ~Boss() noexcept {}
 
  private:
-  inline void draw_shot(SDL_Surface *screen, ImageManager &image_manager) const
+  inline void draw_shot(SDL_Surface *screen, const ImageManager &image_manager) const
       noexcept {
     for (const auto &bullet : bullets) {
       if (!bullet.view) {

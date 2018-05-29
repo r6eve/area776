@@ -7,13 +7,13 @@
 
 namespace util {
 
-inline bool check_hit_rect(SDL_Rect *a, SDL_Rect *b) noexcept {
+inline bool check_hit_rect(const SDL_Rect *a, const SDL_Rect *b) noexcept {
   return ((a->x) < (b->x + b->w)) && ((b->x) < (a->x + a->w)) &&
          ((a->y) < (b->y + b->h)) && ((b->y) < (a->y + a->h));
 }
 
-bool check_enemyshots_hit_fighter(enemy_type enemy_select, Fighter &fighter,
-                                  Enemy &enemy, Boss &boss,
+bool check_enemyshots_hit_fighter(const enemy_type enemy_select,
+                                  Fighter &fighter, Enemy &enemy, Boss &boss,
                                   Effect &effect) noexcept {
   SDL_Rect r1 = {static_cast<Sint16>(fighter.pos.x + 20),
                  static_cast<Sint16>(fighter.pos.y + 16), 20, 22};

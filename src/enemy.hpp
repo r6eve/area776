@@ -37,7 +37,7 @@ struct Enemy {
     life = debug_mode ? 5 : 30;
   }
 
-  inline void appear(Fighter &fighter) noexcept {
+  inline void appear(const Fighter &fighter) noexcept {
     const double speed = 8;
     if (rand() % 45 != 0) {
       return;
@@ -58,7 +58,8 @@ struct Enemy {
     }
   }
 
-  void update(MixerManager &mixer_manager, Fighter &fighter) noexcept;
+  void update(const MixerManager &mixer_manager,
+              const Fighter &fighter) noexcept;
 
   inline void update_shot() noexcept {
     for (auto &bullet : bullets) {
@@ -82,7 +83,7 @@ struct Enemy {
     }
   }
 
-  inline void draw(SDL_Surface *screen, ImageManager &image_manager) const
+  inline void draw(SDL_Surface *screen, const ImageManager &image_manager) const
       noexcept {
     for (const auto &enemy : enemies) {
       if (!enemy.view) {
@@ -100,8 +101,8 @@ struct Enemy {
   ~Enemy() noexcept {}
 
  private:
-  inline void draw_shot(SDL_Surface *screen, ImageManager &image_manager) const
-      noexcept {
+  inline void draw_shot(SDL_Surface *screen,
+                        const ImageManager &image_manager) const noexcept {
     for (const auto &bullet : bullets) {
       if (!bullet.view) {
         continue;
