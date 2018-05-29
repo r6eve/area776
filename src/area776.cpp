@@ -124,7 +124,6 @@ void Area776::game_start() noexcept {
   fighter_.update_shot();
   draw_map();
   fighter_.draw(screen_, image_manager_);
-  fighter_.draw_shot(screen_, image_manager_);
 
   switch (game_count_) {
     case 0: {
@@ -222,7 +221,6 @@ void Area776::play_game() noexcept {
       break;
   }
 
-  fighter_.draw_shot(screen_, image_manager_);
   fighter_.draw(screen_, image_manager_);
   effect_.draw(screen_, image_manager_);
   draw_life();
@@ -233,7 +231,6 @@ void Area776::game_clear() noexcept {
   fighter_.update_shot();
   draw_map();
   fighter_.draw(screen_, image_manager_);
-  fighter_.draw_shot(screen_, image_manager_);
   draw_life();
 
   if (game_count_ == 0) {
@@ -313,7 +310,6 @@ void Area776::game_pause() noexcept {
       break;
   }
 
-  fighter_.draw_shot(screen_, image_manager_);
   fighter_.draw(screen_, image_manager_);
   effect_.draw(screen_, image_manager_);
   draw_life();

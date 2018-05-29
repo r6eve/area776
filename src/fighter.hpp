@@ -52,8 +52,12 @@ struct Fighter {
     SDL_Rect dst = {static_cast<Sint16>(pos.x), static_cast<Sint16>(pos.y), 60,
                     60};
     SDL_BlitSurface(p_surface, nullptr, screen, &dst);
+    draw_shot(screen, image_manager);
   }
 
+  ~Fighter() noexcept {}
+
+private:
   inline void draw_shot(SDL_Surface *screen,
                         ImageManager &image_manager) noexcept {
     SDL_Surface *p_surface = image_manager.get(image::oval_re);
@@ -67,8 +71,6 @@ struct Fighter {
       SDL_BlitSurface(p_surface, nullptr, screen, &dst);
     }
   }
-
-  ~Fighter() noexcept {}
 };
 
 #endif
