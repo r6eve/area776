@@ -99,7 +99,7 @@ class Area776 {
     switch (enemy_select_) {
       case enemy_type::enemy: {
         std::stringstream ss;
-        ss << "ENEMY LIFE:  " << 30 - enemy_.life;
+        ss << "ENEMY LIFE:  " << enemy_.life;
         draw_text(font_size::x16, rgb::white, Point{32, 24}, ss.str().c_str());
         break;
       }

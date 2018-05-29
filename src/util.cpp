@@ -103,7 +103,7 @@ bool check_fightershots_hit_enemy(Fighter &fighter, Enemy &enemy,
         continue;
       }
 
-      ++enemy.life;
+      --enemy.life;
       e.view = false;
       bullet.view = false;
       for (auto &effect : effect.effects) {
@@ -117,7 +117,7 @@ bool check_fightershots_hit_enemy(Fighter &fighter, Enemy &enemy,
         effect.count = 0;
         break;
       }
-      if (enemy.life > 29) {
+      if (enemy.life <= 0) {
         return true;
       }
 
