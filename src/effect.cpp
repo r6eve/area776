@@ -1,14 +1,14 @@
 #include "def_global.hpp"
+#include "effect.hpp"
 #include "image_manager.hpp"
-#include "point.hpp"
 
-void init_effect() {
+void EffectClass::init() {
   for (auto &effect : Effect) {
     effect.view = false;
   }
 }
 
-void update_effect() {
+void EffectClass::update() {
   for (auto &effect : Effect) {
     if (!effect.view) {
       continue;
@@ -20,7 +20,7 @@ void update_effect() {
   }
 }
 
-void draw_effect(SDL_Surface *screen, ImageManager &image_manager) {
+void EffectClass::draw(SDL_Surface *screen, ImageManager &image_manager) {
   for (auto &effect : Effect) {
     if (!effect.view) {
       continue;

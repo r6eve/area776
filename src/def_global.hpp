@@ -3,9 +3,6 @@
 
 #include <SDL/SDL.h>
 #include <math.h>
-#include "effect.hpp"
-#include "enemy.hpp"
-#include "fighter.hpp"
 #include "point.hpp"
 
 namespace screen {
@@ -41,6 +38,24 @@ enum class boss_state {
   attack00,
   attack01,
   attack02,
+};
+
+struct Fighter_data {
+  Point pos;
+  int shot_timer;
+};
+
+struct Enemy_data {
+  bool view;
+  Point pos;
+  Point move;
+  int shot_timer;
+};
+
+struct Effect_data {
+  bool view;
+  Point pos;
+  int count;
 };
 
 struct Boss_data {

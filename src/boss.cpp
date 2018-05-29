@@ -3,8 +3,9 @@
 #include "image_manager.hpp"
 #include "mixer_manager.hpp"
 #include "util.hpp"
+#include "boss.hpp"
 
-void init_boss() {
+void BossClass::init() {
   Boss.state = boss_state::automove;
   Boss.x = (screen::width - 418) / 2;
   Boss.y = -240;
@@ -14,7 +15,7 @@ void init_boss() {
   }
 }
 
-void move_boss(MixerManager &mixer_manager) {
+void BossClass::move(MixerManager &mixer_manager) {
   Boss.x += Boss.move;
   if (Boss.x < 0) {
     Boss.x = 0;
@@ -97,7 +98,7 @@ void move_boss(MixerManager &mixer_manager) {
   }
 }
 
-void move_boss_shot() {
+void BossClass::move_shot() {
   for (auto &shot : Boss_shot) {
     if (!shot.view) {
       continue;
@@ -124,7 +125,7 @@ void move_boss_shot() {
   }
 }
 
-bool check_myshots_hit_boss() {
+bool BossClass::check_myshots_hit_boss() {
   for (auto &shot : Fighter_shot) {
     if (!shot.view) {
       continue;
@@ -156,14 +157,14 @@ bool check_myshots_hit_boss() {
   return false;
 }
 
-void draw_boss(SDL_Surface *screen, ImageManager &image_manager) {
+void BossClass::draw(SDL_Surface *screen, ImageManager &image_manager) {
   SDL_Surface *p_surface = image_manager.get(image::boss);
   SDL_Rect dst = {static_cast<Sint16>(Boss.x), static_cast<Sint16>(Boss.y), 400,
                   224};
   SDL_BlitSurface(p_surface, nullptr, screen, &dst);
 }
 
-void draw_boss_shot(SDL_Surface *screen, ImageManager &image_manager) {
+void BossClass::draw_shot(SDL_Surface *screen, ImageManager &image_manager) {
   for (auto &shot : Boss_shot) {
     if (!shot.view) {
       continue;

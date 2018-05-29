@@ -1,12 +1,13 @@
+#include "fighter.hpp"
 #include <SDL/SDL_mixer.h>
 #include "def_global.hpp"
 #include "image_manager.hpp"
 #include "input_manager.hpp"
 #include "mixer_manager.hpp"
-#include "util.hpp"
 #include "point.hpp"
+#include "util.hpp"
 
-void init_fighter() {
+void FighterClass::init() {
   Fighter.pos.x = 280;
   Fighter.pos.y = 400;
   Fighter.shot_timer = 0;
@@ -15,7 +16,8 @@ void init_fighter() {
   }
 }
 
-void move_fighter(InputManager &input_manager, MixerManager &mixer_manager) {
+void FighterClass::move(InputManager &input_manager,
+                        MixerManager &mixer_manager) {
   const double move_speed = 4.0;
 
   if (input_manager.press_key_p(input_device::up)) {
@@ -70,7 +72,7 @@ void move_fighter(InputManager &input_manager, MixerManager &mixer_manager) {
   Fighter.shot_timer = 8;
 }
 
-void move_fighter_shot() {
+void FighterClass::move_shot() {
   for (auto &shot : Fighter_shot) {
     if (!shot.view) {
       continue;
@@ -83,7 +85,7 @@ void move_fighter_shot() {
   }
 }
 
-bool check_enemyshots_hit_mychara() {
+bool FighterClass::check_enemyshots_hit_mychara() {
   SDL_Rect r1 = {static_cast<Sint16>(Fighter.pos.x + 20),
                  static_cast<Sint16>(Fighter.pos.y + 16), 20, 22};
 
@@ -144,14 +146,14 @@ bool check_enemyshots_hit_mychara() {
   return Chara_life <= 0;
 }
 
-void draw_fighter(SDL_Surface *screen, ImageManager &image_manager) {
+void FighterClass::draw(SDL_Surface *screen, ImageManager &image_manager) {
   SDL_Surface *p_surface = image_manager.get(image::fighter);
   SDL_Rect dst = {static_cast<Sint16>(Fighter.pos.x),
                   static_cast<Sint16>(Fighter.pos.y), 60, 60};
   SDL_BlitSurface(p_surface, nullptr, screen, &dst);
 }
 
-void draw_fighter_shot(SDL_Surface *screen, ImageManager &image_manager) {
+void FighterClass::draw_shot(SDL_Surface *screen, ImageManager &image_manager) {
   SDL_Surface *p_surface = image_manager.get(image::oval_re);
   for (auto &shot : Fighter_shot) {
     if (!shot.view) {

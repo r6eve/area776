@@ -1,14 +1,18 @@
 #ifndef AREA776_H
 #define AREA776_H
 
+#include "boss.hpp"
 #include "def_global.hpp"
+#include "effect.hpp"
+#include "enemy.hpp"
+#include "fighter.hpp"
 #include "font_manager.hpp"
 #include "image_manager.hpp"
 #include "input_manager.hpp"
 #include "mixer_manager.hpp"
+#include "point.hpp"
 #include "snow.hpp"
 #include "wipe.hpp"
-#include "point.hpp"
 
 struct RGB {
   Uint8 r;
@@ -43,6 +47,11 @@ class Area776 {
   int game_count_;
   game_state game_state_;
   int game_level_;
+
+  FighterClass fighter_;
+  EnemyClass enemy_;
+  BossClass boss_;
+  EffectClass effect_;
 
   Wipe wipe_;
   Snow snow_;

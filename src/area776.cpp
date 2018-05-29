@@ -2,20 +2,18 @@
 
 #include "area776.hpp"
 #include <SDL/SDL_mixer.h>
+#include <time.h>
 #include <iomanip>
 #include <sstream>
-#include "def_global.hpp"
-#include "image_manager.hpp"
-
-#include <time.h>
 #include "boss.hpp"
+#include "def_global.hpp"
 #include "effect.hpp"
 #include "enemy.hpp"
 #include "fighter.hpp"
 #include "image_manager.hpp"
 #include "input_manager.hpp"
-#include "snow.hpp"
 #include "point.hpp"
+#include "snow.hpp"
 #include "wipe.hpp"
 
 void Area776::run() {
@@ -102,11 +100,11 @@ void Area776::game_title() {
       wipe_.draw(screen_);
       if (wipe_.update()) {
         Mix_PlayMusic(mixer_manager_.get_music(), -1);
-        init_fighter();
-        init_enemy();
-        init_effect();
+        fighter_.init();
+        enemy_.init();
+        effect_.init();
         snow_.init();
-        init_boss();
+        boss_.init();
         game_count_ = 0;
         game_state_ = game_state::start;
         game_level_ = 1;
@@ -125,11 +123,11 @@ void Area776::game_title() {
 }
 
 void Area776::game_start() {
-  move_fighter(input_manager_, mixer_manager_);
-  move_fighter_shot();
+  fighter_.move(input_manager_, mixer_manager_);
+  fighter_.move_shot();
   draw_map();
-  draw_fighter(screen_, image_manager_);
-  draw_fighter_shot(screen_, image_manager_);
+  fighter_.draw(screen_, image_manager_);
+  fighter_.draw_shot(screen_, image_manager_);
 
   switch (game_count_) {
     case 0: {
@@ -169,24 +167,24 @@ void Area776::play_game() {
     game_state_ = game_state::pause;
   }
 
-  move_fighter(input_manager_, mixer_manager_);
-  move_fighter_shot();
-  if (check_enemyshots_hit_mychara()) {
+  fighter_.move(input_manager_, mixer_manager_);
+  fighter_.move_shot();
+  if (fighter_.check_enemyshots_hit_mychara()) {
     game_state_ = game_state::gameover;
   }
-  update_effect();
+  effect_.update();
   draw_map();
   if (Enemy_select == ENEMY_1) {
-    appear_enemy();
-    move_enemy(mixer_manager_);
-    move_enemy_shot();
-    if (check_myshots_hit_enemy()) {
+    enemy_.appear();
+    enemy_.move(mixer_manager_);
+    enemy_.move_shot();
+    if (enemy_.check_myshots_hit_enemy()) {
       Enemy_select = BOSS_1;
     }
     snow_.update();
     snow_.draw(screen_, image_manager_);
-    draw_enemy(screen_, image_manager_);
-    draw_enemy_shot(screen_, image_manager_);
+    enemy_.draw(screen_, image_manager_);
+    enemy_.draw_shot(screen_, image_manager_);
   } else if (Enemy_select == BOSS_1) {
     if (game_count_ < 130) {
       if (blink_count_ < 20) {
@@ -203,30 +201,30 @@ void Area776::play_game() {
         ++blink_count_;
       }
     } else {
-      move_boss(mixer_manager_);
-      move_boss_shot();
+      boss_.move(mixer_manager_);
+      boss_.move_shot();
 
-      if (check_myshots_hit_boss()) {
+      if (boss_.check_myshots_hit_boss()) {
         game_state_ = game_state::clear;
         game_count_ = 0;
       }
 
-      draw_boss(screen_, image_manager_);
-      draw_boss_shot(screen_, image_manager_);
+      boss_.draw(screen_, image_manager_);
+      boss_.draw_shot(screen_, image_manager_);
     }
   }
-  draw_fighter_shot(screen_, image_manager_);
-  draw_fighter(screen_, image_manager_);
-  draw_effect(screen_, image_manager_);
+  fighter_.draw_shot(screen_, image_manager_);
+  fighter_.draw(screen_, image_manager_);
+  effect_.draw(screen_, image_manager_);
   draw_life();
 }
 
 void Area776::game_clear() {
-  move_fighter(input_manager_, mixer_manager_);
-  move_fighter_shot();
+  fighter_.move(input_manager_, mixer_manager_);
+  fighter_.move_shot();
   draw_map();
-  draw_fighter(screen_, image_manager_);
-  draw_fighter_shot(screen_, image_manager_);
+  fighter_.draw(screen_, image_manager_);
+  fighter_.draw_shot(screen_, image_manager_);
   draw_life();
 
   if (game_count_ == 0) {
@@ -257,10 +255,10 @@ void Area776::game_clear() {
     return;
   }
 
-  init_fighter();
-  init_enemy();
-  init_boss();
-  init_effect();
+  fighter_.init();
+  enemy_.init();
+  boss_.init();
+  effect_.init();
   snow_.init();
   game_count_ = 0;
   game_state_ = game_state::start;
@@ -290,17 +288,17 @@ void Area776::game_pause() {
   draw_map();
   if (Enemy_select == ENEMY_1) {
     snow_.draw(screen_, image_manager_);
-    draw_enemy(screen_, image_manager_);
-    draw_enemy_shot(screen_, image_manager_);
+    enemy_.draw(screen_, image_manager_);
+    enemy_.draw_shot(screen_, image_manager_);
   } else if (Enemy_select == BOSS_1) {
-    draw_boss(screen_, image_manager_);
-    draw_boss_shot(screen_, image_manager_);
+    boss_.draw(screen_, image_manager_);
+    boss_.draw_shot(screen_, image_manager_);
   } else {
     // NOTREACHED
   }
-  draw_fighter_shot(screen_, image_manager_);
-  draw_fighter(screen_, image_manager_);
-  draw_effect(screen_, image_manager_);
+  fighter_.draw_shot(screen_, image_manager_);
+  fighter_.draw(screen_, image_manager_);
+  effect_.draw(screen_, image_manager_);
   draw_life();
   draw_translucence();
   if (input_manager_.edge_key_p(input_device::space)) {

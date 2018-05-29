@@ -3,16 +3,12 @@
 
 #include "def_global.hpp"
 #include "image_manager.hpp"
-#include "point.hpp"
 
-struct Effect_data {
-  bool view;
-  Point pos;
-  int count;
+class EffectClass {
+ public:
+  void init();
+  void update();
+  void draw(SDL_Surface *screen, ImageManager &image_manager);
 };
-
-void init_effect();
-void update_effect();
-void draw_effect(SDL_Surface *screen, ImageManager &image_manager);
 
 #endif

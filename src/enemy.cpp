@@ -1,11 +1,12 @@
 #include <SDL/SDL_mixer.h>
 #include "def_global.hpp"
+#include "enemy.hpp"
 #include "image_manager.hpp"
 #include "mixer_manager.hpp"
 #include "point.hpp"
 #include "util.hpp"
 
-void init_enemy() {
+void EnemyClass::init() {
   for (auto &enemy : Enemy) {
     enemy.view = false;
   }
@@ -14,7 +15,7 @@ void init_enemy() {
   }
 }
 
-void appear_enemy() {
+void EnemyClass::appear() {
   const double speed = 8;
   if (rand() % 45 != 0) {
     return;
@@ -35,7 +36,7 @@ void appear_enemy() {
   }
 }
 
-void move_enemy(MixerManager &mixer_manager) {
+void EnemyClass::move(MixerManager &mixer_manager) {
   const double speed = 6;
   const double shot_pitch = 20;
 
@@ -90,7 +91,7 @@ void move_enemy(MixerManager &mixer_manager) {
   }
 }
 
-void move_enemy_shot() {
+void EnemyClass::move_shot() {
   for (auto &shot : Enemy_shot) {
     if (!shot.view) {
       continue;
@@ -112,7 +113,7 @@ void move_enemy_shot() {
   }
 }
 
-bool check_myshots_hit_enemy() {
+bool EnemyClass::check_myshots_hit_enemy() {
   for (auto &enemy : Enemy) {
     if (!enemy.view) {
       continue;
@@ -155,7 +156,7 @@ bool check_myshots_hit_enemy() {
   return false;
 }
 
-void draw_enemy(SDL_Surface *screen, ImageManager &image_manager) {
+void EnemyClass::draw(SDL_Surface *screen, ImageManager &image_manager) {
   for (auto &enemy : Enemy) {
     if (!enemy.view) {
       continue;
@@ -168,7 +169,7 @@ void draw_enemy(SDL_Surface *screen, ImageManager &image_manager) {
   }
 }
 
-void draw_enemy_shot(SDL_Surface *screen, ImageManager &image_manager) {
+void EnemyClass::draw_shot(SDL_Surface *screen, ImageManager &image_manager) {
   for (auto &shot : Enemy_shot) {
     if (!shot.view) {
       continue;

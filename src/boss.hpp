@@ -5,16 +5,19 @@
 #include "image_manager.hpp"
 #include "mixer_manager.hpp"
 
-void init_boss();
-void move_boss(MixerManager &mixer_manager);
-void move_boss_shot();
+class BossClass {
+ public:
+  void init();
+  void move(MixerManager &mixer_manager);
+  void move_shot();
 
-/**
- * Return true if boss life is 0.
- */
-bool check_myshots_hit_boss();
+  /**
+   * Return true if boss life is 0.
+   */
+  bool check_myshots_hit_boss();
 
-void draw_boss(SDL_Surface *screen, ImageManager &image_manager);
-void draw_boss_shot(SDL_Surface *screen, ImageManager &image_manager);
+  void draw(SDL_Surface *screen, ImageManager &image_manager);
+  void draw_shot(SDL_Surface *screen, ImageManager &image_manager);
+};
 
 #endif
