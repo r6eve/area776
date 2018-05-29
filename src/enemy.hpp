@@ -92,8 +92,12 @@ struct Enemy {
                       static_cast<Sint16>(enemy.pos.y), 35, 35};
       SDL_BlitSurface(p_surface, nullptr, screen, &dst);
     }
+    draw_shot(screen, image_manager);
   }
 
+  ~Enemy() noexcept {}
+
+ private:
   inline void draw_shot(SDL_Surface *screen,
                         ImageManager &image_manager) noexcept {
     for (auto &bullet : bullets) {
@@ -107,8 +111,6 @@ struct Enemy {
       SDL_BlitSurface(p_surface, nullptr, screen, &dst);
     }
   }
-
-  ~Enemy() noexcept {}
 };
 
 #endif

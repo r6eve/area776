@@ -76,8 +76,12 @@ struct Boss {
     SDL_Surface *p_surface = image_manager.get(image::boss);
     SDL_Rect dst = {static_cast<Sint16>(x), static_cast<Sint16>(y), 400, 224};
     SDL_BlitSurface(p_surface, nullptr, screen, &dst);
+    draw_shot(screen, image_manager);
   }
 
+  ~Boss() noexcept {}
+
+ private:
   inline void draw_shot(SDL_Surface *screen,
                         ImageManager &image_manager) noexcept {
     for (auto &bullet : bullets) {
@@ -90,8 +94,6 @@ struct Boss {
       SDL_BlitSurface(p_surface, nullptr, screen, &dst);
     }
   }
-
-  ~Boss() noexcept {}
 };
 
 #endif

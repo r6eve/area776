@@ -183,7 +183,6 @@ void Area776::play_game() noexcept {
       snow_.update();
       snow_.draw(screen_, image_manager_);
       enemy_.draw(screen_, image_manager_);
-      enemy_.draw_shot(screen_, image_manager_);
       break;
     }
     case enemy_type::boss: {
@@ -212,7 +211,6 @@ void Area776::play_game() noexcept {
         }
 
         boss_.draw(screen_, image_manager_);
-        boss_.draw_shot(screen_, image_manager_);
       }
       break;
     }
@@ -297,12 +295,10 @@ void Area776::game_pause() noexcept {
     case enemy_type::enemy: {
       snow_.draw(screen_, image_manager_);
       enemy_.draw(screen_, image_manager_);
-      enemy_.draw_shot(screen_, image_manager_);
       break;
     }
     case enemy_type::boss: {
       boss_.draw(screen_, image_manager_);
-      boss_.draw_shot(screen_, image_manager_);
       break;
     }
     default:
