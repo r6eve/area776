@@ -6,7 +6,23 @@
 #include "image_manager.hpp"
 #include "mixer_manager.hpp"
 
-struct Boss {
+class Boss {
+  int life_;
+
+  inline void draw_shot(SDL_Surface *screen,
+                        const ImageManager &image_manager) const noexcept {
+    for (const auto &bullet : bullets) {
+      if (!bullet.view) {
+        continue;
+      }
+      SDL_Surface *p_surface = image_manager.get(image::bm01);
+      SDL_Rect dst = {static_cast<Sint16>(bullet.pos.x),
+                      static_cast<Sint16>(bullet.pos.y), 16, 16};
+      SDL_BlitSurface(p_surface, nullptr, screen, &dst);
+    }
+  }
+
+ public:
   enum class boss_state {
     automove,
     attack00,
@@ -27,7 +43,6 @@ struct Boss {
   int move;
   int shot_rot;
   int shot_count;
-  int life;
   Bullet bullets[BOSS_SHOT_MAX];
 
   Boss() noexcept {}
@@ -39,7 +54,7 @@ struct Boss {
     for (auto &bullet : bullets) {
       bullet.view = false;
     }
-    life = 100;
+    life_ = 100;
   }
 
   void update(const MixerManager &mixer_manager) noexcept;
@@ -80,21 +95,11 @@ struct Boss {
     draw_shot(screen, image_manager);
   }
 
-  ~Boss() noexcept {}
+  inline int get_life() const noexcept { return life_; }
 
- private:
-  inline void draw_shot(SDL_Surface *screen, const ImageManager &image_manager) const
-      noexcept {
-    for (const auto &bullet : bullets) {
-      if (!bullet.view) {
-        continue;
-      }
-      SDL_Surface *p_surface = image_manager.get(image::bm01);
-      SDL_Rect dst = {static_cast<Sint16>(bullet.pos.x),
-                      static_cast<Sint16>(bullet.pos.y), 16, 16};
-      SDL_BlitSurface(p_surface, nullptr, screen, &dst);
-    }
-  }
+  inline void set_life(const int life) noexcept { life_ = life; }
+
+  ~Boss() noexcept {}
 };
 
 #endif

@@ -153,8 +153,9 @@ bool check_fightershots_hit_boss(Fighter &fighter, Boss &boss, Effect &effect,
     if (!check_hit_rect(&r1, &r2)) {
       continue;
     }
-    --boss.life;
-    if (boss.life <= 0) {
+
+    boss.set_life(boss.get_life() - 1);
+    if (boss.get_life() <= 0) {
       Mix_PlayChannel(-1, mixer_manager.get_se(se_type::boss_down), 0);
     } else {
       Mix_PlayChannel(-1, mixer_manager.get_se(se_type::enemy_hit), 0);
@@ -170,7 +171,7 @@ bool check_fightershots_hit_boss(Fighter &fighter, Boss &boss, Effect &effect,
       effect.count = 0;
       break;
     }
-    if (boss.life <= 0) {
+    if (boss.get_life() <= 0) {
       return true;
     }
     break;
