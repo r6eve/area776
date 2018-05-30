@@ -1,9 +1,7 @@
 #include "enemy.hpp"
 #include <SDL/SDL_mixer.h>
 #include "def_global.hpp"
-#include "effect.hpp"
 #include "fighter.hpp"
-#include "image_manager.hpp"
 #include "mixer_manager.hpp"
 
 void Enemy::update(const MixerManager &mixer_manager,

@@ -1,7 +1,6 @@
 #include "boss.hpp"
 #include <SDL/SDL_mixer.h>
 #include "def_global.hpp"
-#include "fighter.hpp"
 #include "image_manager.hpp"
 #include "mixer_manager.hpp"
 

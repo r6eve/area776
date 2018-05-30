@@ -2,7 +2,6 @@
 #define BOSS_H
 
 #include "def_global.hpp"
-#include "effect.hpp"
 #include "image_manager.hpp"
 #include "mixer_manager.hpp"
 

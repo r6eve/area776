@@ -4,14 +4,10 @@
 #include <sstream>
 #include "boss.hpp"
 #include "def_global.hpp"
-#include "effect.hpp"
 #include "enemy.hpp"
 #include "fighter.hpp"
-#include "image_manager.hpp"
 #include "input_manager.hpp"
-#include "snow.hpp"
 #include "util.hpp"
-#include "wipe.hpp"
 
 void Area776::run() noexcept {
   for (;;) {
