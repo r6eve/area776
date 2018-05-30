@@ -2,9 +2,7 @@
 #define FIGHTER_H
 
 #include <SDL/SDL_mixer.h>
-#include "boss.hpp"
 #include "def_global.hpp"
-#include "effect.hpp"
 #include "image_manager.hpp"
 #include "input_manager.hpp"
 #include "mixer_manager.hpp"
