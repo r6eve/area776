@@ -8,6 +8,23 @@
 #include "mixer_manager.hpp"
 
 struct Enemy {
+  int life_;
+
+  inline void draw_shot(SDL_Surface *screen,
+                        const ImageManager &image_manager) const noexcept {
+    for (const auto &bullet : bullets) {
+      if (!bullet.view) {
+        continue;
+      }
+
+      SDL_Surface *p_surface = image_manager.get(image::bm01);
+      SDL_Rect dst = {static_cast<Sint16>(bullet.pos.x),
+                      static_cast<Sint16>(bullet.pos.y), 16, 16};
+      SDL_BlitSurface(p_surface, nullptr, screen, &dst);
+    }
+  }
+
+public:
   struct EnemyData {
     bool view;
     Point pos;
@@ -21,7 +38,6 @@ struct Enemy {
     Point move;
   };
 
-  int life;
   EnemyData enemies[ENEMY_MAX];
   Bullet bullets[ENEMY_SHOT_MAX];
 
@@ -34,7 +50,7 @@ struct Enemy {
     for (auto &bullet : bullets) {
       bullet.view = false;
     }
-    life = debug_mode ? 5 : 30;
+    life_ = debug_mode ? 5 : 30;
   }
 
   inline void appear(const Fighter &fighter) noexcept {
@@ -51,7 +67,7 @@ struct Enemy {
       enemy.pos.x = rand() % (screen::width - 64);
       enemy.pos.y = -64;
       enemy.shot_timer = rand() % 15 + 15;
-      enemy.move = fighter.pos - enemy.pos;
+      enemy.move = fighter.get_pos() - enemy.pos;
       enemy.move.norm();
       enemy.move *= speed;
       break;
@@ -98,22 +114,13 @@ struct Enemy {
     draw_shot(screen, image_manager);
   }
 
+  inline int get_life() const noexcept { return life_; }
+
+  inline void set_life(const int life) noexcept { life_ = life; }
+
   ~Enemy() noexcept {}
 
  private:
-  inline void draw_shot(SDL_Surface *screen,
-                        const ImageManager &image_manager) const noexcept {
-    for (const auto &bullet : bullets) {
-      if (!bullet.view) {
-        continue;
-      }
-
-      SDL_Surface *p_surface = image_manager.get(image::bm01);
-      SDL_Rect dst = {static_cast<Sint16>(bullet.pos.x),
-                      static_cast<Sint16>(bullet.pos.y), 16, 16};
-      SDL_BlitSurface(p_surface, nullptr, screen, &dst);
-    }
-  }
 };
 
 #endif

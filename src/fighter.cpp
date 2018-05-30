@@ -13,33 +13,33 @@ void Fighter::update(const InputManager &input_manager,
   const double move_speed = 4.0;
 
   if (input_manager.press_key_p(input_device::up)) {
-    pos.y -= move_speed;
+    pos_.y -= move_speed;
   }
   if (input_manager.press_key_p(input_device::down)) {
-    pos.y += move_speed;
+    pos_.y += move_speed;
   }
   if (input_manager.press_key_p(input_device::left)) {
-    pos.x -= move_speed;
+    pos_.x -= move_speed;
   }
   if (input_manager.press_key_p(input_device::right)) {
-    pos.x += move_speed;
+    pos_.x += move_speed;
   }
 
-  if (pos.x < 0) {
-    pos.x = 0;
+  if (pos_.x < 0) {
+    pos_.x = 0;
   }
-  if (pos.y < 0) {
-    pos.y = 0;
+  if (pos_.y < 0) {
+    pos_.y = 0;
   }
-  if (pos.x > (screen::width - 60)) {
-    pos.x = screen::width - 60;
+  if (pos_.x > (screen::width - 60)) {
+    pos_.x = screen::width - 60;
   }
-  if (pos.y > (screen::height - 70)) {
-    pos.y = screen::height - 70;
+  if (pos_.y > (screen::height - 70)) {
+    pos_.y = screen::height - 70;
   }
 
-  if (shot_timer != 0) {
-    --shot_timer;
+  if (shot_timer_ != 0) {
+    --shot_timer_;
     return;
   }
 
@@ -54,10 +54,10 @@ void Fighter::update(const InputManager &input_manager,
     }
 
     bullet.view = true;
-    bullet.pos = pos + Point{25, 10};
+    bullet.pos = pos_ + Point{25, 10};
     bullet.move = Point{0, -shot_speed};
     Mix_PlayChannel(-1, mixer_manager.get_se(se_type::fighter_shoot), 0);
     break;
   }
-  shot_timer = 8;
+  shot_timer_ = 8;
 }

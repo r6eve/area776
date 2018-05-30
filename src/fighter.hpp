@@ -8,23 +8,39 @@
 #include "input_manager.hpp"
 #include "mixer_manager.hpp"
 
-struct Fighter {
+class Fighter {
+  Point pos_;
+  int life_;
+  int shot_timer_;
+
+  inline void draw_shot(SDL_Surface *screen,
+                        const ImageManager &image_manager) const noexcept {
+    SDL_Surface *p_surface = image_manager.get(image::oval_re);
+    for (const auto &bullet : bullets) {
+      if (!bullet.view) {
+        continue;
+      }
+
+      SDL_Rect dst = {static_cast<Sint16>(bullet.pos.x),
+                      static_cast<Sint16>(bullet.pos.y), 10, 24};
+      SDL_BlitSurface(p_surface, nullptr, screen, &dst);
+    }
+  }
+
+ public:
   struct Bullet {
     bool view;
     Point pos;
     Point move;
   };
 
-  Point pos;
-  int shot_timer;
-  int life;
   Bullet bullets[FIGHTER_SHOT_MAX];
 
   Fighter() noexcept {}
 
   inline void init() noexcept {
-    pos = Point{280, 400};
-    shot_timer = 0;
+    pos_ = Point{280, 400};
+    shot_timer_ = 0;
     for (auto &bullet : bullets) {
       bullet.view = false;
     }
@@ -49,28 +65,19 @@ struct Fighter {
   inline void draw(SDL_Surface *screen, const ImageManager &image_manager) const
       noexcept {
     SDL_Surface *p_surface = image_manager.get(image::fighter);
-    SDL_Rect dst = {static_cast<Sint16>(pos.x), static_cast<Sint16>(pos.y), 60,
-                    60};
+    SDL_Rect dst = {static_cast<Sint16>(pos_.x), static_cast<Sint16>(pos_.y),
+                    60, 60};
     SDL_BlitSurface(p_surface, nullptr, screen, &dst);
     draw_shot(screen, image_manager);
   }
 
+  inline Point get_pos() const noexcept { return pos_; }
+
+  inline int get_life() const noexcept { return life_; }
+
+  inline void set_life(const int life) noexcept { life_ = life; }
+
   ~Fighter() noexcept {}
-
- private:
-  inline void draw_shot(SDL_Surface *screen,
-                        const ImageManager &image_manager) const noexcept {
-    SDL_Surface *p_surface = image_manager.get(image::oval_re);
-    for (const auto &bullet : bullets) {
-      if (!bullet.view) {
-        continue;
-      }
-
-      SDL_Rect dst = {static_cast<Sint16>(bullet.pos.x),
-                      static_cast<Sint16>(bullet.pos.y), 10, 24};
-      SDL_BlitSurface(p_surface, nullptr, screen, &dst);
-    }
-  }
 };
 
 #endif

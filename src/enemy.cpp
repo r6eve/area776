@@ -36,7 +36,7 @@ void Enemy::update(const MixerManager &mixer_manager,
     }
 
     const Point enemy_center = enemy.pos + 32;
-    const Point fighter_center = fighter.pos + 32;
+    const Point fighter_center = fighter.get_pos() + 32;
     Point p = fighter_center - enemy_center;
     p.norm();
     p *= speed;

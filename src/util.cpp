@@ -17,8 +17,9 @@ bool check_enemyshots_hit_fighter(const enemy_type enemy_select,
                                   Fighter &fighter, Enemy &enemy, Boss &boss,
                                   Effect &effect,
                                   const MixerManager &mixer_manager) noexcept {
-  SDL_Rect r1 = {static_cast<Sint16>(fighter.pos.x + 20),
-                 static_cast<Sint16>(fighter.pos.y + 16), 20, 22};
+  const Point fighter_pos = fighter.get_pos();
+  SDL_Rect r1 = {static_cast<Sint16>(fighter_pos.x + 20),
+                 static_cast<Sint16>(fighter_pos.y + 16), 20, 22};
 
   switch (enemy_select) {
     case enemy_type::enemy: {
@@ -33,8 +34,8 @@ bool check_enemyshots_hit_fighter(const enemy_type enemy_select,
           continue;
         }
 
-        --fighter.life;
-        if (fighter.life <= 0) {
+        fighter.set_life(fighter.get_life() - 1);
+        if (fighter.get_life() <= 0) {
           Mix_PlayChannel(-1, mixer_manager.get_se(se_type::fighter_down), 0);
         } else {
           Mix_PlayChannel(-1, mixer_manager.get_se(se_type::fighter_hit), 0);
@@ -46,7 +47,7 @@ bool check_enemyshots_hit_fighter(const enemy_type enemy_select,
           }
 
           effect.view = true;
-          effect.pos = fighter.pos - 50;
+          effect.pos = fighter_pos - 50;
           effect.count = 0;
           break;
         }
@@ -65,8 +66,8 @@ bool check_enemyshots_hit_fighter(const enemy_type enemy_select,
           continue;
         }
 
-        --fighter.life;
-        if (fighter.life <= 0) {
+        fighter.set_life(fighter.get_life() - 1);
+        if (fighter.get_life() <= 0) {
           Mix_PlayChannel(-1, mixer_manager.get_se(se_type::fighter_down), 0);
         } else {
           Mix_PlayChannel(-1, mixer_manager.get_se(se_type::fighter_hit), 0);
@@ -78,7 +79,7 @@ bool check_enemyshots_hit_fighter(const enemy_type enemy_select,
           }
 
           effect.view = true;
-          effect.pos = fighter.pos - 50;
+          effect.pos = fighter_pos - 50;
           effect.count = 0;
           break;
         }
@@ -90,7 +91,7 @@ bool check_enemyshots_hit_fighter(const enemy_type enemy_select,
       break;
   }
 
-  return fighter.life <= 0;
+  return fighter.get_life() <= 0;
 }
 
 bool check_fightershots_hit_enemy(Fighter &fighter, Enemy &enemy,
@@ -114,7 +115,7 @@ bool check_fightershots_hit_enemy(Fighter &fighter, Enemy &enemy,
         continue;
       }
 
-      --enemy.life;
+      enemy.set_life(enemy.get_life() - 1);
       Mix_PlayChannel(-1, mixer_manager.get_se(se_type::enemy_hit), 0);
       e.view = false;
       bullet.view = false;
@@ -129,7 +130,7 @@ bool check_fightershots_hit_enemy(Fighter &fighter, Enemy &enemy,
         effect.count = 0;
         break;
       }
-      if (enemy.life <= 0) {
+      if (enemy.get_life() <= 0) {
         return true;
       }
 

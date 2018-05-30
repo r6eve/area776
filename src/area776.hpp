@@ -99,7 +99,7 @@ class Area776 {
     switch (enemy_select_) {
       case enemy_type::enemy: {
         std::stringstream ss;
-        ss << "ENEMY LIFE:  " << enemy_.life;
+        ss << "ENEMY LIFE:  " << enemy_.get_life();
         draw_text(font_size::x16, rgb::white, Point{32, 24}, ss.str().c_str());
         break;
       }
@@ -115,9 +115,9 @@ class Area776 {
     }
 
     std::stringstream ss;
-    ss << "LIFE:  " << fighter_.life;
-    draw_text(font_size::x16, rgb::white,
-              Point{fighter_.pos.x, fighter_.pos.y + 55}, ss.str().c_str());
+    ss << "LIFE:  " << fighter_.get_life();
+    draw_text(font_size::x16, rgb::white, fighter_.get_pos() + Point{0, 55},
+              ss.str().c_str());
   }
 
   inline bool poll_event() noexcept {
