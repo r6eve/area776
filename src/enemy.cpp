@@ -8,6 +8,8 @@
 
 void Enemy::update(const MixerManager &mixer_manager,
                    const Fighter &fighter) noexcept {
+  appear(fighter);
+
   const double speed = 6;
   const double shot_pitch = 20;
 
@@ -59,4 +61,6 @@ void Enemy::update(const MixerManager &mixer_manager,
       Mix_PlayChannel(-1, mixer_manager.get_se(se_type::enemy_shoot), 0);
     }
   }
+
+  fade_bullets();
 }

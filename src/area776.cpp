@@ -172,9 +172,7 @@ void Area776::play_game() noexcept {
 
   switch (enemy_select_) {
     case enemy_type::enemy: {
-      enemy_.appear(fighter_);
       enemy_.update(mixer_manager_, fighter_);
-      enemy_.update_shot();
       if (util::check_fightershots_hit_enemy(fighter_, enemy_, effect_,
                                              mixer_manager_)) {
         enemy_select_ = enemy_type::boss;
@@ -202,7 +200,7 @@ void Area776::play_game() noexcept {
         }
       } else {
         boss_.update(mixer_manager_);
-        boss_.update_shot();
+        boss_.update_bullets();
 
         if (util::check_fightershots_hit_boss(fighter_, boss_, effect_,
                                               mixer_manager_)) {

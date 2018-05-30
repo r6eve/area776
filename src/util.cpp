@@ -60,8 +60,9 @@ bool check_enemyshots_hit_fighter(const enemy_type enemy_select,
           continue;
         }
 
-        SDL_Rect r2 = {static_cast<Sint16>(bullet.pos.x + 3),
-                       static_cast<Sint16>(bullet.pos.y + 3), 10, 10};
+        const Point bullet_pos = bullet.get_pos();
+        SDL_Rect r2 = {static_cast<Sint16>(bullet_pos.x + 3),
+                       static_cast<Sint16>(bullet_pos.y + 3), 10, 10};
         if (!check_hit_rect(&r1, &r2)) {
           continue;
         }
