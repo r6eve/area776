@@ -142,14 +142,15 @@ bool check_fightershots_hit_enemy(Fighter &fighter, Enemy &enemy,
 
 bool check_fightershots_hit_boss(Fighter &fighter, Boss &boss, Effect &effect,
                                  const MixerManager &mixer_manager) noexcept {
+  const Point boss_pos = boss.get_pos();
   for (auto &bullet : fighter.bullets) {
     if (!bullet.view) {
       continue;
     }
     SDL_Rect r1 = {static_cast<Sint16>(bullet.pos.x),
                    static_cast<Sint16>(bullet.pos.y), 10, 24};
-    SDL_Rect r2 = {static_cast<Sint16>(boss.pos.x + 171),
-                   static_cast<Sint16>(boss.pos.y + 95), 57, 57};
+    SDL_Rect r2 = {static_cast<Sint16>(boss_pos.x + 171),
+                   static_cast<Sint16>(boss_pos.y + 95), 57, 57};
     if (!check_hit_rect(&r1, &r2)) {
       continue;
     }
