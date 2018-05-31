@@ -12,7 +12,7 @@ class Fighter {
   int life_;
   int shot_timer_;
 
-  inline void draw_shot(SDL_Surface *screen,
+  inline void draw_bullets(SDL_Surface *screen,
                         const ImageManager &image_manager) const noexcept {
     SDL_Surface *p_surface = image_manager.get(image::oval_re);
     for (const auto &bullet : bullets) {
@@ -117,7 +117,7 @@ class Fighter {
     SDL_Rect dst = {static_cast<Sint16>(pos_.x), static_cast<Sint16>(pos_.y),
                     60, 60};
     SDL_BlitSurface(p_surface, nullptr, screen, &dst);
-    draw_shot(screen, image_manager);
+    draw_bullets(screen, image_manager);
   }
 
   inline Point get_pos() const noexcept { return pos_; }
