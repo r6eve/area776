@@ -10,7 +10,7 @@
 class Fighter {
   Point pos_;
   int life_;
-  int shot_timer_;
+  unsigned char shot_timer_;
 
  public:
   class Bullet {
@@ -38,7 +38,8 @@ class Fighter {
 
       SDL_Surface *p_surface = image_manager.get(image::oval_re);
       SDL_Rect dst = {static_cast<Sint16>(pos_.x), static_cast<Sint16>(pos_.y),
-                      10, 24};
+                      static_cast<Uint16>(p_surface->w),
+                      static_cast<Uint16>(p_surface->h)};
       SDL_BlitSurface(p_surface, nullptr, screen, &dst);
     }
 
@@ -71,7 +72,7 @@ class Fighter {
   Fighter() noexcept {}
 
   inline void init() noexcept {
-    pos_ = Point{280, 400};
+    pos_ = Point{screen::width / 2 - 40, screen::height - 90};
     shot_timer_ = 0;
     for (auto &bullet : bullets) {
       bullet.make_invisible();
@@ -103,8 +104,8 @@ class Fighter {
     if (pos_.x > (screen::width - 60)) {
       pos_.x = screen::width - 60;
     }
-    if (pos_.y > (screen::height - 70)) {
-      pos_.y = screen::height - 70;
+    if (pos_.y > (screen::height - 80)) {
+      pos_.y = screen::height - 80;
     }
 
     for (auto &bullet : bullets) {
@@ -132,7 +133,8 @@ class Fighter {
       noexcept {
     SDL_Surface *p_surface = image_manager.get(image::fighter);
     SDL_Rect dst = {static_cast<Sint16>(pos_.x), static_cast<Sint16>(pos_.y),
-                    60, 60};
+                    static_cast<Uint16>(p_surface->w),
+                    static_cast<Uint16>(p_surface->h)};
     SDL_BlitSurface(p_surface, nullptr, screen, &dst);
     for (const auto &bullet : bullets) {
       bullet.draw(screen, image_manager);
