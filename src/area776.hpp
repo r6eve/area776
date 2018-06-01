@@ -51,7 +51,7 @@ class Area776 {
   enemy_type enemy_select_;
 
   Fighter fighter_;
-  Enemy enemy_;
+  Enemies enemies_;
   Boss boss_;
   Effect effect_;
 
@@ -99,7 +99,7 @@ class Area776 {
     switch (enemy_select_) {
       case enemy_type::enemy: {
         std::stringstream ss;
-        ss << "ENEMY LIFE:  " << enemy_.get_life();
+        ss << "ENEMY LIFE:  " << enemies_.get_life();
         draw_text(font_size::x16, rgb::white, Point{32, 24}, ss.str().c_str());
         break;
       }

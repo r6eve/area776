@@ -94,7 +94,7 @@ void Area776::game_title() noexcept {
       if (wipe_.update()) {
         Mix_PlayMusic(mixer_manager_.get_music(), -1);
         fighter_.init();
-        enemy_.init(debug_mode_);
+        enemies_.init(debug_mode_);
         effect_.init();
         snow_.init();
         boss_.init();
@@ -157,8 +157,8 @@ void Area776::play_game() noexcept {
   }
 
   fighter_.update(input_manager_, mixer_manager_);
-  if (util::check_enemyshots_hit_fighter(enemy_select_, fighter_, enemy_, boss_,
-                                         effect_, mixer_manager_)) {
+  if (util::check_enemyshots_hit_fighter(enemy_select_, fighter_, enemies_,
+                                         boss_, effect_, mixer_manager_)) {
     game_state_ = game_state::gameover;
   }
   effect_.update();
@@ -166,14 +166,14 @@ void Area776::play_game() noexcept {
 
   switch (enemy_select_) {
     case enemy_type::enemy: {
-      enemy_.update(mixer_manager_, fighter_);
-      if (util::check_fightershots_hit_enemy(fighter_, enemy_, effect_,
+      enemies_.update(mixer_manager_, fighter_);
+      if (util::check_fightershots_hit_enemy(fighter_, enemies_, effect_,
                                              mixer_manager_)) {
         enemy_select_ = enemy_type::boss;
       }
       snow_.update();
       snow_.draw(screen_, image_manager_);
-      enemy_.draw(screen_, image_manager_);
+      enemies_.draw(screen_, image_manager_);
       break;
     }
     case enemy_type::boss: {
@@ -250,7 +250,7 @@ void Area776::game_clear() noexcept {
   }
 
   fighter_.init();
-  enemy_.init(debug_mode_);
+  enemies_.init(debug_mode_);
   boss_.init();
   effect_.init();
   snow_.init();
@@ -282,7 +282,7 @@ void Area776::game_pause() noexcept {
   switch (enemy_select_) {
     case enemy_type::enemy: {
       snow_.draw(screen_, image_manager_);
-      enemy_.draw(screen_, image_manager_);
+      enemies_.draw(screen_, image_manager_);
       break;
     }
     case enemy_type::boss: {

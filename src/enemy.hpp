@@ -6,7 +6,7 @@
 #include "image_manager.hpp"
 #include "mixer_manager.hpp"
 
-class Enemy {
+class Enemies {
   int life_;
 
   inline void draw_bullets(SDL_Surface *screen,
@@ -67,7 +67,7 @@ class Enemy {
   }
 
  public:
-  struct EnemyData {
+  struct Enemy {
     bool view;
     Point pos;
     Point move;
@@ -80,10 +80,10 @@ class Enemy {
     Point move;
   };
 
-  EnemyData enemies[ENEMY_MAX];
+  Enemy enemies[ENEMY_MAX];
   Bullet bullets[ENEMY_SHOT_MAX];
 
-  Enemy() noexcept {}
+  Enemies() noexcept {}
 
   inline void init(const bool debug_mode) noexcept {
     for (auto &enemy : enemies) {
@@ -117,7 +117,7 @@ class Enemy {
 
   inline void set_life(const int life) noexcept { life_ = life; }
 
-  ~Enemy() noexcept {}
+  ~Enemies() noexcept {}
 };
 
 #endif

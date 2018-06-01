@@ -14,13 +14,13 @@ namespace util {
  * Return true if player life is 0.
  */
 bool check_enemyshots_hit_fighter(enemy_type enemy_select, Fighter &fighter,
-                                  Enemy &enemy, Boss &boss, Effect &effect,
+                                  Enemies &enemies, Boss &boss, Effect &effect,
                                   const MixerManager &mixer_manager) noexcept;
 
 /**
- * Return true if enemy life is 0.
+ * Return true if enemies life is 0.
  */
-bool check_fightershots_hit_enemy(Fighter &fighter, Enemy &enemy,
+bool check_fightershots_hit_enemy(Fighter &fighter, Enemies &enemies,
                                   Effect &effect,
                                   const MixerManager &mixer_manager) noexcept;
 

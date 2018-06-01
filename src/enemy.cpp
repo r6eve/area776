@@ -4,8 +4,8 @@
 #include "fighter.hpp"
 #include "mixer_manager.hpp"
 
-void Enemy::update(const MixerManager &mixer_manager,
-                   const Fighter &fighter) noexcept {
+void Enemies::update(const MixerManager &mixer_manager,
+                     const Fighter &fighter) noexcept {
   appear(fighter);
 
   const double speed = 6;
