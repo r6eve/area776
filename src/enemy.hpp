@@ -185,7 +185,6 @@ class Enemies {
       Point p = fighter_center - enemy_center;
       p.norm();
       p *= 6;
-      /* 時計回りに(shot_pitch * 2)度回転させておく */
       const double rot_angle = -(shot_pitch * 2) * PI / 180;
       p.rot(rot_angle);
       for (int _ = 0; _ < 5; ++_) {
