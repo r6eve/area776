@@ -12,25 +12,58 @@ class Fighter {
   int life_;
   int shot_timer_;
 
-  inline void draw_bullets(SDL_Surface *screen,
-                        const ImageManager &image_manager) const noexcept {
-    SDL_Surface *p_surface = image_manager.get(image::oval_re);
-    for (const auto &bullet : bullets) {
-      if (!bullet.view) {
-        continue;
+ public:
+  class Bullet {
+    Point pos_;
+    Point move_;
+    bool view_p_;
+
+   public:
+    inline void update() noexcept {
+      if (!view_p_) {
+        return;
       }
 
-      SDL_Rect dst = {static_cast<Sint16>(bullet.pos.x),
-                      static_cast<Sint16>(bullet.pos.y), 10, 24};
+      pos_ += move_;
+      if (pos_.y < -16) {
+        view_p_ = false;
+      }
+    }
+
+    inline void draw(SDL_Surface *screen,
+                     const ImageManager &image_manager) const noexcept {
+      if (!view_p_) {
+        return;
+      }
+
+      SDL_Surface *p_surface = image_manager.get(image::oval_re);
+      SDL_Rect dst = {static_cast<Sint16>(pos_.x), static_cast<Sint16>(pos_.y),
+                      10, 24};
       SDL_BlitSurface(p_surface, nullptr, screen, &dst);
     }
-  }
 
- public:
-  struct Bullet {
-    bool view;
-    Point pos;
-    Point move;
+    /**
+     * Return false if the bullet has already been shot. Otherwise, return true
+     * after making the bullet visible and playing shot sound.
+     */
+    inline bool shoot(const Point &fighter_pos,
+                      const MixerManager &mixer_manager) noexcept {
+      if (view_p_) {
+        return false;
+      }
+
+      view_p_ = true;
+      pos_ = fighter_pos + Point{25, 10};
+      move_ = Point{0, -16};
+      Mix_PlayChannel(-1, mixer_manager.get_se(se_type::fighter_shoot), 0);
+      return true;
+    }
+
+    inline Point get_pos() const noexcept { return pos_; }
+
+    inline bool view_p() const noexcept { return view_p_; }
+
+    inline void make_invisible() noexcept { view_p_ = false; }
   };
 
   Bullet bullets[FIGHTER_SHOT_MAX];
@@ -41,11 +74,12 @@ class Fighter {
     pos_ = Point{280, 400};
     shot_timer_ = 0;
     for (auto &bullet : bullets) {
-      bullet.view = false;
+      bullet.make_invisible();
     }
   }
 
-  inline void update(const InputManager &input_manager) noexcept {
+  inline void update(const InputManager &input_manager,
+                     const MixerManager &mixer_manager) noexcept {
     const double move_speed = 4.0;
     if (input_manager.press_key_p(input_device::up)) {
       pos_.y -= move_speed;
@@ -72,19 +106,9 @@ class Fighter {
     if (pos_.y > (screen::height - 70)) {
       pos_.y = screen::height - 70;
     }
-  }
 
-  inline void update_shot(const InputManager &input_manager,
-                          const MixerManager &mixer_manager) noexcept {
     for (auto &bullet : bullets) {
-      if (!bullet.view) {
-        continue;
-      }
-
-      bullet.pos += bullet.move;
-      if (bullet.pos.y < -16) {
-        bullet.view = false;
-      }
+      bullet.update();
     }
 
     if (shot_timer_ != 0) {
@@ -96,17 +120,10 @@ class Fighter {
       return;
     }
 
-    const double shot_speed = 16;
     for (auto &bullet : bullets) {
-      if (bullet.view) {
-        continue;
+      if (bullet.shoot(pos_, mixer_manager)) {
+        break;
       }
-
-      bullet.view = true;
-      bullet.pos = pos_ + Point{25, 10};
-      bullet.move = Point{0, -shot_speed};
-      Mix_PlayChannel(-1, mixer_manager.get_se(se_type::fighter_shoot), 0);
-      break;
     }
     shot_timer_ = 8;
   }
@@ -117,7 +134,9 @@ class Fighter {
     SDL_Rect dst = {static_cast<Sint16>(pos_.x), static_cast<Sint16>(pos_.y),
                     60, 60};
     SDL_BlitSurface(p_surface, nullptr, screen, &dst);
-    draw_bullets(screen, image_manager);
+    for (const auto &bullet : bullets) {
+      bullet.draw(screen, image_manager);
+    }
   }
 
   inline Point get_pos() const noexcept { return pos_; }

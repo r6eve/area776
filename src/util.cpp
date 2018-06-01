@@ -104,14 +104,15 @@ bool check_fightershots_hit_enemy(Fighter &fighter, Enemy &enemy,
     }
 
     for (auto &bullet : fighter.bullets) {
-      if (!bullet.view) {
+      if (!bullet.view_p()) {
         continue;
       }
 
+      const Point bullet_pos = bullet.get_pos();
       SDL_Rect r1 = {static_cast<Sint16>(e.pos.x), static_cast<Sint16>(e.pos.y),
                      35, 35};
-      SDL_Rect r2 = {static_cast<Sint16>(bullet.pos.x),
-                     static_cast<Sint16>(bullet.pos.y), 10, 24};
+      SDL_Rect r2 = {static_cast<Sint16>(bullet_pos.x),
+                     static_cast<Sint16>(bullet_pos.y), 10, 24};
       if (!check_hit_rect(&r1, &r2)) {
         continue;
       }
@@ -119,7 +120,7 @@ bool check_fightershots_hit_enemy(Fighter &fighter, Enemy &enemy,
       enemy.set_life(enemy.get_life() - 1);
       Mix_PlayChannel(-1, mixer_manager.get_se(se_type::enemy_hit), 0);
       e.view = false;
-      bullet.view = false;
+      bullet.make_invisible();
       for (auto &effect : effect.effects) {
         if (effect.view) {
           continue;
@@ -145,11 +146,12 @@ bool check_fightershots_hit_boss(Fighter &fighter, Boss &boss, Effect &effect,
                                  const MixerManager &mixer_manager) noexcept {
   const Point boss_pos = boss.get_pos();
   for (auto &bullet : fighter.bullets) {
-    if (!bullet.view) {
+    if (!bullet.view_p()) {
       continue;
     }
-    SDL_Rect r1 = {static_cast<Sint16>(bullet.pos.x),
-                   static_cast<Sint16>(bullet.pos.y), 10, 24};
+    const Point bullet_pos = bullet.get_pos();
+    SDL_Rect r1 = {static_cast<Sint16>(bullet_pos.x),
+                   static_cast<Sint16>(bullet_pos.y), 10, 24};
     SDL_Rect r2 = {static_cast<Sint16>(boss_pos.x + 171),
                    static_cast<Sint16>(boss_pos.y + 95), 57, 57};
     if (!check_hit_rect(&r1, &r2)) {
@@ -162,14 +164,14 @@ bool check_fightershots_hit_boss(Fighter &fighter, Boss &boss, Effect &effect,
     } else {
       Mix_PlayChannel(-1, mixer_manager.get_se(se_type::enemy_hit), 0);
     }
-    bullet.view = false;
+    bullet.make_invisible();
     for (auto &effect : effect.effects) {
       if (effect.view) {
         continue;
       }
       effect.view = true;
-      effect.pos.x = -80 + bullet.pos.x + r1.w / 2;
-      effect.pos.y = -80 + bullet.pos.y + r1.h / 2;
+      effect.pos.x = -80 + bullet_pos.x + r1.w / 2;
+      effect.pos.y = -80 + bullet_pos.y + r1.h / 2;
       effect.count = 0;
       break;
     }
