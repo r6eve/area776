@@ -71,10 +71,10 @@ class Enemies {
       view_p_ = true;
       pos_.x = rand() % (screen::width - 64);
       pos_.y = -64;
-      shot_timer_ = rand() % 15 + 15;
       move_ = fighter.get_pos() - pos_;
       move_.norm();
       move_ *= 8;
+      shot_timer_ = rand() % 15 + 15;
     }
 
     inline void make_invisible() noexcept { view_p_ = false; }
