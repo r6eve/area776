@@ -9,75 +9,137 @@
 class Enemies {
   int life_;
 
-  inline void draw_bullets(SDL_Surface *screen,
-                           const ImageManager &image_manager) const noexcept {
-    for (const auto &bullet : bullets) {
-      if (!bullet.view) {
-        continue;
+ public:
+  class Enemy {
+    bool view_p_;
+    Point pos_;
+    Point move_;
+    int shot_timer_;
+
+   public:
+    Enemy() noexcept {}
+
+    inline void init() noexcept { view_p_ = false; }
+
+    inline void draw(SDL_Surface *screen,
+                     const ImageManager &image_manager) const noexcept {
+      if (!view_p_) {
+        return;
+      }
+
+      SDL_Surface *p_surface = image_manager.get(image::mons13);
+      SDL_Rect dst = {static_cast<Sint16>(pos_.x), static_cast<Sint16>(pos_.y),
+                      static_cast<Uint16>(p_surface->w),
+                      static_cast<Uint16>(p_surface->h)};
+      SDL_BlitSurface(p_surface, nullptr, screen, &dst);
+    }
+
+    /**
+     * Return false if updated enemy is invisible or shot timer is not 0, and
+     * true otherwise.
+     */
+    inline bool update() noexcept {
+      if (!view_p_) {
+        return false;
+      }
+
+      pos_ += move_;
+      if (pos_.x < -35) {
+        view_p_ = false;
+        return false;
+      }
+      if (pos_.x > screen::width) {
+        view_p_ = false;
+        return false;
+      }
+      if (pos_.y > screen::height) {
+        view_p_ = false;
+        return false;
+      }
+
+      --shot_timer_;
+      if (shot_timer_ != 0) {
+        return false;
+      }
+
+      return true;
+    }
+
+    inline bool view_p() const noexcept { return view_p_; }
+
+    inline void make_visible(const Fighter &fighter) noexcept {
+      view_p_ = true;
+      pos_.x = rand() % (screen::width - 64);
+      pos_.y = -64;
+      shot_timer_ = rand() % 15 + 15;
+      move_ = fighter.get_pos() - pos_;
+      move_.norm();
+      move_ *= 8;
+    }
+
+    inline void make_invisible() noexcept { view_p_ = false; }
+
+    inline Point get_pos() const noexcept { return pos_; }
+
+    ~Enemy() noexcept {}
+  };
+
+  class Bullet {
+    bool view_p_;
+    Point pos_;
+    Point move_;
+
+   public:
+    Bullet() noexcept {}
+
+    inline void init() noexcept { view_p_ = false; }
+
+    inline void draw(SDL_Surface *screen,
+                     const ImageManager &image_manager) const noexcept {
+      if (!view_p_) {
+        return;
       }
 
       SDL_Surface *p_surface = image_manager.get(image::bm01);
-      SDL_Rect dst = {static_cast<Sint16>(bullet.pos.x),
-                      static_cast<Sint16>(bullet.pos.y), 16, 16};
+      SDL_Rect dst = {static_cast<Sint16>(pos_.x), static_cast<Sint16>(pos_.y),
+                      static_cast<Uint16>(p_surface->w),
+                      static_cast<Uint16>(p_surface->h)};
       SDL_BlitSurface(p_surface, nullptr, screen, &dst);
     }
-  }
 
-  inline void appear(const Fighter &fighter) noexcept {
-    if (rand() % 45 != 0) {
-      return;
-    }
-
-    const double speed = 8;
-    for (auto &enemy : enemies) {
-      if (enemy.view) {
-        continue;
-      }
-      enemy.view = true;
-      enemy.pos.x = rand() % (screen::width - 64);
-      enemy.pos.y = -64;
-      enemy.shot_timer = rand() % 15 + 15;
-      enemy.move = fighter.get_pos() - enemy.pos;
-      enemy.move.norm();
-      enemy.move *= speed;
-      break;
-    }
-  }
-
-  inline void fade_bullets() noexcept {
-    for (auto &bullet : bullets) {
-      if (!bullet.view) {
-        continue;
+    inline void update() noexcept {
+      if (!view_p_) {
+        return;
       }
 
-      bullet.pos += bullet.move;
-      if (bullet.pos.x < -16) {
-        bullet.view = false;
+      pos_ += move_;
+      if (pos_.x < -16) {
+        view_p_ = false;
       }
-      if (bullet.pos.y < -16) {
-        bullet.view = false;
+      if (pos_.y < -16) {
+        view_p_ = false;
       }
-      if (bullet.pos.x > screen::width) {
-        bullet.view = false;
+      if (pos_.x > screen::width) {
+        view_p_ = false;
       }
-      if (bullet.pos.y > screen::height) {
-        bullet.view = false;
+      if (pos_.y > screen::height) {
+        view_p_ = false;
       }
     }
-  }
 
- public:
-  struct Enemy {
-    bool view;
-    Point pos;
-    Point move;
-    int shot_timer;
-  };
+    inline void shoot(const Point &enemy_center, const Point &move) noexcept {
+      view_p_ = true;
+      pos_ = enemy_center;
+      move_ = move;
+    }
 
-  struct Bullet {
-    bool view;
-    Point pos;
-    Point move;
+    inline bool view_p() const noexcept { return view_p_; }
+
+    inline void make_invisible() noexcept { view_p_ = false; }
+
+    inline Point get_pos() const noexcept { return pos_; }
+
+    ~Bullet() noexcept {}
   };
 
   Enemy enemies[ENEMY_MAX];
@@ -87,30 +149,68 @@ class Enemies {
 
   inline void init(const bool debug_mode) noexcept {
     for (auto &enemy : enemies) {
-      enemy.view = false;
+      enemy.init();
     }
     for (auto &bullet : bullets) {
-      bullet.view = false;
+      bullet.init();
     }
     life_ = debug_mode ? 5 : 30;
   }
 
-  void update(const MixerManager &mixer_manager,
-              const Fighter &fighter) noexcept;
+  inline void update(const MixerManager &mixer_manager,
+                     const Fighter &fighter) noexcept {
+    if (rand() % 45 == 0) {
+      for (auto &enemy : enemies) {
+        if (enemy.view_p()) {
+          continue;
+        }
+        enemy.make_visible(fighter);
+        break;
+      }
+    }
+
+    for (auto &bullet : bullets) {
+      bullet.update();
+    }
+
+    const double shot_pitch = 20;
+
+    for (auto &enemy : enemies) {
+      if (!enemy.update()) {
+        continue;
+      }
+
+      const Point enemy_center = enemy.get_pos() + 32;
+      const Point fighter_center = fighter.get_pos() + 32;
+      Point p = fighter_center - enemy_center;
+      p.norm();
+      p *= 6;
+      /* 時計回りに(shot_pitch * 2)度回転させておく */
+      const double rot_angle = -(shot_pitch * 2) * PI / 180;
+      p.rot(rot_angle);
+      for (int _ = 0; _ < 5; ++_) {
+        for (auto &bullet : bullets) {
+          if (bullet.view_p()) {
+            continue;
+          }
+          bullet.shoot(enemy_center, p);
+          break;
+        }
+        const double rot_angle = shot_pitch * PI / 180;
+        p.rot(rot_angle);
+        Mix_PlayChannel(-1, mixer_manager.get_se(se_type::enemy_shoot), 0);
+      }
+    }
+  }
 
   inline void draw(SDL_Surface *screen, const ImageManager &image_manager) const
       noexcept {
     for (const auto &enemy : enemies) {
-      if (!enemy.view) {
-        continue;
-      }
-
-      SDL_Surface *p_surface = image_manager.get(image::mons13);
-      SDL_Rect dst = {static_cast<Sint16>(enemy.pos.x),
-                      static_cast<Sint16>(enemy.pos.y), 35, 35};
-      SDL_BlitSurface(p_surface, nullptr, screen, &dst);
+      enemy.draw(screen, image_manager);
     }
-    draw_bullets(screen, image_manager);
+    for (const auto &bullet : bullets) {
+      bullet.draw(screen, image_manager);
+    }
   }
 
   inline int get_life() const noexcept { return life_; }
