@@ -194,7 +194,6 @@ void Area776::play_game() noexcept {
         }
       } else {
         boss_.update(mixer_manager_);
-        boss_.update_bullets();
 
         if (util::check_fightershots_hit_boss(fighter_, boss_, effect_,
                                               mixer_manager_)) {

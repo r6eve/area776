@@ -56,7 +56,7 @@ bool check_enemyshots_hit_fighter(const enemy_type enemy_select,
     }
     case enemy_type::boss: {
       for (auto &bullet : boss.bullets) {
-        if (!bullet.view) {
+        if (!bullet.view_p()) {
           continue;
         }
 
@@ -73,7 +73,7 @@ bool check_enemyshots_hit_fighter(const enemy_type enemy_select,
         } else {
           Mix_PlayChannel(-1, mixer_manager.get_se(se_type::fighter_hit), 0);
         }
-        bullet.view = false;
+        bullet.make_invisible();
         for (auto &effect : effect.effects) {
           if (effect.view) {
             continue;
