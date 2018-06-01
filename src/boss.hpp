@@ -22,21 +22,20 @@ class Boss {
 
  public:
   class Bullet {
-    Point pos_;
     bool view_p_;
+    Point pos_;
+    Point move_;
+    int count_;
+    int rot_;
 
    public:
-    int rot;
-    int count;
-    Point move;
-
     inline void init() noexcept { view_p_ = false; }
 
     inline void update() noexcept {
       if (!view_p_) {
         return;
       }
-      pos_ += move;
+      pos_ += move_;
       if (pos_.x < -16) {
         view_p_ = false;
       }
@@ -49,11 +48,11 @@ class Boss {
       if (pos_.y > screen::height) {
         view_p_ = false;
       }
-      ++count;
-      count %= 2;
-      if (count == 0) {
-        ++rot;
-        rot %= 16;
+      ++count_;
+      count_ %= 2;
+      if (count_ == 0) {
+        ++rot_;
+        rot_ %= 16;
       }
     }
 
@@ -69,13 +68,44 @@ class Boss {
       SDL_BlitSurface(p_surface, nullptr, screen, &dst);
     }
 
+    /**
+     * Return false if the bullet has already been shot. Otherwise, return true
+     * after making the bullet visible.
+     */
+    inline bool shoot_attack00(const Point &boss_pos, const int n,
+                               const int shot_rot) noexcept {
+      if (view_p_) {
+        return false;
+      }
+
+      const Point p[2] = {{88, 120}, {418 - 88, 120}};
+      pos_ = boss_pos + p[n];
+      double r = PI * shot_rot / 10;
+      if (n == 1) {
+        r = -r;
+      }
+      move_.rot(Point{0, 4}, r);
+      view_p_ = true;
+      count_ = 0;
+      rot_ = 0;
+
+      return true;
+    }
+
+    inline void shoot_attack01(const Point &boss_pos, const int i) noexcept {
+      pos_ = boss_pos + Point{418 / 2, 105};
+      double r = PI * i / 24;
+      move_.rot(Point{0, 3}, r);
+      view_p_ = true;
+      count_ = 0;
+      rot_ = 0;
+    }
+
     inline Point get_pos() const noexcept { return pos_; }
 
     inline void set_pos(const Point &pos) noexcept { pos_ = pos; }
 
     inline bool view_p() const noexcept { return view_p_; }
-
-    inline void make_visible() noexcept { view_p_ = true; }
 
     inline void make_invisible() noexcept { view_p_ = false; }
   };
@@ -123,21 +153,11 @@ class Boss {
       }
       case boss_state::attack00: {
         if (!(shot_count_ % 2)) {
-          const Point p[2] = {{88, 120}, {418 - 88, 120}};
           for (int n = 0; n < 2; ++n) {
             for (auto &bullet : bullets) {
-              if (bullet.view_p()) {
+              if (!bullet.shoot_attack00(pos_, n, shot_rot_)) {
                 continue;
               }
-              bullet.set_pos(pos_ + p[n]);
-              double r = PI * shot_rot_ / 10;
-              if (n == 1) {
-                r = -r;
-              }
-              bullet.move.rot(Point{0, 4}, r);
-              bullet.make_visible();
-              bullet.count = 0;
-              bullet.rot = 0;
               break;
             }
           }
@@ -157,12 +177,7 @@ class Boss {
           }
         }
         for (int i = 0; i < 48; ++i) {
-          bullets[i].set_pos(pos_ + Point{418 / 2, 105});
-          double r = PI * i / 24;
-          bullets[i].move.rot(Point{0, 3}, r);
-          bullets[i].make_visible();
-          bullets[i].count = 0;
-          bullets[i].rot = 0;
+          bullets[i].shoot_attack01(pos_, i);
         }
         Mix_PlayChannel(-1, mixer_manager.get_se(se_type::enemy_shoot), 0);
         shot_count_ = 0;
