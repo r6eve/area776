@@ -95,7 +95,7 @@ void Area776::game_title() noexcept {
         Mix_PlayMusic(mixer_manager_.get_music(), -1);
         fighter_.init();
         enemies_.init(debug_mode_);
-        effect_.init();
+        effects_.init();
         snow_.init();
         boss_.init();
         game_count_ = 0;
@@ -158,16 +158,16 @@ void Area776::play_game() noexcept {
 
   fighter_.update(input_manager_, mixer_manager_);
   if (util::check_enemyshots_hit_fighter(enemy_select_, fighter_, enemies_,
-                                         boss_, effect_, mixer_manager_)) {
+                                         boss_, effects_, mixer_manager_)) {
     game_state_ = game_state::gameover;
   }
-  effect_.update();
+  effects_.update();
   draw_map();
 
   switch (enemy_select_) {
     case enemy_type::enemy: {
       enemies_.update(mixer_manager_, fighter_);
-      if (util::check_fightershots_hit_enemy(fighter_, enemies_, effect_,
+      if (util::check_fightershots_hit_enemy(fighter_, enemies_, effects_,
                                              mixer_manager_)) {
         enemy_select_ = enemy_type::boss;
       }
@@ -195,7 +195,7 @@ void Area776::play_game() noexcept {
       } else {
         boss_.update(mixer_manager_);
 
-        if (util::check_fightershots_hit_boss(fighter_, boss_, effect_,
+        if (util::check_fightershots_hit_boss(fighter_, boss_, effects_,
                                               mixer_manager_)) {
           game_state_ = game_state::clear;
           game_count_ = 0;
@@ -211,7 +211,7 @@ void Area776::play_game() noexcept {
   }
 
   fighter_.draw(screen_, image_manager_);
-  effect_.draw(screen_, image_manager_);
+  effects_.draw(screen_, image_manager_);
   draw_life();
 }
 
@@ -252,7 +252,7 @@ void Area776::game_clear() noexcept {
   fighter_.init();
   enemies_.init(debug_mode_);
   boss_.init();
-  effect_.init();
+  effects_.init();
   snow_.init();
   game_count_ = 0;
   game_state_ = game_state::start;
@@ -295,7 +295,7 @@ void Area776::game_pause() noexcept {
   }
 
   fighter_.draw(screen_, image_manager_);
-  effect_.draw(screen_, image_manager_);
+  effects_.draw(screen_, image_manager_);
   draw_life();
   draw_translucence();
   if (input_manager_.edge_key_p(input_device::space)) {

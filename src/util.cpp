@@ -15,7 +15,7 @@ inline bool check_hit_rect(const SDL_Rect *a, const SDL_Rect *b) noexcept {
 
 bool check_enemyshots_hit_fighter(const enemy_type enemy_select,
                                   Fighter &fighter, Enemies &enemies,
-                                  Boss &boss, Effect &effect,
+                                  Boss &boss, Effects &effects,
                                   const MixerManager &mixer_manager) noexcept {
   const Point fighter_pos = fighter.get_pos();
   SDL_Rect r1 = {static_cast<Sint16>(fighter_pos.x + 20),
@@ -42,14 +42,11 @@ bool check_enemyshots_hit_fighter(const enemy_type enemy_select,
           Mix_PlayChannel(-1, mixer_manager.get_se(se_type::fighter_hit), 0);
         }
         bullet.make_invisible();
-        for (auto &effect : effect.effects) {
-          if (effect.view) {
+        for (auto &effect : effects.effects) {
+          if (effect.view_p()) {
             continue;
           }
-
-          effect.view = true;
-          effect.pos = fighter_pos - 50;
-          effect.count = 0;
+          effect.make_visible(fighter_pos - 50);
           break;
         }
       }
@@ -75,14 +72,11 @@ bool check_enemyshots_hit_fighter(const enemy_type enemy_select,
           Mix_PlayChannel(-1, mixer_manager.get_se(se_type::fighter_hit), 0);
         }
         bullet.make_invisible();
-        for (auto &effect : effect.effects) {
-          if (effect.view) {
+        for (auto &effect : effects.effects) {
+          if (effect.view_p()) {
             continue;
           }
-
-          effect.view = true;
-          effect.pos = fighter_pos - 50;
-          effect.count = 0;
+          effect.make_visible(fighter_pos - 50);
           break;
         }
       }
@@ -97,7 +91,7 @@ bool check_enemyshots_hit_fighter(const enemy_type enemy_select,
 }
 
 bool check_fightershots_hit_enemy(Fighter &fighter, Enemies &enemies,
-                                  Effect &effect,
+                                  Effects &effects,
                                   const MixerManager &mixer_manager) noexcept {
   for (auto &enemy : enemies.enemies) {
     if (!enemy.view_p()) {
@@ -123,15 +117,11 @@ bool check_fightershots_hit_enemy(Fighter &fighter, Enemies &enemies,
       Mix_PlayChannel(-1, mixer_manager.get_se(se_type::enemy_hit), 0);
       enemy.make_invisible();
       bullet.make_invisible();
-      for (auto &effect : effect.effects) {
-        if (effect.view) {
+      for (auto &effect : effects.effects) {
+        if (effect.view_p()) {
           continue;
         }
-
-        effect.view = true;
-        effect.pos.x = -80 + enemy_pos.x + r1.w / 2;
-        effect.pos.y = -80 + enemy_pos.y + r1.h / 2;
-        effect.count = 0;
+        effect.make_visible(bullet_pos + Point{10 / 2, 24 / 2} - 80);
         break;
       }
       if (enemies.get_life() <= 0) {
@@ -144,7 +134,7 @@ bool check_fightershots_hit_enemy(Fighter &fighter, Enemies &enemies,
   return false;
 }
 
-bool check_fightershots_hit_boss(Fighter &fighter, Boss &boss, Effect &effect,
+bool check_fightershots_hit_boss(Fighter &fighter, Boss &boss, Effects &effects,
                                  const MixerManager &mixer_manager) noexcept {
   const Point boss_pos = boss.get_pos();
   for (auto &bullet : fighter.bullets) {
@@ -167,14 +157,11 @@ bool check_fightershots_hit_boss(Fighter &fighter, Boss &boss, Effect &effect,
       Mix_PlayChannel(-1, mixer_manager.get_se(se_type::enemy_hit), 0);
     }
     bullet.make_invisible();
-    for (auto &effect : effect.effects) {
-      if (effect.view) {
+    for (auto &effect : effects.effects) {
+      if (effect.view_p()) {
         continue;
       }
-      effect.view = true;
-      effect.pos.x = -80 + bullet_pos.x + r1.w / 2;
-      effect.pos.y = -80 + bullet_pos.y + r1.h / 2;
-      effect.count = 0;
+      effect.make_visible(bullet_pos + Point{10 / 2, 24 / 2} - 80);
       break;
     }
     if (boss.get_life() <= 0) {

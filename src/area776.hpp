@@ -53,7 +53,7 @@ class Area776 {
   Fighter fighter_;
   Enemies enemies_;
   Boss boss_;
-  Effect effect_;
+  Effects effects_;
 
   Wipe wipe_;
   Snow snow_;
