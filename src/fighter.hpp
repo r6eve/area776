@@ -136,8 +136,8 @@ class Fighter {
     shot_timer_ = 8;
   }
 
-  inline void draw(SDL_Renderer *renderer, const ImageManager &image_manager) const
-      noexcept {
+  inline void draw(SDL_Renderer *renderer,
+                   const ImageManager &image_manager) const noexcept {
     SDL_Texture *fighter_texture = image_manager.get(renderer, image::fighter);
     SDL_Rect dst;
     dst.x = static_cast<Sint16>(pos_.x);
