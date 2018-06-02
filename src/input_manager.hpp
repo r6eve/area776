@@ -51,18 +51,22 @@ class InputManager {
           SDL_JoystickGetAxis(joystick_, 0) > 256;
     }
 
-    Uint8 *keys = SDL_GetKeyState(nullptr);
-    new_press_key[input_device::up] =
-        (keys[SDLK_UP] == SDL_PRESSED) || (keys['k'] == SDL_PRESSED);
+    const Uint8 *state = SDL_GetKeyboardState(nullptr);
+    new_press_key[input_device::up] = (state[SDL_SCANCODE_UP] == SDL_PRESSED) ||
+                                      (state[SDL_SCANCODE_K] == SDL_PRESSED);
     new_press_key[input_device::down] =
-        (keys[SDLK_DOWN] == SDL_PRESSED) || (keys['j'] == SDL_PRESSED);
+        (state[SDL_SCANCODE_DOWN] == SDL_PRESSED) ||
+        (state[SDL_SCANCODE_J] == SDL_PRESSED);
     new_press_key[input_device::left] =
-        (keys[SDLK_LEFT] == SDL_PRESSED) || (keys['h'] == SDL_PRESSED);
+        (state[SDL_SCANCODE_LEFT] == SDL_PRESSED) ||
+        (state[SDL_SCANCODE_H] == SDL_PRESSED);
     new_press_key[input_device::right] =
-        (keys[SDLK_RIGHT] == SDL_PRESSED) || (keys['l'] == SDL_PRESSED);
-    new_press_key[input_device::f] = keys['f'] == SDL_PRESSED;
-    new_press_key[input_device::x] = keys['x'] == SDL_PRESSED;
-    new_press_key[input_device::space] = keys[SDLK_SPACE] == SDL_PRESSED;
+        (state[SDL_SCANCODE_RIGHT] == SDL_PRESSED) ||
+        (state[SDL_SCANCODE_L] == SDL_PRESSED);
+    new_press_key[input_device::f] = state[SDL_SCANCODE_F] == SDL_PRESSED;
+    new_press_key[input_device::x] = state[SDL_SCANCODE_X] == SDL_PRESSED;
+    new_press_key[input_device::space] =
+        state[SDL_SCANCODE_SPACE] == SDL_PRESSED;
     for (int i = 0; i < input_device::count; ++i) {
       edge_key_[i] = !press_key_[i] && new_press_key[i];
       press_key_[i] = new_press_key[i];

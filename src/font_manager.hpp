@@ -1,7 +1,7 @@
 #ifndef FONT_MANAGER_H
 #define FONT_MANAGER_H
 
-#include <SDL/SDL_ttf.h>
+#include <SDL2/SDL_ttf.h>
 #include <iostream>
 
 namespace font_size {

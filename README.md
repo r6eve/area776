@@ -3,7 +3,7 @@ area776
 [![Build Status on Travis CI][]][Travis CI Results]
 [![Build Status on AppVeyor][]][AppVeyor Results]
 
-`area776` is a mini shooting game written in C++ with SDL1.2.
+`area776` is a mini shooting game written in C++ with SDL2.0.
 
 ## Demo Video
 
@@ -13,13 +13,13 @@ area776
 
 ```console
 # Arch
-> pacman -S sdl sdl_image sdl_mixer sdl_ttf
+> pacman -S sdl2 sdl2_image sdl2_mixer sdl2_ttf
 # Ubuntu
-> apt-get -y install libsdl-dev libsdl-image-dev libsdl-mixer-dev libsdl-ttf-dev
+> apt-get -y install libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev
 
 # macOS
 > brew update
-> brew install sdl sdl_image sdl_mixer sdl_ttf
+> brew install sdl2 sdl2_image sdl2_mixer sdl2_ttf
 
 # Windows
 # Cf. .appveyor.yml
@@ -52,10 +52,10 @@ Options:
 ## Requirement
 
 * g++ / clang++
-* [SDL 1.2][]
-* [SDL_image 1.2][]
-* [SDL_mixer 1.2][]
-* [SDL_ttf for SDL 1.2][]
+* [SDL 2.0][]
+* [SDL_image 2.0][]
+* [SDL_mixer 2.0][]
+* [SDL_ttf 2.0][]
 
 ## Used Resources
 
@@ -66,7 +66,6 @@ Options:
 
 ## TODO
 
-* Support SDL2.0
 * Record Score
 
 [Build Status on Travis CI]: https://travis-ci.org/r6eve/area776.svg?branch=master
@@ -75,10 +74,10 @@ Options:
 [AppVeyor Results]: https://ci.appveyor.com/project/r6eve/area776
 [Demo Image]: http://img.youtube.com/vi/dYCtreFwPDk/0.jpg
 [Demo Video]: https://youtu.be/dYCtreFwPDk
-[SDL 1.2]: http://www.libsdl.org/
-[SDL_image 1.2]: https://www.libsdl.org/projects/SDL_image/release-1.2.html
-[SDL_mixer 1.2]: https://www.libsdl.org/projects/SDL_mixer/release-1.2.html
-[SDL_ttf for SDL 1.2]: https://www.libsdl.org/projects/SDL_ttf/release-1.2.html
+[SDL 2.0]: http://www.libsdl.org/
+[SDL_image 2.0]: https://www.libsdl.org/projects/SDL_image/
+[SDL_mixer 2.0]: https://www.libsdl.org/projects/SDL_mixer/
+[SDL_ttf 2.0]: https://www.libsdl.org/projects/SDL_ttf/
 [源暎ゴシックP]: https://okoneya.jp/font/genei-antique.html
 [フリーBGM・音楽素材 MusMus]: http://musmus.main.jp/
 [ザ・マッチメイカァズ]: http://osabisi.sakura.ne.jp/m2/tm4/se_001.html

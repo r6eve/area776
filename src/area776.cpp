@@ -1,5 +1,5 @@
 #include "area776.hpp"
-#include <SDL/SDL_mixer.h>
+#include <SDL2/SDL_mixer.h>
 #include <time.h>
 #include <sstream>
 #include "boss.hpp"
@@ -41,15 +41,15 @@ void Area776::run() noexcept {
     if (debug_mode_) {
       draw_fps();
     }
-    SDL_Flip(screen_);
+    SDL_RenderPresent(renderer_);
     wait_game();
   }
 }
 
 void Area776::game_title() noexcept {
-  SDL_Rect dst = {0, 0, screen::width, screen::height};
-  const Uint32 bg_col = 0x45402b;
-  SDL_FillRect(screen_, &dst, bg_col);
+  SDL_SetRenderDrawColor(renderer_, 69, 64, 43, 255);
+  SDL_RenderClear(renderer_);
+
   const Point title_pos = Point{160, 180};
   const Point message_pos = Point{210, 300};
   const char *title_str = "A  r  e  a  7  7  6";
@@ -62,7 +62,7 @@ void Area776::game_title() noexcept {
     }
     case 1: {
       draw_text(font_size::x36, rgb::dark_red, title_pos, title_str);
-      wipe_.draw(screen_);
+      wipe_.draw(renderer_);
       if (wipe_.update()) {
         ++game_count_;
       }
@@ -73,10 +73,11 @@ void Area776::game_title() noexcept {
       draw_text(font_size::x16, rgb::black, message_pos, message_str);
       ++blink_count_;
       if (blink_count_ >= 30) {
-        SDL_Rect dst_back = {static_cast<Sint16>(message_pos.x),
-                             static_cast<Sint16>(message_pos.y),
-                             screen::width - 240, screen::height - 300};
-        SDL_FillRect(screen_, &dst_back, bg_col);
+        SDL_SetRenderDrawColor(renderer_, 69, 64, 43, 255);
+        SDL_Rect dst = {static_cast<Sint16>(message_pos.x),
+                        static_cast<Sint16>(message_pos.y), screen::width - 240,
+                        screen::height - 300};
+        SDL_RenderFillRect(renderer_, &dst);
         if (blink_count_ >= 60) {
           blink_count_ = 0;
         }
@@ -90,7 +91,7 @@ void Area776::game_title() noexcept {
     case 3: {
       draw_text(font_size::x36, rgb::dark_red, title_pos, title_str);
       draw_text(font_size::x16, rgb::black, message_pos, message_str);
-      wipe_.draw(screen_);
+      wipe_.draw(renderer_);
       if (wipe_.update()) {
         Mix_PlayMusic(mixer_manager_.get_music(), -1);
         fighter_.init();
@@ -116,17 +117,17 @@ void Area776::game_title() noexcept {
 void Area776::game_start() noexcept {
   fighter_.update(input_manager_, mixer_manager_);
   draw_map();
-  fighter_.draw(screen_, image_manager_);
+  fighter_.draw(renderer_, image_manager_);
 
   switch (game_count_) {
     case 0: {
       wipe_.set_wipe_in();
-      wipe_.draw(screen_);
+      wipe_.draw(renderer_);
       ++game_count_;
       break;
     }
     case 1: {
-      wipe_.draw(screen_);
+      wipe_.draw(renderer_);
       if (wipe_.update()) {
         ++game_count_;
       }
@@ -172,8 +173,8 @@ void Area776::play_game() noexcept {
         enemy_select_ = enemy_type::boss;
       }
       snow_.update();
-      snow_.draw(screen_, image_manager_);
-      enemies_.draw(screen_, image_manager_);
+      snow_.draw(renderer_, image_manager_);
+      enemies_.draw(renderer_, image_manager_);
       break;
     }
     case enemy_type::boss: {
@@ -201,7 +202,7 @@ void Area776::play_game() noexcept {
           game_count_ = 0;
         }
 
-        boss_.draw(screen_, image_manager_);
+        boss_.draw(renderer_, image_manager_);
       }
       break;
     }
@@ -210,36 +211,37 @@ void Area776::play_game() noexcept {
       break;
   }
 
-  fighter_.draw(screen_, image_manager_);
-  effects_.draw(screen_, image_manager_);
+  fighter_.draw(renderer_, image_manager_);
+  effects_.draw(renderer_, image_manager_);
   draw_life();
 }
 
 void Area776::game_clear() noexcept {
   fighter_.update(input_manager_, mixer_manager_);
   draw_map();
-  fighter_.draw(screen_, image_manager_);
+  fighter_.draw(renderer_, image_manager_);
   draw_life();
 
   if (game_count_ == 0) {
     wipe_.set_wipe_out();
-    wipe_.draw(screen_);
+    wipe_.draw(renderer_);
     ++game_count_;
     return;
   }
 
-  wipe_.draw(screen_);
+  wipe_.draw(renderer_);
   if (!wipe_.update()) {
     return;
   }
 
   if (game_level_ == 1) {
+    SDL_SetRenderDrawColor(renderer_, 255, 255, 255, 255);
     SDL_Rect dst = {0, 0, screen::width, screen::height};
-    SDL_FillRect(screen_, &dst, 0xffffffff);
+    SDL_RenderFillRect(renderer_, &dst);
     draw_text(font_size::x36, rgb::red, Point{150, 180}, "G A M E  C L E A R");
     ++game_count_;
     if (game_count_ > 200) {
-      wipe_.draw(screen_);
+      wipe_.draw(renderer_);
       if (wipe_.update()) {
         game_count_ = 0;
         game_state_ = game_state::title;
@@ -266,7 +268,7 @@ void Area776::game_over() noexcept {
     return;
   }
 
-  wipe_.draw(screen_);
+  wipe_.draw(renderer_);
   if (!wipe_.update()) {
     return;
   }
@@ -281,12 +283,12 @@ void Area776::game_pause() noexcept {
 
   switch (enemy_select_) {
     case enemy_type::enemy: {
-      snow_.draw(screen_, image_manager_);
-      enemies_.draw(screen_, image_manager_);
+      snow_.draw(renderer_, image_manager_);
+      enemies_.draw(renderer_, image_manager_);
       break;
     }
     case enemy_type::boss: {
-      boss_.draw(screen_, image_manager_);
+      boss_.draw(renderer_, image_manager_);
       break;
     }
     default:
@@ -294,8 +296,8 @@ void Area776::game_pause() noexcept {
       break;
   }
 
-  fighter_.draw(screen_, image_manager_);
-  effects_.draw(screen_, image_manager_);
+  fighter_.draw(renderer_, image_manager_);
+  effects_.draw(renderer_, image_manager_);
   draw_life();
   draw_translucence();
   if (input_manager_.edge_key_p(input_device::space)) {

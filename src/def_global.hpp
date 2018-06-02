@@ -1,7 +1,7 @@
 #ifndef DEF_GLOBAL_H
 #define DEF_GLOBAL_H
 
-#include <SDL/SDL.h>
+#include <SDL2/SDL.h>
 #include <cmath>
 
 const double PI = 4 * atan(1);
