@@ -11,13 +11,15 @@ enum {
 };
 }  // namespace effect_size
 
-struct Effects {
+class Effects {
   class Effect {
     bool view_p_;
     Point pos_;
     int count_;
 
    public:
+    Effect() noexcept {}
+
     inline void init() noexcept { view_p_ = false; }
 
     inline void update() noexcept {
@@ -45,18 +47,26 @@ struct Effects {
       SDL_BlitSurface(p_surface, &src, screen, &dst);
     }
 
-    inline bool view_p() const noexcept { return view_p_; }
-
-    inline void make_visible(const Point &pos) noexcept {
+    /**
+     * Return false if the effect has already been visible, and true otherwise.
+     */
+    inline bool make_visible(const Point &pos) noexcept {
+      if (view_p_) {
+        return false;
+      }
       view_p_ = true;
       pos_ = pos;
       count_ = 0;
+      return true;
     }
 
-    inline Point get_pos() const noexcept { return pos_; }
+    ~Effect() noexcept {}
   };
 
   Effect effects[EFFECT_MAX];
+
+ public:
+  Effects() noexcept {}
 
   inline void init() noexcept {
     for (auto &effect : effects) {
@@ -70,12 +80,22 @@ struct Effects {
     }
   }
 
+  inline void make_visible(const Point &pos) noexcept {
+    for (auto &effect : effects) {
+      if (effect.make_visible(pos)) {
+        return;
+      }
+    }
+  }
+
   inline void draw(SDL_Surface *screen, const ImageManager &image_manager) const
       noexcept {
     for (const auto &effect : effects) {
       effect.draw(screen, image_manager);
     }
   }
+
+  ~Effects() noexcept {}
 };
 
 #endif

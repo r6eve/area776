@@ -42,13 +42,7 @@ bool check_enemyshots_hit_fighter(const enemy_type enemy_select,
           Mix_PlayChannel(-1, mixer_manager.get_se(se_type::fighter_hit), 0);
         }
         bullet.make_invisible();
-        for (auto &effect : effects.effects) {
-          if (effect.view_p()) {
-            continue;
-          }
-          effect.make_visible(fighter_pos - 50);
-          break;
-        }
+        effects.make_visible(fighter_pos - 50);
       }
       break;
     }
@@ -72,13 +66,7 @@ bool check_enemyshots_hit_fighter(const enemy_type enemy_select,
           Mix_PlayChannel(-1, mixer_manager.get_se(se_type::fighter_hit), 0);
         }
         bullet.make_invisible();
-        for (auto &effect : effects.effects) {
-          if (effect.view_p()) {
-            continue;
-          }
-          effect.make_visible(fighter_pos - 50);
-          break;
-        }
+        effects.make_visible(fighter_pos - 50);
       }
       break;
     }
@@ -117,13 +105,7 @@ bool check_fightershots_hit_enemy(Fighter &fighter, Enemies &enemies,
       Mix_PlayChannel(-1, mixer_manager.get_se(se_type::enemy_hit), 0);
       enemy.make_invisible();
       bullet.make_invisible();
-      for (auto &effect : effects.effects) {
-        if (effect.view_p()) {
-          continue;
-        }
-        effect.make_visible(bullet_pos + Point{10 / 2, 24 / 2} - 80);
-        break;
-      }
+      effects.make_visible(bullet_pos + Point{10 / 2, 24 / 2} - 80);
       if (enemies.get_life() <= 0) {
         return true;
       }
@@ -157,13 +139,7 @@ bool check_fightershots_hit_boss(Fighter &fighter, Boss &boss, Effects &effects,
       Mix_PlayChannel(-1, mixer_manager.get_se(se_type::enemy_hit), 0);
     }
     bullet.make_invisible();
-    for (auto &effect : effects.effects) {
-      if (effect.view_p()) {
-        continue;
-      }
-      effect.make_visible(bullet_pos + Point{10 / 2, 24 / 2} - 80);
-      break;
-    }
+    effects.make_visible(bullet_pos + Point{10 / 2, 24 / 2} - 80);
     if (boss.get_life() <= 0) {
       return true;
     }
