@@ -43,7 +43,8 @@ class Area776 {
 
   const bool debug_mode_;
 
-  SDL_Surface *screen_;
+  SDL_Window *window_;
+  SDL_Renderer *renderer_;
   int blink_count_;
   int game_count_;
   game_state game_state_;
@@ -74,10 +75,16 @@ class Area776 {
     const SDL_Color color = {rgb.r, rgb.g, rgb.b, 255};
     SDL_Surface *font_surface =
         TTF_RenderUTF8_Blended(font_manager_.get(font_size), str, color);
+    SDL_Texture *font_texture =
+        SDL_CreateTextureFromSurface(renderer_, font_surface);
     SDL_Rect src = {0, 0, static_cast<Uint16>(font_surface->w),
                     static_cast<Uint16>(font_surface->h)};
-    SDL_Rect dst = {static_cast<Sint16>(p.x), static_cast<Sint16>(p.y), 0, 0};
-    SDL_BlitSurface(font_surface, &src, screen_, &dst);
+    SDL_Rect dst;
+    dst.x = static_cast<Sint16>(p.x);
+    dst.y = static_cast<Sint16>(p.y);
+    SDL_QueryTexture(font_texture, nullptr, nullptr, &dst.w, &dst.h);
+    SDL_RenderCopy(renderer_, font_texture, &src, &dst);
+    SDL_DestroyTexture(font_texture);
   }
 
   inline void draw_text(const unsigned char font_size, const RGB &&rgb,
@@ -179,14 +186,15 @@ class Area776 {
   }
 
   inline void draw_map() noexcept {
-    SDL_Surface *pSurface = image_manager_.get(image::map);
+    SDL_Texture *map_texture = image_manager_.get(renderer_, image::map);
+    SDL_Rect src = {0, 0, screen::width, screen::height};
     SDL_Rect dst = {0, 0, screen::width, screen::height};
-    SDL_BlitSurface(pSurface, nullptr, screen_, &dst);
+    SDL_RenderCopy(renderer_, map_texture, &src, &dst);
+    SDL_DestroyTexture(map_texture);
   }
 
   inline void draw_translucence() noexcept {
     Uint32 rmask, gmask, bmask, amask;
-    Uint8 alpha = 128;
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
     rmask = 0xff000000;
     gmask = 0x00ff0000;
@@ -198,7 +206,6 @@ class Area776 {
     bmask = 0x00ff0000;
     amask = 0xff000000;
 #endif
-
     SDL_Surface *trans_surface =
         SDL_CreateRGBSurface(SDL_SWSURFACE, screen::width, screen::height, 32,
                              rmask, gmask, bmask, amask);
@@ -206,11 +213,13 @@ class Area776 {
       std::cerr << "CreateRGBSurface failed: " << SDL_GetError() << '\n';
       exit(EXIT_FAILURE);
     }
-    SDL_SetAlpha(trans_surface, SDL_SRCALPHA, alpha);
-    SDL_Rect dst_back;
-    dst_back.x = 0;
-    dst_back.y = 0;
-    SDL_BlitSurface(trans_surface, nullptr, screen_, &dst_back);
+    SDL_Texture *trans_texture =
+        SDL_CreateTextureFromSurface(renderer_, trans_surface);
+    SDL_FreeSurface(trans_surface);
+    SDL_Rect src = {0, 0, screen::width, screen::height};
+    SDL_Rect dst = {0, 0, screen::width, screen::height};
+    SDL_RenderCopy(renderer_, trans_texture, &src, &dst);
+    SDL_DestroyTexture(trans_texture);
     if (blink_count_ < 30) {
       draw_text(font_size::x36, rgb::white, Point{220, 180}, "P a u s e");
       ++blink_count_;
@@ -232,16 +241,23 @@ class Area776 {
       exit(EXIT_FAILURE);
     }
 
-    SDL_WM_SetCaption("Area776", nullptr);
     if (debug_mode_) {
-      screen_ = SDL_SetVideoMode(screen::width, screen::height, screen::bpp,
-                                 SDL_HWSURFACE | SDL_DOUBLEBUF);
+      window_ = SDL_CreateWindow("Area776", SDL_WINDOWPOS_UNDEFINED,
+                                 SDL_WINDOWPOS_UNDEFINED, screen::width,
+                                 screen::height, SDL_WINDOW_SHOWN);
     } else {
-      screen_ =
-          SDL_SetVideoMode(screen::width, screen::height, screen::bpp,
-                           SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_FULLSCREEN);
+      window_ = SDL_CreateWindow("Area776", SDL_WINDOWPOS_UNDEFINED,
+                                 SDL_WINDOWPOS_UNDEFINED, screen::width,
+                                 screen::height,
+                                 SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN);
     }
-    if (!screen_) {
+    if (window_ == nullptr) {
+      std::cerr << "error: " << SDL_GetError() << '\n';
+      exit(EXIT_FAILURE);
+    }
+
+    renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_ACCELERATED);
+    if (renderer_ == nullptr) {
       std::cerr << "error: " << SDL_GetError() << '\n';
       exit(EXIT_FAILURE);
     }

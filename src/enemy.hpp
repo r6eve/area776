@@ -21,17 +21,24 @@ class Enemies {
 
     inline void init() noexcept { view_p_ = false; }
 
-    inline void draw(SDL_Surface *screen,
+    inline void draw(SDL_Renderer *renderer,
                      const ImageManager &image_manager) const noexcept {
       if (!view_p_) {
         return;
       }
 
-      SDL_Surface *p_surface = image_manager.get(image::mons13);
-      SDL_Rect dst = {static_cast<Sint16>(pos_.x), static_cast<Sint16>(pos_.y),
-                      static_cast<Uint16>(p_surface->w),
-                      static_cast<Uint16>(p_surface->h)};
-      SDL_BlitSurface(p_surface, nullptr, screen, &dst);
+      SDL_Texture *enemy_texture = image_manager.get(renderer, image::mons13);
+      SDL_Rect dst;
+      dst.x = static_cast<Sint16>(pos_.x);
+      dst.y = static_cast<Sint16>(pos_.y);
+      SDL_QueryTexture(enemy_texture, nullptr, nullptr, &dst.w, &dst.h);
+      SDL_Rect src;
+      src.x = 0;
+      src.y = 0;
+      src.w = dst.w;
+      src.h = dst.h;
+      SDL_RenderCopy(renderer, enemy_texture, &src, &dst);
+      SDL_DestroyTexture(enemy_texture);
     }
 
     /**
@@ -94,17 +101,24 @@ class Enemies {
 
     inline void init() noexcept { view_p_ = false; }
 
-    inline void draw(SDL_Surface *screen,
+    inline void draw(SDL_Renderer *renderer,
                      const ImageManager &image_manager) const noexcept {
       if (!view_p_) {
         return;
       }
 
-      SDL_Surface *p_surface = image_manager.get(image::bm01);
-      SDL_Rect dst = {static_cast<Sint16>(pos_.x), static_cast<Sint16>(pos_.y),
-                      static_cast<Uint16>(p_surface->w),
-                      static_cast<Uint16>(p_surface->h)};
-      SDL_BlitSurface(p_surface, nullptr, screen, &dst);
+      SDL_Texture *bullet_texture = image_manager.get(renderer, image::bm01);
+      SDL_Rect dst;
+      dst.x = static_cast<Sint16>(pos_.x);
+      dst.y = static_cast<Sint16>(pos_.y);
+      SDL_QueryTexture(bullet_texture, nullptr, nullptr, &dst.w, &dst.h);
+      SDL_Rect src;
+      src.x = 0;
+      src.y = 0;
+      src.w = dst.w;
+      src.h = dst.h;
+      SDL_RenderCopy(renderer, bullet_texture, &src, &dst);
+      SDL_DestroyTexture(bullet_texture);
     }
 
     inline void update() noexcept {
@@ -202,13 +216,13 @@ class Enemies {
     }
   }
 
-  inline void draw(SDL_Surface *screen, const ImageManager &image_manager) const
-      noexcept {
+  inline void draw(SDL_Renderer *renderer,
+                   const ImageManager &image_manager) const noexcept {
     for (const auto &enemy : enemies) {
-      enemy.draw(screen, image_manager);
+      enemy.draw(renderer, image_manager);
     }
     for (const auto &bullet : bullets) {
-      bullet.draw(screen, image_manager);
+      bullet.draw(renderer, image_manager);
     }
   }
 

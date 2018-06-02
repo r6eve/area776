@@ -49,20 +49,26 @@ class Snow {
     }
   }
 
-  inline void draw(SDL_Surface *screen, const ImageManager &image_manager) const
-      noexcept {
+  inline void draw(SDL_Renderer *renderer,
+                   const ImageManager &image_manager) const noexcept {
+    SDL_Texture *snow_texture = image_manager.get(renderer, image::snow);
     for (const auto &snow : snows_) {
       if (!snow.view_p) {
         continue;
       }
-      SDL_Surface *p_surface = image_manager.get(image::snow);
-      const Uint16 w = static_cast<Uint16>(p_surface->w / 2);
-      SDL_Rect src = {static_cast<Sint16>(w * snow.type), 0, w,
-                      static_cast<Uint16>(p_surface->h)};
-      SDL_Rect dst = {static_cast<Sint16>(snow.x), static_cast<Sint16>(snow.y),
-                      w, static_cast<Uint16>(p_surface->h)};
-      SDL_BlitSurface(p_surface, &src, screen, &dst);
+      SDL_Rect dst;
+      dst.x = static_cast<Sint16>(snow.x);
+      dst.y = static_cast<Sint16>(snow.y);
+      SDL_QueryTexture(snow_texture, nullptr, nullptr, &dst.w, &dst.h);
+      dst.w /= 2;
+      SDL_Rect src;
+      src.x = dst.w * snow.type;
+      src.y = 0;
+      src.w = dst.w;
+      src.h = dst.h;
+      SDL_RenderCopy(renderer, snow_texture, &src, &dst);
     }
+    SDL_DestroyTexture(snow_texture);
   }
 
   ~Snow() noexcept {}

@@ -32,19 +32,20 @@ class Effects {
       }
     }
 
-    inline void draw(SDL_Surface *screen,
+    inline void draw(SDL_Renderer *renderer,
                      const ImageManager &image_manager) const noexcept {
       if (!view_p_) {
         return;
       }
       const int n = count_ / 2;
-      SDL_Surface *p_surface = image_manager.get(image::effect01);
+      SDL_Texture *effect_texture = image_manager.get(renderer, image::effect01);
+      SDL_Rect dst = {static_cast<Sint16>(pos_.x), static_cast<Sint16>(pos_.y),
+                      effect_size::w, effect_size::h};
       SDL_Rect src = {static_cast<Sint16>(n % 4 * effect_size::w),
                       static_cast<Sint16>(n / 4 * effect_size::h),
                       effect_size::w, effect_size::h};
-      SDL_Rect dst = {static_cast<Sint16>(pos_.x), static_cast<Sint16>(pos_.y),
-                      effect_size::w, effect_size::h};
-      SDL_BlitSurface(p_surface, &src, screen, &dst);
+      SDL_RenderCopy(renderer, effect_texture, &src, &dst);
+      SDL_DestroyTexture(effect_texture);
     }
 
     /**
@@ -88,10 +89,10 @@ class Effects {
     }
   }
 
-  inline void draw(SDL_Surface *screen, const ImageManager &image_manager) const
+  inline void draw(SDL_Renderer *renderer, const ImageManager &image_manager) const
       noexcept {
     for (const auto &effect : effects) {
-      effect.draw(screen, image_manager);
+      effect.draw(renderer, image_manager);
     }
   }
 
