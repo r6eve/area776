@@ -2,7 +2,7 @@
 #include <iostream>
 #include "area776.hpp"
 
-const std::string Version = "v0.1.0";
+const std::string Version = "v0.2.0";
 
 bool parse_options(const int argc, char **argv) noexcept {
   bool ret = false;
