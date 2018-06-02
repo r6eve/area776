@@ -29,10 +29,11 @@ class ImageManager {
   // array to manage images.
   //
   // `std::unordered_map<std::string, std::unique_ptr<SDL_Surface>> image_map_`
-  inline void load(const char *path, const unsigned char image_type) {
+  inline void load(const char *path, const unsigned char image_type) noexcept {
     SDL_Surface *image = IMG_Load(path);
     if (!image) {
-      throw IMG_GetError();
+      std::cerr << "error: " << IMG_GetError() << '\n';
+      exit(EXIT_FAILURE);
     }
     images_[image_type] = image;
   }
@@ -47,19 +48,14 @@ class ImageManager {
       exit(EXIT_FAILURE);
     }
 
-    try {
-      load("./data/fighter.png", image::fighter);
-      load("./data/mons13.png", image::mons13);
-      load("./data/boss.png", image::boss);
-      load("./data/oval_re.png", image::oval_re);
-      load("./data/bm01.png", image::bm01);
-      load("./data/effect01.png", image::effect01);
-      load("./data/snow.png", image::snow);
-      load("./data/72.png", image::map);
-    } catch (const char &e) {
-      std::cerr << "error: " << e << '\n';
-      exit(EXIT_FAILURE);
-    }
+    load("./data/fighter.png", image::fighter);
+    load("./data/mons13.png", image::mons13);
+    load("./data/boss.png", image::boss);
+    load("./data/oval_re.png", image::oval_re);
+    load("./data/bm01.png", image::bm01);
+    load("./data/effect01.png", image::effect01);
+    load("./data/snow.png", image::snow);
+    load("./data/72.png", image::map);
   }
 
   inline SDL_Texture *get(SDL_Renderer *renderer,
