@@ -41,6 +41,7 @@ class Area776 {
     pause,
   };
 
+  const bool fullscreen_mode_;
   const bool debug_mode_;
 
   SDL_Window *window_;
@@ -231,8 +232,9 @@ class Area776 {
   }
 
  public:
-  Area776(const bool debug_mode) noexcept
-      : debug_mode_(debug_mode),
+  Area776(const bool fullscreen_mode, const bool debug_mode) noexcept
+      : fullscreen_mode_(fullscreen_mode),
+        debug_mode_(debug_mode),
         blink_count_(0),
         game_count_(0),
         game_state_(game_state::title) {
@@ -241,16 +243,13 @@ class Area776 {
       exit(EXIT_FAILURE);
     }
 
-    if (debug_mode_) {
-      window_ = SDL_CreateWindow("Area776", SDL_WINDOWPOS_UNDEFINED,
-                                 SDL_WINDOWPOS_UNDEFINED, screen::width,
-                                 screen::height, SDL_WINDOW_SHOWN);
-    } else {
-      window_ = SDL_CreateWindow("Area776", SDL_WINDOWPOS_UNDEFINED,
-                                 SDL_WINDOWPOS_UNDEFINED, screen::width,
-                                 screen::height,
-                                 SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN);
+    Uint32 flags = SDL_WINDOW_SHOWN;
+    if (fullscreen_mode_) {
+      flags |= SDL_WINDOW_FULLSCREEN;
     }
+    window_ = SDL_CreateWindow("Area776", SDL_WINDOWPOS_UNDEFINED,
+                               SDL_WINDOWPOS_UNDEFINED, screen::width,
+                               screen::height, flags);
     if (window_ == nullptr) {
       std::cerr << "error: " << SDL_GetError() << '\n';
       exit(EXIT_FAILURE);
