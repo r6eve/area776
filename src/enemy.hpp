@@ -211,7 +211,8 @@ class Enemies {
         }
         const double rot_angle = shot_pitch * PI / 180;
         p.rot(rot_angle);
-        Mix_PlayChannel(-1, mixer_manager.get_se(se_type::enemy_shoot), 0);
+        Mix_PlayChannel(se_type::enemy_shoot,
+                        mixer_manager.get_se(se_type::enemy_shoot), 0);
       }
     }
   }

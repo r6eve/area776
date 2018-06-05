@@ -37,9 +37,12 @@ bool check_enemyshots_hit_fighter(const enemy_type enemy_select,
 
         fighter.set_life(fighter.get_life() - 1);
         if (fighter.get_life() <= 0) {
-          Mix_PlayChannel(-1, mixer_manager.get_se(se_type::fighter_down), 0);
+          Mix_HaltChannel(-1);
+          Mix_PlayChannel(se_type::fighter_down,
+                          mixer_manager.get_se(se_type::fighter_down), 0);
         } else {
-          Mix_PlayChannel(-1, mixer_manager.get_se(se_type::fighter_hit), 0);
+          Mix_PlayChannel(se_type::fighter_hit,
+                          mixer_manager.get_se(se_type::fighter_hit), 0);
         }
         bullet.make_invisible();
         effects.make_visible(fighter_pos - 50);
@@ -61,9 +64,12 @@ bool check_enemyshots_hit_fighter(const enemy_type enemy_select,
 
         fighter.set_life(fighter.get_life() - 1);
         if (fighter.get_life() <= 0) {
-          Mix_PlayChannel(-1, mixer_manager.get_se(se_type::fighter_down), 0);
+          Mix_HaltChannel(-1);
+          Mix_PlayChannel(se_type::fighter_down,
+                          mixer_manager.get_se(se_type::fighter_down), 0);
         } else {
-          Mix_PlayChannel(-1, mixer_manager.get_se(se_type::fighter_hit), 0);
+          Mix_PlayChannel(se_type::fighter_hit,
+                          mixer_manager.get_se(se_type::fighter_hit), 0);
         }
         bullet.make_invisible();
         effects.make_visible(fighter_pos - 50);
@@ -102,7 +108,8 @@ bool check_fightershots_hit_enemy(Fighter &fighter, Enemies &enemies,
       }
 
       enemies.set_life(enemies.get_life() - 1);
-      Mix_PlayChannel(-1, mixer_manager.get_se(se_type::enemy_hit), 0);
+      Mix_PlayChannel(se_type::enemy_hit,
+                      mixer_manager.get_se(se_type::enemy_hit), 0);
       enemy.make_invisible();
       bullet.make_invisible();
       effects.make_visible(bullet_pos + Point{10 / 2, 24 / 2} - 80);
@@ -134,9 +141,12 @@ bool check_fightershots_hit_boss(Fighter &fighter, Boss &boss, Effects &effects,
 
     boss.set_life(boss.get_life() - 1);
     if (boss.get_life() <= 0) {
-      Mix_PlayChannel(-1, mixer_manager.get_se(se_type::boss_down), 0);
+      Mix_HaltChannel(-1);
+      Mix_PlayChannel(se_type::boss_down,
+                      mixer_manager.get_se(se_type::boss_down), 0);
     } else {
-      Mix_PlayChannel(-1, mixer_manager.get_se(se_type::enemy_hit), 0);
+      Mix_PlayChannel(se_type::enemy_hit,
+                      mixer_manager.get_se(se_type::enemy_hit), 0);
     }
     bullet.make_invisible();
     effects.make_visible(bullet_pos + Point{10 / 2, 24 / 2} - 80);

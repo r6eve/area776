@@ -186,7 +186,8 @@ class Boss {
         for (int i = 0; i < 48; ++i) {
           bullets[i].shoot_attack01(pos_, i);
         }
-        Mix_PlayChannel(-1, mixer_manager.get_se(se_type::enemy_shoot), 0);
+        Mix_PlayChannel(se_type::enemy_shoot,
+                        mixer_manager.get_se(se_type::enemy_shoot), 0);
         shot_count_ = 0;
         shot_rot_ = 0;
         if (state_ == boss_state::attack01) {

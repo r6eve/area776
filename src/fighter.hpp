@@ -63,7 +63,8 @@ class Fighter {
       view_p_ = true;
       pos_ = fighter_pos + Point{25, 10};
       move_ = Point{0, -16};
-      Mix_PlayChannel(-1, mixer_manager.get_se(se_type::fighter_shoot), 0);
+      Mix_PlayChannel(se_type::fighter_shoot,
+                      mixer_manager.get_se(se_type::fighter_shoot), 0);
       return true;
     }
 
