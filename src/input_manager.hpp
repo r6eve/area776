@@ -1,6 +1,7 @@
 #ifndef INPUT_MANAGER_H
 #define INPUT_MANAGER_H
 
+#include <iostream>
 #include "def_global.hpp"
 
 namespace input_device {
@@ -25,9 +26,19 @@ class InputManager {
 
  public:
   InputManager() noexcept {
-    if (SDL_NumJoysticks() > 0) {
-      joystick_ = SDL_JoystickOpen(0);
+    const int n = SDL_NumJoysticks();
+    if (n < 0) {
+      std::cerr << "error: " << SDL_GetError() << '\n';
+      exit(EXIT_FAILURE);
     }
+
+    if (n == 0) {
+      // JoySticks not found.
+      return;
+    }
+
+    // Only use one of JoySticks.
+    joystick_ = SDL_JoystickOpen(0);
   }
 
   inline void update() {
