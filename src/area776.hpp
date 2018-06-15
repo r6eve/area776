@@ -2,6 +2,7 @@
 #define AREA776_H
 
 #include <iomanip>
+#include <memory>
 #include <sstream>
 #include "boss.hpp"
 #include "def_global.hpp"
@@ -52,7 +53,7 @@ class Area776 {
   int game_level_;
   enemy_type enemy_select_;
 
-  Fighter fighter_;
+  std::unique_ptr<Fighter> fighter_;
   Enemies enemies_;
   Boss boss_;
   Effects effects_;
@@ -123,8 +124,8 @@ class Area776 {
     }
 
     std::stringstream ss;
-    ss << "LIFE:  " << fighter_.get_life();
-    draw_text(font_size::x16, rgb::white, fighter_.get_pos() + Point{0, 55},
+    ss << "LIFE:  " << fighter_->get_life();
+    draw_text(font_size::x16, rgb::white, fighter_->get_pos() + Point{0, 55},
               ss.str().c_str());
   }
 
@@ -261,6 +262,7 @@ class Area776 {
       exit(EXIT_FAILURE);
     }
 
+    fighter_ = std::make_unique<Fighter>(Fighter(renderer_));
     SDL_ShowCursor(SDL_DISABLE);
   }
 

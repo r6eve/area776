@@ -11,6 +11,7 @@ class Fighter {
   Point pos_;
   int life_;
   unsigned char shot_timer_;
+  SDL_Renderer *renderer_;
 
  public:
   class Bullet {
@@ -77,7 +78,7 @@ class Fighter {
 
   Bullet bullets[FIGHTER_SHOT_MAX];
 
-  Fighter() noexcept {}
+  Fighter(SDL_Renderer *renderer) noexcept : renderer_(renderer) {}
 
   inline void init() noexcept {
     pos_ = Point{screen::width / 2 - 40, screen::height - 90};
@@ -137,9 +138,8 @@ class Fighter {
     shot_timer_ = 8;
   }
 
-  inline void draw(SDL_Renderer *renderer,
-                   const ImageManager &image_manager) const noexcept {
-    SDL_Texture *fighter_texture = image_manager.get(renderer, image::fighter);
+  inline void draw(const ImageManager &image_manager) const noexcept {
+    SDL_Texture *fighter_texture = image_manager.get(renderer_, image::fighter);
     SDL_Rect dst;
     dst.x = static_cast<Sint16>(pos_.x);
     dst.y = static_cast<Sint16>(pos_.y);
@@ -149,10 +149,10 @@ class Fighter {
     src.y = 0;
     src.w = dst.w;
     src.h = dst.h;
-    SDL_RenderCopy(renderer, fighter_texture, &src, &dst);
+    SDL_RenderCopy(renderer_, fighter_texture, &src, &dst);
     SDL_DestroyTexture(fighter_texture);
     for (const auto &bullet : bullets) {
-      bullet.draw(renderer, image_manager);
+      bullet.draw(renderer_, image_manager);
     }
   }
 

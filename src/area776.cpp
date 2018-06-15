@@ -94,7 +94,7 @@ void Area776::game_title() noexcept {
       wipe_.draw(renderer_);
       if (wipe_.update()) {
         Mix_PlayMusic(mixer_manager_.get_music(), -1);
-        fighter_.init();
+        fighter_->init();
         enemies_.init(debug_mode_);
         effects_.init();
         snow_.init();
@@ -103,7 +103,7 @@ void Area776::game_title() noexcept {
         game_state_ = game_state::start;
         game_level_ = 1;
         enemy_select_ = enemy_type::enemy;
-        fighter_.set_life(20);
+        fighter_->set_life(20);
         srand((unsigned int)time(nullptr));
       }
       break;
@@ -115,9 +115,9 @@ void Area776::game_title() noexcept {
 }
 
 void Area776::game_start() noexcept {
-  fighter_.update(input_manager_, mixer_manager_);
+  fighter_->update(input_manager_, mixer_manager_);
   draw_map();
-  fighter_.draw(renderer_, image_manager_);
+  fighter_->draw(image_manager_);
 
   switch (game_count_) {
     case 0: {
@@ -157,8 +157,8 @@ void Area776::play_game() noexcept {
     game_state_ = game_state::pause;
   }
 
-  fighter_.update(input_manager_, mixer_manager_);
-  if (util::check_enemyshots_hit_fighter(enemy_select_, fighter_, enemies_,
+  fighter_->update(input_manager_, mixer_manager_);
+  if (util::check_enemyshots_hit_fighter(enemy_select_, *fighter_, enemies_,
                                          boss_, effects_, mixer_manager_)) {
     game_state_ = game_state::gameover;
   }
@@ -167,8 +167,8 @@ void Area776::play_game() noexcept {
 
   switch (enemy_select_) {
     case enemy_type::enemy: {
-      enemies_.update(mixer_manager_, fighter_);
-      if (util::check_fightershots_hit_enemy(fighter_, enemies_, effects_,
+      enemies_.update(mixer_manager_, *fighter_);
+      if (util::check_fightershots_hit_enemy(*fighter_, enemies_, effects_,
                                              mixer_manager_)) {
         enemy_select_ = enemy_type::boss;
       }
@@ -196,7 +196,7 @@ void Area776::play_game() noexcept {
       } else {
         boss_.update(mixer_manager_);
 
-        if (util::check_fightershots_hit_boss(fighter_, boss_, effects_,
+        if (util::check_fightershots_hit_boss(*fighter_, boss_, effects_,
                                               mixer_manager_)) {
           game_state_ = game_state::clear;
           game_count_ = 0;
@@ -211,15 +211,15 @@ void Area776::play_game() noexcept {
       break;
   }
 
-  fighter_.draw(renderer_, image_manager_);
+  fighter_->draw(image_manager_);
   effects_.draw(renderer_, image_manager_);
   draw_life();
 }
 
 void Area776::game_clear() noexcept {
-  fighter_.update(input_manager_, mixer_manager_);
+  fighter_->update(input_manager_, mixer_manager_);
   draw_map();
-  fighter_.draw(renderer_, image_manager_);
+  fighter_->draw(image_manager_);
   draw_life();
 
   if (game_count_ == 0) {
@@ -251,7 +251,7 @@ void Area776::game_clear() noexcept {
     return;
   }
 
-  fighter_.init();
+  fighter_->init();
   enemies_.init(debug_mode_);
   boss_.init();
   effects_.init();
@@ -296,7 +296,7 @@ void Area776::game_pause() noexcept {
       break;
   }
 
-  fighter_.draw(renderer_, image_manager_);
+  fighter_->draw(image_manager_);
   effects_.draw(renderer_, image_manager_);
   draw_life();
   draw_translucence();
