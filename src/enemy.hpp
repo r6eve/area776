@@ -7,6 +7,7 @@
 #include "mixer_manager.hpp"
 
 class Enemies {
+  SDL_Renderer *renderer_;
   int life_;
 
  public:
@@ -159,7 +160,7 @@ class Enemies {
   Enemy enemies[ENEMY_MAX];
   Bullet bullets[ENEMY_SHOT_MAX];
 
-  Enemies() noexcept {}
+  Enemies(SDL_Renderer *renderer) noexcept : renderer_(renderer) {}
 
   inline void init(const bool debug_mode) noexcept {
     for (auto &enemy : enemies) {
@@ -217,13 +218,12 @@ class Enemies {
     }
   }
 
-  inline void draw(SDL_Renderer *renderer,
-                   const ImageManager &image_manager) const noexcept {
+  inline void draw(const ImageManager &image_manager) const noexcept {
     for (const auto &enemy : enemies) {
-      enemy.draw(renderer, image_manager);
+      enemy.draw(renderer_, image_manager);
     }
     for (const auto &bullet : bullets) {
-      bullet.draw(renderer, image_manager);
+      bullet.draw(renderer_, image_manager);
     }
   }
 

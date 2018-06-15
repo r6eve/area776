@@ -14,6 +14,7 @@ class Boss {
   };
 
   boss_state state_;
+  SDL_Renderer *renderer_;
   Point pos_;
   int life_;
   int move_;
@@ -119,7 +120,7 @@ class Boss {
 
   Bullet bullets[BOSS_SHOT_MAX];
 
-  Boss() noexcept {}
+  Boss(SDL_Renderer *renderer) noexcept : renderer_(renderer) {}
 
   inline void init() noexcept {
     state_ = boss_state::automove;
@@ -200,9 +201,8 @@ class Boss {
     }
   }
 
-  inline void draw(SDL_Renderer *renderer,
-                   const ImageManager &image_manager) const noexcept {
-    SDL_Texture *boss_texture = image_manager.get(renderer, image::boss);
+  inline void draw(const ImageManager &image_manager) const noexcept {
+    SDL_Texture *boss_texture = image_manager.get(renderer_, image::boss);
     SDL_Rect dst;
     dst.x = static_cast<Sint16>(pos_.x);
     dst.y = static_cast<Sint16>(pos_.y);
@@ -212,11 +212,11 @@ class Boss {
     src.y = 0;
     src.w = dst.w;
     src.h = dst.h;
-    SDL_RenderCopy(renderer, boss_texture, &src, &dst);
+    SDL_RenderCopy(renderer_, boss_texture, &src, &dst);
     SDL_DestroyTexture(boss_texture);
 
     for (const auto &bullet : bullets) {
-      bullet.draw(renderer, image_manager);
+      bullet.draw(renderer_, image_manager);
     }
   }
 

@@ -54,12 +54,11 @@ class Area776 {
   enemy_type enemy_select_;
 
   std::unique_ptr<Fighter> fighter_;
-  Enemies enemies_;
-  Boss boss_;
-  Effects effects_;
-
-  Wipe wipe_;
-  Snow snow_;
+  std::unique_ptr<Enemies> enemies_;
+  std::unique_ptr<Boss> boss_;
+  std::unique_ptr<Effects> effects_;
+  std::unique_ptr<Wipe> wipe_;
+  std::unique_ptr<Snow> snow_;
   FontManager font_manager_;
   ImageManager image_manager_;
   InputManager input_manager_;
@@ -108,19 +107,16 @@ class Area776 {
     switch (enemy_select_) {
       case enemy_type::enemy: {
         std::stringstream ss;
-        ss << "ENEMY LIFE:  " << enemies_.get_life();
+        ss << "ENEMY LIFE:  " << enemies_->get_life();
         draw_text(font_size::x16, rgb::white, Point{32, 24}, ss.str().c_str());
         break;
       }
       case enemy_type::boss: {
         std::stringstream ss;
-        ss << "BOSS LIFE:  " << boss_.get_life();
+        ss << "BOSS LIFE:  " << boss_->get_life();
         draw_text(font_size::x16, rgb::white, Point{32, 24}, ss.str().c_str());
         break;
       }
-      default:
-        // NOTREACHED
-        break;
     }
 
     std::stringstream ss;
@@ -263,6 +259,11 @@ class Area776 {
     }
 
     fighter_ = std::make_unique<Fighter>(Fighter(renderer_));
+    enemies_ = std::make_unique<Enemies>(Enemies(renderer_));
+    boss_ = std::make_unique<Boss>(Boss(renderer_));
+    effects_ = std::make_unique<Effects>(Effects(renderer_));
+    wipe_ = std::make_unique<Wipe>(Wipe(renderer_));
+    snow_ = std::make_unique<Snow>(Snow(renderer_));
     SDL_ShowCursor(SDL_DISABLE);
   }
 

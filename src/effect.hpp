@@ -66,9 +66,10 @@ class Effects {
   };
 
   Effect effects[EFFECT_MAX];
+  SDL_Renderer *renderer_;
 
  public:
-  Effects() noexcept {}
+  Effects(SDL_Renderer *renderer) noexcept : renderer_(renderer) {}
 
   inline void init() noexcept {
     for (auto &effect : effects) {
@@ -90,10 +91,9 @@ class Effects {
     }
   }
 
-  inline void draw(SDL_Renderer *renderer,
-                   const ImageManager &image_manager) const noexcept {
+  inline void draw(const ImageManager &image_manager) const noexcept {
     for (const auto &effect : effects) {
-      effect.draw(renderer, image_manager);
+      effect.draw(renderer_, image_manager);
     }
   }
 

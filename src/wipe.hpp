@@ -9,9 +9,10 @@ class Wipe {
   wipe_type wipe_variation_;
   unsigned int wipe_count_;
   unsigned int wipe_count_reach_;
+  SDL_Renderer *renderer_;
 
  public:
-  Wipe() noexcept {}
+  Wipe(SDL_Renderer *renderer) noexcept : renderer_(renderer) {}
 
   /**
    * Set wipe-in mode for drawing.
@@ -35,12 +36,12 @@ class Wipe {
    * Start drawing. Before execute this function, call set_wipe_in() or
    * set_wipe_out().
    */
-  inline void draw(SDL_Renderer *renderer) const noexcept {
+  inline void draw() const noexcept {
     SDL_Rect dst = {0, 0, screen::width, static_cast<Uint16>(wipe_count_)};
     const unsigned int dy = screen::height / 10;
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_SetRenderDrawColor(renderer_, 0, 0, 0, 255);
     for (dst.y = 0; dst.y < screen::height; dst.y += dy) {
-      SDL_RenderFillRect(renderer, &dst);
+      SDL_RenderFillRect(renderer_, &dst);
     }
   }
 

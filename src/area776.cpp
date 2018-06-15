@@ -53,14 +53,14 @@ void Area776::game_title() noexcept {
   const char *message_str = "P r e s s  S p a c e  K e y";
   switch (game_count_) {
     case 0: {
-      wipe_.set_wipe_in();
+      wipe_->set_wipe_in();
       ++game_count_;
       break;
     }
     case 1: {
       draw_text(font_size::x36, rgb::dark_red, title_pos, title_str);
-      wipe_.draw(renderer_);
-      if (wipe_.update()) {
+      wipe_->draw();
+      if (wipe_->update()) {
         ++game_count_;
       }
       break;
@@ -80,7 +80,7 @@ void Area776::game_title() noexcept {
         }
       }
       if (input_manager_.press_key_p(input_device::space)) {
-        wipe_.set_wipe_out();
+        wipe_->set_wipe_out();
         ++game_count_;
       }
       break;
@@ -88,14 +88,14 @@ void Area776::game_title() noexcept {
     case 3: {
       draw_text(font_size::x36, rgb::dark_red, title_pos, title_str);
       draw_text(font_size::x16, rgb::black, message_pos, message_str);
-      wipe_.draw(renderer_);
-      if (wipe_.update()) {
+      wipe_->draw();
+      if (wipe_->update()) {
         Mix_PlayMusic(mixer_manager_.get_music(), -1);
         fighter_->init();
-        enemies_.init(debug_mode_);
-        effects_.init();
-        snow_.init();
-        boss_.init();
+        enemies_->init(debug_mode_);
+        effects_->init();
+        snow_->init();
+        boss_->init();
         game_count_ = 0;
         game_state_ = game_state::start;
         game_level_ = 1;
@@ -118,14 +118,14 @@ void Area776::game_start() noexcept {
 
   switch (game_count_) {
     case 0: {
-      wipe_.set_wipe_in();
-      wipe_.draw(renderer_);
+      wipe_->set_wipe_in();
+      wipe_->draw();
       ++game_count_;
       break;
     }
     case 1: {
-      wipe_.draw(renderer_);
-      if (wipe_.update()) {
+      wipe_->draw();
+      if (wipe_->update()) {
         ++game_count_;
       }
       break;
@@ -155,23 +155,23 @@ void Area776::play_game() noexcept {
   }
 
   fighter_->update(input_manager_, mixer_manager_);
-  if (util::check_enemyshots_hit_fighter(enemy_select_, *fighter_, enemies_,
-                                         boss_, effects_, mixer_manager_)) {
+  if (util::check_enemyshots_hit_fighter(enemy_select_, *fighter_, *enemies_,
+                                         *boss_, *effects_, mixer_manager_)) {
     game_state_ = game_state::gameover;
   }
-  effects_.update();
+  effects_->update();
   draw_map();
 
   switch (enemy_select_) {
     case enemy_type::enemy: {
-      enemies_.update(mixer_manager_, *fighter_);
-      if (util::check_fightershots_hit_enemy(*fighter_, enemies_, effects_,
+      enemies_->update(mixer_manager_, *fighter_);
+      if (util::check_fightershots_hit_enemy(*fighter_, *enemies_, *effects_,
                                              mixer_manager_)) {
         enemy_select_ = enemy_type::boss;
       }
-      snow_.update();
-      snow_.draw(renderer_, image_manager_);
-      enemies_.draw(renderer_, image_manager_);
+      snow_->update();
+      snow_->draw(image_manager_);
+      enemies_->draw(image_manager_);
       break;
     }
     case enemy_type::boss: {
@@ -191,22 +191,22 @@ void Area776::play_game() noexcept {
           ++blink_count_;
         }
       } else {
-        boss_.update(mixer_manager_);
+        boss_->update(mixer_manager_);
 
-        if (util::check_fightershots_hit_boss(*fighter_, boss_, effects_,
+        if (util::check_fightershots_hit_boss(*fighter_, *boss_, *effects_,
                                               mixer_manager_)) {
           game_state_ = game_state::clear;
           game_count_ = 0;
         }
 
-        boss_.draw(renderer_, image_manager_);
+        boss_->draw(image_manager_);
       }
       break;
     }
   }
 
   fighter_->draw(image_manager_);
-  effects_.draw(renderer_, image_manager_);
+  effects_->draw(image_manager_);
   draw_life();
 }
 
@@ -217,14 +217,14 @@ void Area776::game_clear() noexcept {
   draw_life();
 
   if (game_count_ == 0) {
-    wipe_.set_wipe_out();
-    wipe_.draw(renderer_);
+    wipe_->set_wipe_out();
+    wipe_->draw();
     ++game_count_;
     return;
   }
 
-  wipe_.draw(renderer_);
-  if (!wipe_.update()) {
+  wipe_->draw();
+  if (!wipe_->update()) {
     return;
   }
 
@@ -235,8 +235,8 @@ void Area776::game_clear() noexcept {
     draw_text(font_size::x36, rgb::red, Point{150, 180}, "G A M E  C L E A R");
     ++game_count_;
     if (game_count_ > 200) {
-      wipe_.draw(renderer_);
-      if (wipe_.update()) {
+      wipe_->draw();
+      if (wipe_->update()) {
         game_count_ = 0;
         game_state_ = game_state::title;
         Mix_HaltMusic();
@@ -246,10 +246,10 @@ void Area776::game_clear() noexcept {
   }
 
   fighter_->init();
-  enemies_.init(debug_mode_);
-  boss_.init();
-  effects_.init();
-  snow_.init();
+  enemies_->init(debug_mode_);
+  boss_->init();
+  effects_->init();
+  snow_->init();
   game_count_ = 0;
   game_state_ = game_state::start;
   ++game_level_;
@@ -262,8 +262,8 @@ void Area776::game_over() noexcept {
     return;
   }
 
-  wipe_.draw(renderer_);
-  if (!wipe_.update()) {
+  wipe_->draw();
+  if (!wipe_->update()) {
     return;
   }
 
@@ -277,18 +277,18 @@ void Area776::game_pause() noexcept {
 
   switch (enemy_select_) {
     case enemy_type::enemy: {
-      snow_.draw(renderer_, image_manager_);
-      enemies_.draw(renderer_, image_manager_);
+      snow_->draw(image_manager_);
+      enemies_->draw(image_manager_);
       break;
     }
     case enemy_type::boss: {
-      boss_.draw(renderer_, image_manager_);
+      boss_->draw(image_manager_);
       break;
     }
   }
 
   fighter_->draw(image_manager_);
-  effects_.draw(renderer_, image_manager_);
+  effects_->draw(image_manager_);
   draw_life();
   draw_translucence();
   if (input_manager_.edge_key_p(input_device::space)) {
