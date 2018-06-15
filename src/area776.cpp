@@ -114,7 +114,7 @@ void Area776::game_title() noexcept {
 void Area776::game_start() noexcept {
   fighter_->update(input_manager_, mixer_manager_);
   draw_map();
-  fighter_->draw(image_manager_);
+  fighter_->draw();
 
   switch (game_count_) {
     case 0: {
@@ -170,8 +170,8 @@ void Area776::play_game() noexcept {
         enemy_select_ = enemy_type::boss;
       }
       snow_->update();
-      snow_->draw(image_manager_);
-      enemies_->draw(image_manager_);
+      snow_->draw();
+      enemies_->draw();
       break;
     }
     case enemy_type::boss: {
@@ -199,21 +199,21 @@ void Area776::play_game() noexcept {
           game_count_ = 0;
         }
 
-        boss_->draw(image_manager_);
+        boss_->draw();
       }
       break;
     }
   }
 
-  fighter_->draw(image_manager_);
-  effects_->draw(image_manager_);
+  fighter_->draw();
+  effects_->draw();
   draw_life();
 }
 
 void Area776::game_clear() noexcept {
   fighter_->update(input_manager_, mixer_manager_);
   draw_map();
-  fighter_->draw(image_manager_);
+  fighter_->draw();
   draw_life();
 
   if (game_count_ == 0) {
@@ -277,18 +277,18 @@ void Area776::game_pause() noexcept {
 
   switch (enemy_select_) {
     case enemy_type::enemy: {
-      snow_->draw(image_manager_);
-      enemies_->draw(image_manager_);
+      snow_->draw();
+      enemies_->draw();
       break;
     }
     case enemy_type::boss: {
-      boss_->draw(image_manager_);
+      boss_->draw();
       break;
     }
   }
 
-  fighter_->draw(image_manager_);
-  effects_->draw(image_manager_);
+  fighter_->draw();
+  effects_->draw();
   draw_life();
   draw_translucence();
   if (input_manager_.edge_key_p(input_device::space)) {

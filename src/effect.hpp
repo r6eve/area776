@@ -38,8 +38,7 @@ class Effects {
         return;
       }
       const int n = count_ / 2;
-      SDL_Texture *effect_texture =
-          image_manager.get(renderer, image::effect01);
+      SDL_Texture *effect_texture = image_manager.get(image::effect01);
       SDL_Rect dst = {static_cast<Sint16>(pos_.x), static_cast<Sint16>(pos_.y),
                       effect_size::w, effect_size::h};
       SDL_Rect src = {static_cast<Sint16>(n % 4 * effect_size::w),
@@ -67,9 +66,11 @@ class Effects {
 
   Effect effects[EFFECT_MAX];
   SDL_Renderer *renderer_;
+  const ImageManager *image_manager_;
 
  public:
-  Effects(SDL_Renderer *renderer) noexcept : renderer_(renderer) {}
+  Effects(SDL_Renderer *renderer, const ImageManager *image_manager) noexcept
+      : renderer_(renderer), image_manager_(image_manager) {}
 
   inline void init() noexcept {
     for (auto &effect : effects) {
@@ -91,9 +92,9 @@ class Effects {
     }
   }
 
-  inline void draw(const ImageManager &image_manager) const noexcept {
+  inline void draw() const noexcept {
     for (const auto &effect : effects) {
-      effect.draw(renderer_, image_manager);
+      effect.draw(renderer_, *image_manager_);
     }
   }
 

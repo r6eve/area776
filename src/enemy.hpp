@@ -8,6 +8,7 @@
 
 class Enemies {
   SDL_Renderer *renderer_;
+  const ImageManager *image_manager_;
   int life_;
 
  public:
@@ -28,7 +29,7 @@ class Enemies {
         return;
       }
 
-      SDL_Texture *enemy_texture = image_manager.get(renderer, image::mons13);
+      SDL_Texture *enemy_texture = image_manager.get(image::mons13);
       SDL_Rect dst;
       dst.x = static_cast<Sint16>(pos_.x);
       dst.y = static_cast<Sint16>(pos_.y);
@@ -108,7 +109,7 @@ class Enemies {
         return;
       }
 
-      SDL_Texture *bullet_texture = image_manager.get(renderer, image::bm01);
+      SDL_Texture *bullet_texture = image_manager.get(image::bm01);
       SDL_Rect dst;
       dst.x = static_cast<Sint16>(pos_.x);
       dst.y = static_cast<Sint16>(pos_.y);
@@ -160,7 +161,8 @@ class Enemies {
   Enemy enemies[ENEMY_MAX];
   Bullet bullets[ENEMY_SHOT_MAX];
 
-  Enemies(SDL_Renderer *renderer) noexcept : renderer_(renderer) {}
+  Enemies(SDL_Renderer *renderer, const ImageManager *image_manager) noexcept
+      : renderer_(renderer), image_manager_(image_manager) {}
 
   inline void init(const bool debug_mode) noexcept {
     for (auto &enemy : enemies) {
@@ -218,12 +220,12 @@ class Enemies {
     }
   }
 
-  inline void draw(const ImageManager &image_manager) const noexcept {
+  inline void draw() const noexcept {
     for (const auto &enemy : enemies) {
-      enemy.draw(renderer_, image_manager);
+      enemy.draw(renderer_, *image_manager_);
     }
     for (const auto &bullet : bullets) {
-      bullet.draw(renderer_, image_manager);
+      bullet.draw(renderer_, *image_manager_);
     }
   }
 

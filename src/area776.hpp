@@ -53,6 +53,7 @@ class Area776 {
   int game_level_;
   enemy_type enemy_select_;
 
+  std::unique_ptr<ImageManager> image_manager_;
   std::unique_ptr<Fighter> fighter_;
   std::unique_ptr<Enemies> enemies_;
   std::unique_ptr<Boss> boss_;
@@ -60,7 +61,6 @@ class Area776 {
   std::unique_ptr<Wipe> wipe_;
   std::unique_ptr<Snow> snow_;
   FontManager font_manager_;
-  ImageManager image_manager_;
   InputManager input_manager_;
   MixerManager mixer_manager_;
 
@@ -184,7 +184,7 @@ class Area776 {
   }
 
   inline void draw_map() noexcept {
-    SDL_Texture *map_texture = image_manager_.get(renderer_, image::map);
+    SDL_Texture *map_texture = image_manager_->get(image::map);
     SDL_Rect src = {0, 0, screen::width, screen::height};
     SDL_Rect dst = {0, 0, screen::width, screen::height};
     SDL_RenderCopy(renderer_, map_texture, &src, &dst);
@@ -258,12 +258,13 @@ class Area776 {
       exit(EXIT_FAILURE);
     }
 
-    fighter_ = std::make_unique<Fighter>(Fighter(renderer_));
-    enemies_ = std::make_unique<Enemies>(Enemies(renderer_));
-    boss_ = std::make_unique<Boss>(Boss(renderer_));
-    effects_ = std::make_unique<Effects>(Effects(renderer_));
-    wipe_ = std::make_unique<Wipe>(Wipe(renderer_));
-    snow_ = std::make_unique<Snow>(Snow(renderer_));
+    image_manager_ = std::make_unique<ImageManager>(renderer_);
+    fighter_ = std::make_unique<Fighter>(renderer_, image_manager_.get());
+    enemies_ = std::make_unique<Enemies>(renderer_, image_manager_.get());
+    boss_ = std::make_unique<Boss>(renderer_, image_manager_.get());
+    effects_ = std::make_unique<Effects>(renderer_, image_manager_.get());
+    wipe_ = std::make_unique<Wipe>(renderer_);
+    snow_ = std::make_unique<Snow>(renderer_, image_manager_.get());
     SDL_ShowCursor(SDL_DISABLE);
   }
 

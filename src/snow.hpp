@@ -16,9 +16,11 @@ class Snow {
 
   Snow_data snows_[snow_count];
   SDL_Renderer *renderer_;
+  const ImageManager *image_manager_;
 
  public:
-  Snow(SDL_Renderer *renderer) noexcept : renderer_(renderer) {}
+  Snow(SDL_Renderer *renderer, const ImageManager *image_manager) noexcept
+      : renderer_(renderer), image_manager_(image_manager) {}
 
   inline void init() noexcept {
     for (auto &snow : snows_) {
@@ -50,8 +52,8 @@ class Snow {
     }
   }
 
-  inline void draw(const ImageManager &image_manager) const noexcept {
-    SDL_Texture *snow_texture = image_manager.get(renderer_, image::snow);
+  inline void draw() const noexcept {
+    SDL_Texture *snow_texture = image_manager_->get(image::snow);
     for (const auto &snow : snows_) {
       if (!snow.view_p) {
         continue;
