@@ -15,12 +15,11 @@ class Snow {
   };
 
   Snow_data snows_[snow_count];
-  SDL_Renderer *renderer_;
   const ImageManager *image_manager_;
 
  public:
-  Snow(SDL_Renderer *renderer, const ImageManager *image_manager) noexcept
-      : renderer_(renderer), image_manager_(image_manager) {}
+  Snow(const ImageManager *image_manager) noexcept
+      : image_manager_(image_manager) {}
 
   inline void init() noexcept {
     for (auto &snow : snows_) {
@@ -68,7 +67,7 @@ class Snow {
       src.y = 0;
       src.w = dst.w;
       src.h = dst.h;
-      SDL_RenderCopy(renderer_, snow_texture, &src, &dst);
+      image_manager_->render_copy(*snow_texture, src, dst);
     }
     SDL_DestroyTexture(snow_texture);
   }

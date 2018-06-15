@@ -32,8 +32,7 @@ class Effects {
       }
     }
 
-    inline void draw(SDL_Renderer *renderer,
-                     const ImageManager &image_manager) const noexcept {
+    inline void draw(const ImageManager &image_manager) const noexcept {
       if (!view_p_) {
         return;
       }
@@ -44,7 +43,7 @@ class Effects {
       SDL_Rect src = {static_cast<Sint16>(n % 4 * effect_size::w),
                       static_cast<Sint16>(n / 4 * effect_size::h),
                       effect_size::w, effect_size::h};
-      SDL_RenderCopy(renderer, effect_texture, &src, &dst);
+      image_manager.render_copy(*effect_texture, src, dst);
       SDL_DestroyTexture(effect_texture);
     }
 
@@ -65,12 +64,11 @@ class Effects {
   };
 
   Effect effects[EFFECT_MAX];
-  SDL_Renderer *renderer_;
   const ImageManager *image_manager_;
 
  public:
-  Effects(SDL_Renderer *renderer, const ImageManager *image_manager) noexcept
-      : renderer_(renderer), image_manager_(image_manager) {}
+  Effects(const ImageManager *image_manager) noexcept
+      : image_manager_(image_manager) {}
 
   inline void init() noexcept {
     for (auto &effect : effects) {
@@ -94,7 +92,7 @@ class Effects {
 
   inline void draw() const noexcept {
     for (const auto &effect : effects) {
-      effect.draw(renderer_, *image_manager_);
+      effect.draw(*image_manager_);
     }
   }
 

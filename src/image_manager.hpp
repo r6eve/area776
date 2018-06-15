@@ -1,6 +1,7 @@
 #ifndef IMAGE_MANAGER_H
 #define IMAGE_MANAGER_H
 
+#include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <iostream>
 #include <vector>
@@ -61,6 +62,11 @@ class ImageManager {
 
   inline SDL_Texture *get(const unsigned char image_type) const noexcept {
     return SDL_CreateTextureFromSurface(renderer_, images_[image_type]);
+  }
+
+  inline void render_copy(SDL_Texture &texture, const SDL_Rect &src,
+                          const SDL_Rect &dst) const noexcept {
+    SDL_RenderCopy(renderer_, &texture, &src, &dst);
   }
 
   ~ImageManager() noexcept { atexit(IMG_Quit); }

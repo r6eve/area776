@@ -7,7 +7,6 @@
 #include "mixer_manager.hpp"
 
 class Enemies {
-  SDL_Renderer *renderer_;
   const ImageManager *image_manager_;
   int life_;
 
@@ -23,8 +22,7 @@ class Enemies {
 
     inline void init() noexcept { view_p_ = false; }
 
-    inline void draw(SDL_Renderer *renderer,
-                     const ImageManager &image_manager) const noexcept {
+    inline void draw(const ImageManager &image_manager) const noexcept {
       if (!view_p_) {
         return;
       }
@@ -39,7 +37,7 @@ class Enemies {
       src.y = 0;
       src.w = dst.w;
       src.h = dst.h;
-      SDL_RenderCopy(renderer, enemy_texture, &src, &dst);
+      image_manager.render_copy(*enemy_texture, src, dst);
       SDL_DestroyTexture(enemy_texture);
     }
 
@@ -103,8 +101,7 @@ class Enemies {
 
     inline void init() noexcept { view_p_ = false; }
 
-    inline void draw(SDL_Renderer *renderer,
-                     const ImageManager &image_manager) const noexcept {
+    inline void draw(const ImageManager &image_manager) const noexcept {
       if (!view_p_) {
         return;
       }
@@ -119,7 +116,7 @@ class Enemies {
       src.y = 0;
       src.w = dst.w;
       src.h = dst.h;
-      SDL_RenderCopy(renderer, bullet_texture, &src, &dst);
+      image_manager.render_copy(*bullet_texture, src, dst);
       SDL_DestroyTexture(bullet_texture);
     }
 
@@ -161,8 +158,8 @@ class Enemies {
   Enemy enemies[ENEMY_MAX];
   Bullet bullets[ENEMY_SHOT_MAX];
 
-  Enemies(SDL_Renderer *renderer, const ImageManager *image_manager) noexcept
-      : renderer_(renderer), image_manager_(image_manager) {}
+  Enemies(const ImageManager *image_manager) noexcept
+      : image_manager_(image_manager) {}
 
   inline void init(const bool debug_mode) noexcept {
     for (auto &enemy : enemies) {
@@ -222,10 +219,10 @@ class Enemies {
 
   inline void draw() const noexcept {
     for (const auto &enemy : enemies) {
-      enemy.draw(renderer_, *image_manager_);
+      enemy.draw(*image_manager_);
     }
     for (const auto &bullet : bullets) {
-      bullet.draw(renderer_, *image_manager_);
+      bullet.draw(*image_manager_);
     }
   }
 

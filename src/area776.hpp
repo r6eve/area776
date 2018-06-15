@@ -259,12 +259,12 @@ class Area776 {
     }
 
     image_manager_ = std::make_unique<ImageManager>(renderer_);
-    fighter_ = std::make_unique<Fighter>(renderer_, image_manager_.get());
-    enemies_ = std::make_unique<Enemies>(renderer_, image_manager_.get());
-    boss_ = std::make_unique<Boss>(renderer_, image_manager_.get());
-    effects_ = std::make_unique<Effects>(renderer_, image_manager_.get());
+    fighter_ = std::make_unique<Fighter>(image_manager_.get());
+    enemies_ = std::make_unique<Enemies>(image_manager_.get());
+    boss_ = std::make_unique<Boss>(image_manager_.get());
+    effects_ = std::make_unique<Effects>(image_manager_.get());
     wipe_ = std::make_unique<Wipe>(renderer_);
-    snow_ = std::make_unique<Snow>(renderer_, image_manager_.get());
+    snow_ = std::make_unique<Snow>(image_manager_.get());
     SDL_ShowCursor(SDL_DISABLE);
   }
 
