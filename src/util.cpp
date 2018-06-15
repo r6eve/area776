@@ -76,9 +76,6 @@ bool check_enemyshots_hit_fighter(const enemy_type enemy_select,
       }
       break;
     }
-    default:
-      // NOTREACHED
-      break;
   }
 
   return fighter.get_life() <= 0;

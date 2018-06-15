@@ -31,9 +31,6 @@ void Area776::run() noexcept {
       case game_state::pause:
         game_pause();
         break;
-      default:
-        // NOTREACHED
-        break;
     }
     if (!poll_event()) {
       return;
@@ -206,9 +203,6 @@ void Area776::play_game() noexcept {
       }
       break;
     }
-    default:
-      // NOTREACHED
-      break;
   }
 
   fighter_->draw(image_manager_);
@@ -291,9 +285,6 @@ void Area776::game_pause() noexcept {
       boss_.draw(renderer_, image_manager_);
       break;
     }
-    default:
-      // NOTREACHED
-      break;
   }
 
   fighter_->draw(image_manager_);
