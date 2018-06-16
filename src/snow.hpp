@@ -62,11 +62,7 @@ class Snow {
       dst.y = static_cast<Sint16>(snow.y);
       SDL_QueryTexture(snow_texture, nullptr, nullptr, &dst.w, &dst.h);
       dst.w /= 2;
-      SDL_Rect src;
-      src.x = dst.w * snow.type;
-      src.y = 0;
-      src.w = dst.w;
-      src.h = dst.h;
+      SDL_Rect src = {dst.w * snow.type, 0, dst.w, dst.h};
       image_manager_->render_copy(*snow_texture, src, dst);
     }
     SDL_DestroyTexture(snow_texture);
