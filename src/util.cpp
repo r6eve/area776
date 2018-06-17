@@ -8,9 +8,9 @@
 
 namespace util {
 
-inline bool check_hit_rect(const SDL_Rect *a, const SDL_Rect *b) noexcept {
-  return ((a->x) < (b->x + b->w)) && ((b->x) < (a->x + a->w)) &&
-         ((a->y) < (b->y + b->h)) && ((b->y) < (a->y + a->h));
+inline bool check_hit_rect(const SDL_Rect &a, const SDL_Rect &b) noexcept {
+  return (a.x < b.x + b.w) && (b.x < a.x + a.w) && (a.y < b.y + b.h) &&
+         (b.y < a.y + a.h);
 }
 
 bool check_enemyshots_hit_fighter(const enemy_type enemy_select,
@@ -31,7 +31,7 @@ bool check_enemyshots_hit_fighter(const enemy_type enemy_select,
         const Point bullet_pos = bullet.get_pos();
         SDL_Rect r2 = {static_cast<Sint16>(bullet_pos.x + 6),
                        static_cast<Sint16>(bullet_pos.y + 6), 4, 4};
-        if (!check_hit_rect(&r1, &r2)) {
+        if (!check_hit_rect(r1, r2)) {
           continue;
         }
 
@@ -58,7 +58,7 @@ bool check_enemyshots_hit_fighter(const enemy_type enemy_select,
         const Point bullet_pos = bullet.get_pos();
         SDL_Rect r2 = {static_cast<Sint16>(bullet_pos.x + 3),
                        static_cast<Sint16>(bullet_pos.y + 3), 10, 10};
-        if (!check_hit_rect(&r1, &r2)) {
+        if (!check_hit_rect(r1, r2)) {
           continue;
         }
 
@@ -100,7 +100,7 @@ bool check_fightershots_hit_enemy(Fighter &fighter, Enemies &enemies,
                      static_cast<Sint16>(enemy_pos.y), 35, 35};
       SDL_Rect r2 = {static_cast<Sint16>(bullet_pos.x),
                      static_cast<Sint16>(bullet_pos.y), 10, 24};
-      if (!check_hit_rect(&r1, &r2)) {
+      if (!check_hit_rect(r1, r2)) {
         continue;
       }
 
@@ -132,7 +132,7 @@ bool check_fightershots_hit_boss(Fighter &fighter, Boss &boss, Effects &effects,
                    static_cast<Sint16>(bullet_pos.y), 10, 24};
     SDL_Rect r2 = {static_cast<Sint16>(boss_pos.x + 171),
                    static_cast<Sint16>(boss_pos.y + 95), 57, 57};
-    if (!check_hit_rect(&r1, &r2)) {
+    if (!check_hit_rect(r1, r2)) {
       continue;
     }
 
