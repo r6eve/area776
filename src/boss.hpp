@@ -15,6 +15,7 @@ class Boss {
 
   boss_state state_;
   const ImageManager *image_manager_;
+  const MixerManager *mixer_manager_;
   Point pos_;
   int life_;
   int move_;
@@ -115,8 +116,9 @@ class Boss {
 
   Bullet bullets[BOSS_SHOT_MAX];
 
-  Boss(const ImageManager *image_manager) noexcept
-      : image_manager_(image_manager) {}
+  Boss(const ImageManager *image_manager,
+       const MixerManager *mixer_manager) noexcept
+      : image_manager_(image_manager), mixer_manager_(mixer_manager) {}
 
   inline void init() noexcept {
     state_ = boss_state::automove;
@@ -128,7 +130,7 @@ class Boss {
     life_ = 100;
   }
 
-  inline void update(const MixerManager &mixer_manager) noexcept {
+  inline void update() noexcept {
     pos_.x += move_;
     if (pos_.x < 0) {
       pos_.x = 0;
@@ -184,7 +186,7 @@ class Boss {
           bullets[i].shoot_attack01(pos_, i);
         }
         Mix_PlayChannel(se_type::enemy_shoot,
-                        mixer_manager.get_se(se_type::enemy_shoot), 0);
+                        mixer_manager_->get_se(se_type::enemy_shoot), 0);
         shot_count_ = 0;
         shot_rot_ = 0;
         if (state_ == boss_state::attack01) {

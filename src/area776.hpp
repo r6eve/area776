@@ -54,6 +54,8 @@ class Area776 {
   enemy_type enemy_select_;
 
   std::unique_ptr<ImageManager> image_manager_;
+  std::unique_ptr<InputManager> input_manager_;
+  std::unique_ptr<MixerManager> mixer_manager_;
   std::unique_ptr<Fighter> fighter_;
   std::unique_ptr<Enemies> enemies_;
   std::unique_ptr<Boss> boss_;
@@ -61,8 +63,6 @@ class Area776 {
   std::unique_ptr<Wipe> wipe_;
   std::unique_ptr<Snow> snow_;
   FontManager font_manager_;
-  InputManager input_manager_;
-  MixerManager mixer_manager_;
 
   void game_title() noexcept;
   void game_start() noexcept;
@@ -259,9 +259,13 @@ class Area776 {
     }
 
     image_manager_ = std::make_unique<ImageManager>(renderer_);
-    fighter_ = std::make_unique<Fighter>(image_manager_.get());
-    enemies_ = std::make_unique<Enemies>(image_manager_.get());
-    boss_ = std::make_unique<Boss>(image_manager_.get());
+    input_manager_ = std::make_unique<InputManager>();
+    mixer_manager_ = std::make_unique<MixerManager>();
+    fighter_ = std::make_unique<Fighter>(
+        image_manager_.get(), input_manager_.get(), mixer_manager_.get());
+    enemies_ =
+        std::make_unique<Enemies>(image_manager_.get(), mixer_manager_.get());
+    boss_ = std::make_unique<Boss>(image_manager_.get(), mixer_manager_.get());
     effects_ = std::make_unique<Effects>(image_manager_.get());
     wipe_ = std::make_unique<Wipe>(renderer_);
     snow_ = std::make_unique<Snow>(image_manager_.get());

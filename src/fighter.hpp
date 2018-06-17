@@ -12,6 +12,8 @@ class Fighter {
   int life_;
   unsigned char shot_timer_;
   const ImageManager *image_manager_;
+  const InputManager *input_manager_;
+  const MixerManager *mixer_manager_;
 
  public:
   class Bullet {
@@ -73,8 +75,11 @@ class Fighter {
 
   Bullet bullets[FIGHTER_SHOT_MAX];
 
-  Fighter(const ImageManager *image_manager) noexcept
-      : image_manager_(image_manager) {}
+  Fighter(const ImageManager *image_manager, const InputManager *input_manager,
+          const MixerManager *mixer_manager) noexcept
+      : image_manager_(image_manager),
+        input_manager_(input_manager),
+        mixer_manager_(mixer_manager) {}
 
   inline void init() noexcept {
     pos_ = Point{screen::width / 2 - 40, screen::height - 90};
@@ -84,19 +89,18 @@ class Fighter {
     }
   }
 
-  inline void update(const InputManager &input_manager,
-                     const MixerManager &mixer_manager) noexcept {
+  inline void update() noexcept {
     const double move_speed = 4.0;
-    if (input_manager.press_key_p(input_device::up)) {
+    if (input_manager_->press_key_p(input_device::up)) {
       pos_.y -= move_speed;
     }
-    if (input_manager.press_key_p(input_device::down)) {
+    if (input_manager_->press_key_p(input_device::down)) {
       pos_.y += move_speed;
     }
-    if (input_manager.press_key_p(input_device::left)) {
+    if (input_manager_->press_key_p(input_device::left)) {
       pos_.x -= move_speed;
     }
-    if (input_manager.press_key_p(input_device::right)) {
+    if (input_manager_->press_key_p(input_device::right)) {
       pos_.x += move_speed;
     }
 
@@ -122,12 +126,12 @@ class Fighter {
       return;
     }
 
-    if (!input_manager.press_key_p(input_device::f)) {
+    if (!input_manager_->press_key_p(input_device::f)) {
       return;
     }
 
     for (auto &bullet : bullets) {
-      if (bullet.shoot(pos_, mixer_manager)) {
+      if (bullet.shoot(pos_, *mixer_manager_)) {
         break;
       }
     }

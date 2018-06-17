@@ -8,6 +8,7 @@
 
 class Enemies {
   const ImageManager *image_manager_;
+  const MixerManager *mixer_manager_;
   int life_;
 
  public:
@@ -150,8 +151,9 @@ class Enemies {
   Enemy enemies[ENEMY_MAX];
   Bullet bullets[ENEMY_SHOT_MAX];
 
-  Enemies(const ImageManager *image_manager) noexcept
-      : image_manager_(image_manager) {}
+  Enemies(const ImageManager *image_manager,
+          const MixerManager *mixer_manager) noexcept
+      : image_manager_(image_manager), mixer_manager_(mixer_manager) {}
 
   inline void init(const bool debug_mode) noexcept {
     for (auto &enemy : enemies) {
@@ -163,8 +165,7 @@ class Enemies {
     life_ = debug_mode ? 5 : 30;
   }
 
-  inline void update(const MixerManager &mixer_manager,
-                     const Fighter &fighter) noexcept {
+  inline void update(const Fighter &fighter) noexcept {
     if (rand() % 45 == 0) {
       for (auto &enemy : enemies) {
         if (enemy.view_p()) {
@@ -204,7 +205,7 @@ class Enemies {
         const double rot_angle = shot_pitch * PI / 180;
         p.rot(rot_angle);
         Mix_PlayChannel(se_type::enemy_shoot,
-                        mixer_manager.get_se(se_type::enemy_shoot), 0);
+                        mixer_manager_->get_se(se_type::enemy_shoot), 0);
       }
     }
   }
