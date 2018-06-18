@@ -33,7 +33,7 @@ class Enemies {
       dst.x = static_cast<Sint16>(pos_.x);
       dst.y = static_cast<Sint16>(pos_.y);
       SDL_QueryTexture(enemy_texture, nullptr, nullptr, &dst.w, &dst.h);
-      SDL_Rect src = {0, 0, dst.w, dst.h};
+      const SDL_Rect src = {0, 0, dst.w, dst.h};
       image_manager.render_copy(*enemy_texture, src, dst);
       SDL_DestroyTexture(enemy_texture);
     }
@@ -108,7 +108,7 @@ class Enemies {
       dst.x = static_cast<Sint16>(pos_.x);
       dst.y = static_cast<Sint16>(pos_.y);
       SDL_QueryTexture(bullet_texture, nullptr, nullptr, &dst.w, &dst.h);
-      SDL_Rect src = {0, 0, dst.w, dst.h};
+      const SDL_Rect src = {0, 0, dst.w, dst.h};
       image_manager.render_copy(*bullet_texture, src, dst);
       SDL_DestroyTexture(bullet_texture);
     }

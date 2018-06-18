@@ -71,9 +71,9 @@ void Area776::game_title() noexcept {
       ++blink_count_;
       if (blink_count_ >= 30) {
         SDL_SetRenderDrawColor(renderer_, 69, 64, 43, 255);
-        SDL_Rect dst = {static_cast<Sint16>(message_pos.x),
-                        static_cast<Sint16>(message_pos.y), screen::width - 240,
-                        screen::height - 300};
+        const SDL_Rect dst = {static_cast<Sint16>(message_pos.x),
+                              static_cast<Sint16>(message_pos.y),
+                              screen::width - 240, screen::height - 300};
         SDL_RenderFillRect(renderer_, &dst);
         if (blink_count_ >= 60) {
           blink_count_ = 0;
@@ -230,7 +230,7 @@ void Area776::game_clear() noexcept {
 
   if (game_level_ == 1) {
     SDL_SetRenderDrawColor(renderer_, 255, 255, 255, 255);
-    SDL_Rect dst = {0, 0, screen::width, screen::height};
+    const SDL_Rect dst = {0, 0, screen::width, screen::height};
     SDL_RenderFillRect(renderer_, &dst);
     draw_text(font_size::x36, rgb::red, Point{150, 180}, "G A M E  C L E A R");
     ++game_count_;

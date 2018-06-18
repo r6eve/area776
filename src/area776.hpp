@@ -78,8 +78,8 @@ class Area776 {
         TTF_RenderUTF8_Blended(font_manager_.get(font_size), str, color);
     SDL_Texture *font_texture =
         SDL_CreateTextureFromSurface(renderer_, font_surface);
-    SDL_Rect src = {0, 0, static_cast<Uint16>(font_surface->w),
-                    static_cast<Uint16>(font_surface->h)};
+    const SDL_Rect src = {0, 0, static_cast<Uint16>(font_surface->w),
+                          static_cast<Uint16>(font_surface->h)};
     SDL_Rect dst;
     dst.x = static_cast<Sint16>(p.x);
     dst.y = static_cast<Sint16>(p.y);
@@ -185,8 +185,8 @@ class Area776 {
 
   inline void draw_map() noexcept {
     SDL_Texture *map_texture = image_manager_->get(image::map);
-    SDL_Rect src = {0, 0, screen::width, screen::height};
-    SDL_Rect dst = {0, 0, screen::width, screen::height};
+    const SDL_Rect src = {0, 0, screen::width, screen::height};
+    const SDL_Rect dst = {0, 0, screen::width, screen::height};
     SDL_RenderCopy(renderer_, map_texture, &src, &dst);
     SDL_DestroyTexture(map_texture);
   }
@@ -214,8 +214,8 @@ class Area776 {
     SDL_Texture *trans_texture =
         SDL_CreateTextureFromSurface(renderer_, trans_surface);
     SDL_FreeSurface(trans_surface);
-    SDL_Rect src = {0, 0, screen::width, screen::height};
-    SDL_Rect dst = {0, 0, screen::width, screen::height};
+    const SDL_Rect src = {0, 0, screen::width, screen::height};
+    const SDL_Rect dst = {0, 0, screen::width, screen::height};
     SDL_RenderCopy(renderer_, trans_texture, &src, &dst);
     SDL_DestroyTexture(trans_texture);
     if (blink_count_ < 30) {

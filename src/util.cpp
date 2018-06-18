@@ -18,8 +18,8 @@ bool check_enemyshots_hit_fighter(const enemy_type enemy_select,
                                   Boss &boss, Effects &effects,
                                   const MixerManager &mixer_manager) noexcept {
   const Point fighter_pos = fighter.get_pos();
-  SDL_Rect r1 = {static_cast<Sint16>(fighter_pos.x + 20),
-                 static_cast<Sint16>(fighter_pos.y + 16), 20, 22};
+  const SDL_Rect r1 = {static_cast<Sint16>(fighter_pos.x + 20),
+                       static_cast<Sint16>(fighter_pos.y + 16), 20, 22};
 
   switch (enemy_select) {
     case enemy_type::enemy: {
@@ -29,8 +29,8 @@ bool check_enemyshots_hit_fighter(const enemy_type enemy_select,
         }
 
         const Point bullet_pos = bullet.get_pos();
-        SDL_Rect r2 = {static_cast<Sint16>(bullet_pos.x + 6),
-                       static_cast<Sint16>(bullet_pos.y + 6), 4, 4};
+        const SDL_Rect r2 = {static_cast<Sint16>(bullet_pos.x + 6),
+                             static_cast<Sint16>(bullet_pos.y + 6), 4, 4};
         if (!check_hit_rect(r1, r2)) {
           continue;
         }
@@ -56,8 +56,8 @@ bool check_enemyshots_hit_fighter(const enemy_type enemy_select,
         }
 
         const Point bullet_pos = bullet.get_pos();
-        SDL_Rect r2 = {static_cast<Sint16>(bullet_pos.x + 3),
-                       static_cast<Sint16>(bullet_pos.y + 3), 10, 10};
+        const SDL_Rect r2 = {static_cast<Sint16>(bullet_pos.x + 3),
+                             static_cast<Sint16>(bullet_pos.y + 3), 10, 10};
         if (!check_hit_rect(r1, r2)) {
           continue;
         }
@@ -96,10 +96,10 @@ bool check_fightershots_hit_enemy(Fighter &fighter, Enemies &enemies,
 
       const Point enemy_pos = enemy.get_pos();
       const Point bullet_pos = bullet.get_pos();
-      SDL_Rect r1 = {static_cast<Sint16>(enemy_pos.x),
-                     static_cast<Sint16>(enemy_pos.y), 35, 35};
-      SDL_Rect r2 = {static_cast<Sint16>(bullet_pos.x),
-                     static_cast<Sint16>(bullet_pos.y), 10, 24};
+      const SDL_Rect r1 = {static_cast<Sint16>(enemy_pos.x),
+                           static_cast<Sint16>(enemy_pos.y), 35, 35};
+      const SDL_Rect r2 = {static_cast<Sint16>(bullet_pos.x),
+                           static_cast<Sint16>(bullet_pos.y), 10, 24};
       if (!check_hit_rect(r1, r2)) {
         continue;
       }
@@ -128,10 +128,10 @@ bool check_fightershots_hit_boss(Fighter &fighter, Boss &boss, Effects &effects,
       continue;
     }
     const Point bullet_pos = bullet.get_pos();
-    SDL_Rect r1 = {static_cast<Sint16>(bullet_pos.x),
-                   static_cast<Sint16>(bullet_pos.y), 10, 24};
-    SDL_Rect r2 = {static_cast<Sint16>(boss_pos.x + 171),
-                   static_cast<Sint16>(boss_pos.y + 95), 57, 57};
+    const SDL_Rect r1 = {static_cast<Sint16>(bullet_pos.x),
+                         static_cast<Sint16>(bullet_pos.y), 10, 24};
+    const SDL_Rect r2 = {static_cast<Sint16>(boss_pos.x + 171),
+                         static_cast<Sint16>(boss_pos.y + 95), 57, 57};
     if (!check_hit_rect(r1, r2)) {
       continue;
     }

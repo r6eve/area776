@@ -38,11 +38,12 @@ class Effects {
       }
       const int n = count_ / 2;
       SDL_Texture *effect_texture = image_manager.get(image::effect01);
-      SDL_Rect dst = {static_cast<Sint16>(pos_.x), static_cast<Sint16>(pos_.y),
-                      effect_size::w, effect_size::h};
-      SDL_Rect src = {static_cast<Sint16>(n % 4 * effect_size::w),
-                      static_cast<Sint16>(n / 4 * effect_size::h),
-                      effect_size::w, effect_size::h};
+      const SDL_Rect dst = {static_cast<Sint16>(pos_.x),
+                            static_cast<Sint16>(pos_.y), effect_size::w,
+                            effect_size::h};
+      const SDL_Rect src = {static_cast<Sint16>(n % 4 * effect_size::w),
+                            static_cast<Sint16>(n / 4 * effect_size::h),
+                            effect_size::w, effect_size::h};
       image_manager.render_copy(*effect_texture, src, dst);
       SDL_DestroyTexture(effect_texture);
     }
