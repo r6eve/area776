@@ -1,5 +1,7 @@
 #include <getopt.h>
 #include <iostream>
+#include <string>
+#include <utility>
 #include "area776.hpp"
 
 const char Version[] = "v0.2.0";
