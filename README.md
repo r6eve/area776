@@ -5,7 +5,7 @@ area776
 
 `area776` is a mini shooting game written in C++ with SDL2.0.
 
-## Demo Video
+## Demo Video (Clickable)
 
 [![Demo Image][]][Demo Video]
 
