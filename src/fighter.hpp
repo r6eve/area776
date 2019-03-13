@@ -5,8 +5,7 @@
 //           https://www.boost.org/LICENSE_1_0.txt)
 //
 
-#ifndef FIGHTER_H
-#define FIGHTER_H
+#pragma once
 
 #include <SDL2/SDL_mixer.h>
 #include "def_global.hpp"
@@ -167,5 +166,3 @@ class Fighter {
 
   ~Fighter() noexcept {}
 };
-
-#endif

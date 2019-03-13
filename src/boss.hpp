@@ -5,8 +5,7 @@
 //           https://www.boost.org/LICENSE_1_0.txt)
 //
 
-#ifndef BOSS_H
-#define BOSS_H
+#pragma once
 
 #include "def_global.hpp"
 #include "image_manager.hpp"
@@ -229,5 +228,3 @@ class Boss {
 
   ~Boss() noexcept {}
 };
-
-#endif

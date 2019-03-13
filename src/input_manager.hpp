@@ -5,8 +5,7 @@
 //           https://www.boost.org/LICENSE_1_0.txt)
 //
 
-#ifndef INPUT_MANAGER_H
-#define INPUT_MANAGER_H
+#pragma once
 
 #include <iostream>
 #include "def_global.hpp"
@@ -105,5 +104,3 @@ class InputManager {
     }
   }
 };
-
-#endif

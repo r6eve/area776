@@ -5,8 +5,7 @@
 //           https://www.boost.org/LICENSE_1_0.txt)
 //
 
-#ifndef EFFECT_H
-#define EFFECT_H
+#pragma once
 
 #include "def_global.hpp"
 #include "image_manager.hpp"
@@ -106,5 +105,3 @@ class Effects {
 
   ~Effects() noexcept {}
 };
-
-#endif

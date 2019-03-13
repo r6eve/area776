@@ -5,8 +5,7 @@
 //           https://www.boost.org/LICENSE_1_0.txt)
 //
 
-#ifndef ENEMY_H
-#define ENEMY_H
+#pragma once
 
 #include "def_global.hpp"
 #include "fighter.hpp"
@@ -232,5 +231,3 @@ class Enemies {
 
   ~Enemies() noexcept {}
 };
-
-#endif

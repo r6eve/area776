@@ -5,8 +5,7 @@
 //           https://www.boost.org/LICENSE_1_0.txt)
 //
 
-#ifndef DEF_GLOBAL_H
-#define DEF_GLOBAL_H
+#pragma once
 
 #include <SDL2/SDL.h>
 #include <cmath>
@@ -141,5 +140,3 @@ struct Point {
     y = pre_x * sin(r) + pre_y * cos(r);
   }
 };
-
-#endif

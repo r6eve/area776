@@ -5,8 +5,7 @@
 //           https://www.boost.org/LICENSE_1_0.txt)
 //
 
-#ifndef UTIL_H
-#define UTIL_H
+#pragma once
 
 #include "boss.hpp"
 #include "def_global.hpp"
@@ -39,5 +38,3 @@ bool check_fightershots_hit_boss(Fighter &fighter, Boss &boss, Effects &effects,
                                  const MixerManager &mixer_manager) noexcept;
 
 }  // namespace util
-
-#endif

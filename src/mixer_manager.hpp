@@ -5,8 +5,7 @@
 //           https://www.boost.org/LICENSE_1_0.txt)
 //
 
-#ifndef MIXER_MANAGER_H
-#define MIXER_MANAGER_H
+#pragma once
 
 #include <SDL2/SDL_mixer.h>
 #include <iostream>
@@ -80,5 +79,3 @@ class MixerManager {
     atexit(Mix_Quit);
   }
 };
-
-#endif

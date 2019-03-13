@@ -5,8 +5,7 @@
 //           https://www.boost.org/LICENSE_1_0.txt)
 //
 
-#ifndef FONT_MANAGER_H
-#define FONT_MANAGER_H
+#pragma once
 
 #include <SDL2/SDL_ttf.h>
 #include <iostream>
@@ -53,5 +52,3 @@ class FontManager {
     atexit(TTF_Quit);
   }
 };
-
-#endif

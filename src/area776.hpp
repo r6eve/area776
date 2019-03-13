@@ -5,8 +5,7 @@
 //           https://www.boost.org/LICENSE_1_0.txt)
 //
 
-#ifndef AREA776_H
-#define AREA776_H
+#pragma once
 
 #include <iomanip>
 #include <memory>
@@ -283,5 +282,3 @@ class Area776 {
 
   ~Area776() noexcept { atexit(SDL_Quit); }
 };
-
-#endif

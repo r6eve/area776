@@ -5,8 +5,7 @@
 //           https://www.boost.org/LICENSE_1_0.txt)
 //
 
-#ifndef SNOW_H
-#define SNOW_H
+#pragma once
 
 #include "def_global.hpp"
 #include "image_manager.hpp"
@@ -77,5 +76,3 @@ class Snow {
 
   ~Snow() noexcept {}
 };
-
-#endif
