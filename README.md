@@ -47,7 +47,8 @@ Options:
 
 ### Key Config
 
-* Shoot: F Key, UP: Up Arrow, LEFT: Left Arrow, DOWN: Down Arrow, RIGHT: Right Arrow
+* Shoot: F Key
+* UP, LEFT, DOWN, RIGHT: ↑ ← ↓ →
 
 ## Requirement
 
