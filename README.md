@@ -1,6 +1,6 @@
 area776
 =======
-[![Build Status on Travis CI][]][Travis CI Results]
+[![Build Status on GitHub Actions][]][GitHub Actions Results]
 [![Build Status on AppVeyor][]][AppVeyor Results]
 
 `area776` is a mini shooting game written in C++ with SDL2.0.
@@ -69,8 +69,8 @@ Options:
 
 * Record Score
 
-[Build Status on Travis CI]: https://travis-ci.org/r6eve/area776.svg?branch=master
-[Travis CI Results]: https://travis-ci.org/r6eve/area776
+[Build Status on GitHub Actions]: https://github.com/r6eve/area776/workflows/main/badge.svg
+[GitHub Actions Results]: https://github.com/r6eve/area776/actions
 [Build Status on AppVeyor]: https://ci.appveyor.com/api/projects/status/saw2lu2yrqn0omgs?svg=true
 [AppVeyor Results]: https://ci.appveyor.com/project/r6eve/area776
 [Demo Image]: http://img.youtube.com/vi/dYCtreFwPDk/0.jpg
